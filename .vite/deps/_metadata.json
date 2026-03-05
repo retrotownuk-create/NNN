@@ -1,0 +1,94 @@
+{
+  "hash": "588ea4e8",
+  "configHash": "a4d87efd",
+  "lockfileHash": "d624f4a8",
+  "browserHash": "4546a873",
+  "optimized": {
+    "react/jsx-dev-runtime": {
+      "src": "../../node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "bacf61b6",
+      "needsInterop": true
+    },
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "b6d15601",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "a2e9117a",
+      "needsInterop": true
+    },
+    "@react-three/fiber": {
+      "src": "../../node_modules/@react-three/fiber/dist/react-three-fiber.esm.js",
+      "file": "@react-three_fiber.js",
+      "fileHash": "aa778903",
+      "needsInterop": false
+    },
+    "@react-three/drei": {
+      "src": "../../node_modules/@react-three/drei/index.js",
+      "file": "@react-three_drei.js",
+      "fileHash": "537d3817",
+      "needsInterop": false
+    },
+    "three": {
+      "src": "../../node_modules/three/build/three.module.js",
+      "file": "three.js",
+      "fileHash": "9a6af21f",
+      "needsInterop": false
+    },
+    "jspdf": {
+      "src": "../../node_modules/jspdf/dist/jspdf.es.min.js",
+      "file": "jspdf.js",
+      "fileHash": "edb92910",
+      "needsInterop": false
+    },
+    "jspdf-autotable": {
+      "src": "../../node_modules/jspdf-autotable/dist/jspdf.plugin.autotable.mjs",
+      "file": "jspdf-autotable.js",
+      "fileHash": "ea07e9bc",
+      "needsInterop": false
+    },
+    "html2canvas": {
+      "src": "../../node_modules/html2canvas/dist/html2canvas.esm.js",
+      "file": "html2canvas.js",
+      "fileHash": "022e05b7",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "hls-BQ3GNWSN": {
+      "file": "hls-BQ3GNWSN.js"
+    },
+    "vision_bundle-DP6N5SSH": {
+      "file": "vision_bundle-DP6N5SSH.js"
+    },
+    "purify.es-24U7IUSJ": {
+      "file": "purify__es-24U7IUSJ.js"
+    },
+    "index.es-PXHZQNKD": {
+      "file": "index__es-PXHZQNKD.js"
+    },
+    "chunk-CSRC5HA4": {
+      "file": "chunk-CSRC5HA4.js"
+    },
+    "chunk-3X4TXVFC": {
+      "file": "chunk-3X4TXVFC.js"
+    },
+    "chunk-TWJRYSII": {
+      "file": "chunk-TWJRYSII.js"
+    },
+    "chunk-ZF6ZCEZF": {
+      "file": "chunk-ZF6ZCEZF.js"
+    },
+    "chunk-SITVF2AJ": {
+      "file": "chunk-SITVF2AJ.js"
+    },
+    "chunk-DC5AMYBS": {
+      "file": "chunk-DC5AMYBS.js"
+    }
+  }
+}
