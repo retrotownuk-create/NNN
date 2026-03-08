@@ -579,12 +579,136 @@ const ConnectorBracket = ({ position, rotation = [0, 0, 0], showLabel, colorOpti
         <cylinderGeometry args={[1.65, 1.65, 2.4, 16]} />
         <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
       </mesh>
+      {/* Right rim collar ring */}
+      <mesh castShadow receiveShadow position={[2.1, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[2.2, 2.2, 0.4, 32]} />
+        <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.3} roughness={0.2} />
+      </mesh>
       {/* Branch collar */}
       <mesh castShadow receiveShadow position={[0, 0, -2.2]} rotation={[Math.PI / 2, 0, 0]}>
         <cylinderGeometry args={[1.95, 1.95, 0.7, 16]} />
         <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
       </mesh>
       {showLabel && <Label text="Connector Bracket" type="fitting" lineClass="h-16" />}
+    </group>
+  );
+};
+
+const HandrailBracket = ({ position, rotation = [0, 0, 0], showLabel, colorOption = COLORS['Raw grey'] }: { position: [number, number, number], rotation?: [number, number, number], showLabel?: boolean, colorOption?: ColorOption }) => {
+  const wallZ = -4.5;
+  const plateY = -4.0;
+  const bendR = 1.2;
+  const stemR = 0.55;
+
+  const sleeveBottomY = -2.0;
+  const horizZStart = wallZ + 0.5; // Hub ends at +0.5 from plate
+  const horizZEnd = -bendR;
+  const horizLength = Math.max(0.01, Math.abs(horizZStart - horizZEnd));
+  const horizCenterZ = (horizZStart + horizZEnd) / 2;
+
+  const vertYStart = plateY + bendR;
+  const vertYEnd = sleeveBottomY;
+  const vertLength = Math.max(0.01, Math.abs(vertYEnd - vertYStart));
+  const vertCenterY = (vertYStart + vertYEnd) / 2;
+
+  return (
+    <group position={position} rotation={rotation}>
+      {/* === Wall Rosette Plate === */}
+      <mesh castShadow receiveShadow position={[0, plateY, wallZ]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[2.4, 2.4, 0.4, 32]} />
+        <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.3} roughness={0.3} />
+      </mesh>
+      {/* Center hub / base of stem */}
+      <mesh castShadow receiveShadow position={[0, plateY, wallZ + 0.25]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.8, 0.8, 0.5, 16]} />
+        <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.3} roughness={0.3} />
+      </mesh>
+
+      {/* === Stem === */}
+      {/* Horizontal post coming out of the wall plate towards Z=0 */}
+      <mesh castShadow receiveShadow position={[0, plateY, horizCenterZ]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[stemR, stemR, horizLength, 16]} />
+        <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={0.35} />
+      </mesh>
+
+      {/* Curved 90-degree corner (Torus forming a perfect bend) */}
+      <mesh castShadow receiveShadow position={[0, plateY, 0]} rotation={[0, Math.PI / 2, 0]}>
+        <torusGeometry args={[bendR, stemR, 16, 32, Math.PI / 2]} />
+        <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={0.35} />
+      </mesh>
+
+      {/* Vertical post going up to the sleeve */}
+      <mesh castShadow receiveShadow position={[0, vertCenterY, 0]}>
+        <cylinderGeometry args={[stemR, stemR, vertLength, 16]} />
+        <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={0.35} />
+      </mesh>
+
+      {/* === Sleeve / Ring === */}
+      <group position={[0, 0, 0]}>
+        {/* Outer sleeve body */}
+        <mesh castShadow receiveShadow rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[2.0, 2.0, 3.6, 32]} />
+          <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.3} roughness={0.25} />
+        </mesh>
+        {/* Inner hollow (shows the rod passes through) */}
+        <mesh castShadow receiveShadow rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[1.65, 1.65, 3.7, 32]} />
+          <meshStandardMaterial color="#222" metalness={0.1} roughness={0.9} />
+        </mesh>
+
+        {/* Sleeve connection hub (welded transition to stem) */}
+        <mesh castShadow receiveShadow position={[0, -1.8, 0]}>
+          <cylinderGeometry args={[0.7, 0.7, 0.4, 16]} />
+          <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.3} roughness={0.25} />
+        </mesh>
+      </group>
+
+      {showLabel && <Label text="Handrail Bracket" type="fitting" lineClass="h-16" />}
+    </group>
+  );
+};
+
+const StraightHandrailBracket = ({ position, rotation = [0, 0, 0], showLabel, colorOption = COLORS['Raw grey'], orientation = 'horizontal' }: { position: [number, number, number], rotation?: [number, number, number], showLabel?: boolean, colorOption?: ColorOption, orientation?: 'horizontal' | 'vertical' }) => {
+  const wallZ = -4.5; // distance from center of rod back to wall plate
+  const plateY = 0;
+  const stemR = 0.55;
+  const vertLength = Math.abs(wallZ) - 1.6; // span from wall plate to sleeve
+  const vertCenterZ = wallZ + (Math.abs(wallZ) / 2);
+  const sleeveRot: [number, number, number] = orientation === 'horizontal' ? [0, 0, Math.PI / 2] : [0, 0, 0];
+
+  return (
+    <group position={position} rotation={rotation}>
+      {/* Wall Rosette Plate */}
+      <mesh castShadow receiveShadow position={[0, plateY, wallZ]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[2.4, 2.4, 0.4, 32]} />
+        <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.3} roughness={0.3} />
+      </mesh>
+
+      {/* Center hub / base */}
+      <mesh castShadow receiveShadow position={[0, plateY, wallZ + 0.25]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.8, 0.8, 0.5, 16]} />
+        <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.3} roughness={0.3} />
+      </mesh>
+
+      {/* Straight Stem */}
+      <mesh castShadow receiveShadow position={[0, plateY, vertCenterZ + 0.2]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[stemR, stemR, vertLength, 16]} />
+        <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={0.35} />
+      </mesh>
+
+      {/* Sleeve / Ring */}
+      <group position={[0, 0, 0]}>
+        <mesh castShadow receiveShadow rotation={sleeveRot}>
+          <cylinderGeometry args={[2.0, 2.0, 3.6, 32]} />
+          <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.3} roughness={0.25} />
+        </mesh>
+        <mesh castShadow receiveShadow rotation={sleeveRot}>
+          <cylinderGeometry args={[1.65, 1.65, 3.7, 32]} />
+          <meshStandardMaterial color={colorOption.pipeColor} metalness={colorOption.metalness} roughness={colorOption.roughness} />
+        </mesh>
+      </group>
+
+      {showLabel && <Label text="Straight Handrail Bracket" type="fitting" lineClass="h-16" />}
     </group>
   );
 };
@@ -779,7 +903,7 @@ const Shelf = ({ position, length, depth, woodColor = 'Natural Oak', highlightFr
   );
 };
 
-const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFreestanding = false, colorOption = COLORS['Raw grey'], skuType = 'standard', woodColor = 'Natural Oak', tiers = 4 }: { length: number, height: number, wallDistance: number, explode: number, hasShelves?: boolean, isFreestanding?: boolean, colorOption?: ColorOption, skuType?: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku888', woodColor?: string, tiers?: number }) => {
+const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFreestanding = false, colorOption = COLORS['Raw grey'], skuType = 'standard', woodColor = 'Natural Oak', tiers = 4 }: { length: number, height: number, wallDistance: number, explode: number, hasShelves?: boolean, isFreestanding?: boolean, colorOption?: ColorOption, skuType?: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku888', woodColor?: string, tiers?: number }) => {
   const leftX = -length / 2;
   const rightX = length / 2;
   const wallZ = -wallDistance;
@@ -3305,6 +3429,510 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     );
   }
 
+  if (skuType === 'sku132') {
+    // L-shaped: 2 floor posts + 2 wall flanges at top, coupling at mid of each leg
+    // Left top: CornerFitting (down=leg, back=wall arm, right=horizontal rail)
+    // Right top: Elbow (down=leg, back=wall arm)
+    const e = explode * 1.5;
+    const topY = height / 2;
+    const bottomY = -height / 2;
+
+    // Mathematically perfectly split the leg pipe so upper and lower segments are absolutely identical lengths.
+    const pipeSpan = (topY - 2.2) - (bottomY + 1.2);
+    const pipeLen = (pipeSpan - 2.4) / 2; // Subtract Coupling space
+    const couplingY = bottomY + 1.2 + pipeLen + 1.2;
+
+    const frontZ = 0;
+    const wallZ = -wallDistance;
+
+    const buildLeg = (x: number, isLeft: boolean) => {
+      const eX = isLeft ? -e : e;
+      return (
+        <group position={[eX, 0, 0]}>
+          {/* Floor Flange */}
+          <group position={[0, -e * 0.6, 0]}>
+            <Flange position={[x, bottomY, frontZ]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+
+          {/* Lower Pipe: floor flange top → coupling bottom */}
+          <group position={[0, -e * 0.3, 0]}>
+            <Pipe start={[x, bottomY + 1.2, frontZ]} end={[x, couplingY - 1.2, frontZ]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+
+          {/* Coupling at exact mid-leg */}
+          <group position={[0, 0, 0]}>
+            <Coupling position={[x, couplingY, frontZ]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+
+          {/* Upper Pipe: coupling top → top fitting bottom */}
+          <group position={[0, e * 0.3, 0]}>
+            <Pipe start={[x, couplingY + 1.2, frontZ]} end={[x, topY - 2.2, frontZ]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+        </group>
+      );
+    };
+
+    return (
+      <group>
+        {buildLeg(leftX, true)}
+        {buildLeg(rightX, false)}
+
+        {/* LEFT TOP: CornerFitting — opens down (leg), back (wall arm), right (horizontal rail) */}
+        <group position={[-e, e * 0.8, 0]}>
+          <CornerFitting
+            position={[leftX, topY, frontZ]}
+            side="left"
+            rotation={[0, 0, 0]}
+            showLabel={showLabel}
+            colorOption={colorOption}
+          />
+        </group>
+
+        {/* Left wall arm */}
+        <group position={[-e, e * 0.8, -e * 0.4]}>
+          <Pipe start={[leftX, topY, frontZ - 2.2]} end={[leftX, topY, wallZ + 1.2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <group position={[-e, e * 0.8, -e * 0.8]}>
+          <Flange position={[leftX, topY, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* RIGHT TOP: CornerFitting — opens down (leg), back (wall arm), left (horizontal rail) */}
+        <group position={[e, e * 0.8, 0]}>
+          <CornerFitting
+            position={[rightX, topY, frontZ]}
+            side="right"
+            rotation={[0, 0, 0]}
+            showLabel={showLabel}
+            colorOption={colorOption}
+          />
+        </group>
+
+        {/* Right wall arm */}
+        <group position={[e, e * 0.8, -e * 0.4]}>
+          <Pipe start={[rightX, topY, frontZ - 2.2]} end={[rightX, topY, wallZ + 1.2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <group position={[e, e * 0.8, -e * 0.8]}>
+          <Flange position={[rightX, topY, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Horizontal rail */}
+        <group position={[0, e * 0.8, 0]}>
+          <Pipe start={[leftX + 2.2, topY, frontZ]} end={[rightX - 2.2, topY, frontZ]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+      </group>
+    );
+  }
+
+  if (skuType === 'sku133') {
+    // 2 independent wall brackets
+    const e = explode * 1.5;
+    const wallZ = -wallDistance;
+    const midZ = -wallDistance / 2;
+    const frontZ = 0;
+
+    // Top surface of the shelf wood (assumes 5cm standoff pipe + 1.2 flange thickness + 1.5 board thickness)
+    const standoffPipeLen = Math.max(height, 2); // ensure at least 2cm pipe
+    const flangeY = 2.2 + standoffPipeLen + 1.2;
+
+    const buildBracket = (x: number, isLeft: boolean) => {
+      const gX = isLeft ? -e : e;
+      return (
+        <group position={[gX, 0, 0]}>
+          {/* Wall Flange */}
+          <group position={[0, 0, -e * 0.8]}>
+            <Flange position={[x, 0, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          {/* Back Pipe */}
+          <group position={[0, 0, -e * 0.4]}>
+            <Pipe start={[x, 0, wallZ + 1.2]} end={[x, 0, midZ - 2.2]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          {/* Mid T-Fitting */}
+          <group position={[0, 0, 0]}>
+            <TFitting position={[x, 0, midZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          {/* Front Pipe */}
+          <group position={[0, 0, e * 0.4]}>
+            <Pipe start={[x, 0, midZ + 2.2]} end={[x, 0, frontZ - 2.2]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          {/* Front Elbow */}
+          <group position={[0, 0, e * 0.8]}>
+            <Elbow position={[x, 0, frontZ]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+
+          {/* STANDOFFS from Mid T-Fitting */}
+          <group position={[0, e * 0.4, 0]}>
+            <Pipe start={[x, 2.2, midZ]} end={[x, 2.2 + standoffPipeLen, midZ]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[0, e * 0.8, 0]}>
+            <Flange position={[x, flangeY, midZ]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+
+          {/* STANDOFFS from Front Elbow */}
+          <group position={[0, e * 0.4, e * 0.8]}>
+            <Pipe start={[x, 2.2, frontZ]} end={[x, 2.2 + standoffPipeLen, frontZ]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[0, e * 0.8, e * 0.8]}>
+            <Flange position={[x, flangeY, frontZ]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+        </group>
+      );
+    };
+
+    return (
+      <group>
+        {buildBracket(leftX, true)}
+        {buildBracket(rightX, false)}
+
+        {hasShelves && (
+          <group position={[0, e * 0.8, 0]}>
+            <Shelf
+              position={[0, flangeY + 1.5, wallZ / 2]}
+              length={length + 10}
+              depth={wallDistance}
+              woodColor={woodColor}
+            />
+          </group>
+        )}
+      </group>
+    );
+  }
+
+  if (skuType === 'sku134') {
+    const e = explode * 1.5;
+    const wallZ = -wallDistance;
+    const frontZ = 0;
+
+    return (
+      <group>
+        {/* Wall Flange */}
+        <group position={[0, 0, -e]}>
+          <Flange position={[0, 0, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Wall Arm Pipe */}
+        <group position={[0, 0, -e * 0.5]}>
+          <Pipe start={[0, 0, wallZ + 1.2]} end={[0, 0, frontZ - 2.2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Middle Elbow (receives from back (-Z) and goes down (-Y)) */}
+        <group position={[0, 0, 0]}>
+          <Elbow position={[0, 0, frontZ]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Hex Nipple connecting Elbow and TFitting */}
+        <group position={[0, -e * 0.5, 0]}>
+          <HexNipple position={[0, -2.2, frontZ]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Center T-Fitting (receives from UP (+Y) and splits left/right (-X/+X)) */}
+        <group position={[0, -e, 0]}>
+          <TFitting position={[0, -4.4, frontZ]} rotation={[Math.PI / 2, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Left Pipe from TFitting left collar (-1.8) to End Elbow */}
+        <group position={[-e * 0.5, -e, 0]}>
+          <Pipe start={[leftX + 2.2, -4.4, frontZ]} end={[-1.8, -4.4, frontZ]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Right Pipe */}
+        <group position={[e * 0.5, -e, 0]}>
+          <Pipe start={[1.8, -4.4, frontZ]} end={[rightX - 2.2, -4.4, frontZ]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Left End Elbow (pointing UP) */}
+        {/* Receives from Right (+X) and points UP (+Y) */}
+        <group position={[-e, -e, 0]}>
+          <Elbow position={[leftX, -4.4, frontZ]} rotation={[0, Math.PI / 2, Math.PI]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Right End Elbow (pointing UP) */}
+        {/* Receives from Left (-X) and points UP (+Y) */}
+        <group position={[e, -e, 0]}>
+          <Elbow position={[rightX, -4.4, frontZ]} rotation={[0, -Math.PI / 2, Math.PI]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+      </group>
+    );
+  }
+
+  if (skuType === 'sku135') {
+    const e = explode * 1.5;
+    return (
+      <group>
+        {/* Wall Flange (Left) */}
+        <group position={[-e, 0, 0]}>
+          <Flange position={[leftX, 0, 0]} rotation={[0, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Horizontal Pipe */}
+        <group position={[0, 0, 0]}>
+          <Pipe start={[leftX + 1.2, 0, 0]} end={[rightX - 2.2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Connection Elbow: receiving from left (-X) and going up (+Y) */}
+        {/* Test said RIGHT ELBOW for sku134 (needs -X and +Y): [0, -Math.PI / 2, Math.PI]. Wait, let's verify if that works for horizontal right elbow. */}
+        <group position={[e, -e, 0]}>
+          <Elbow position={[rightX, 0, 0]} rotation={[0, -Math.PI / 2, Math.PI]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Vertical Pipe from ceiling down to elbow */}
+        <group position={[e, 0, 0]}>
+          <Pipe start={[rightX, 2.2, 0]} end={[rightX, height - 1.2, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Ceiling Flange */}
+        <group position={[e, e, 0]}>
+          <Flange position={[rightX, height, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+      </group>
+    );
+  }
+
+  if (skuType === 'sku136') {
+    const e = explode * 1.5;
+    const rodRadius = 1.6;
+    const bracketZ = -wallDistance; // Distance from wall to the ROD center
+    const rodZ = bracketZ + e * 0.5;
+
+    // Brackets 15cm from each end
+    const bracketOffset = 15;
+    const bracketXPositions = [leftX + bracketOffset, rightX - bracketOffset];
+    const midLength = Math.max(0, length - bracketOffset * 2);
+
+    let numMiddleSegs = 0;
+    let segLen = 0;
+    if (midLength > 0) {
+      const maxLuciteLen = 120;
+      numMiddleSegs = Math.ceil(midLength / maxLuciteLen);
+      segLen = midLength / numMiddleSegs;
+
+      const startX = leftX + bracketOffset;
+      for (let i = 1; i < numMiddleSegs; i++) {
+        bracketXPositions.push(startX + i * segLen);
+      }
+    }
+
+    const materialProps = {
+      color: "#ffffff",
+      transparent: true,
+      opacity: 0.15,
+      roughness: 0.02,
+      metalness: 0.0,
+      transmission: 0.98,
+      thickness: 2.0,
+      ior: 1.49,
+      envMapIntensity: 1
+    };
+
+    return (
+      <group position={[0, 0, rodZ]}>
+
+        {/* === Left 15cm Rod === */}
+        <group position={[leftX + 7.5 - e * 0.5, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <mesh castShadow receiveShadow>
+            <cylinderGeometry args={[rodRadius, rodRadius, 15, 32]} />
+            <meshPhysicalMaterial {...materialProps} />
+          </mesh>
+          {showLabel && <Label text={`15.0 cm Lucite Rod`} type="pipe" lineClass="h-8" />}
+        </group>
+
+        {/* === Right 15cm Rod === */}
+        <group position={[rightX - 7.5 + e * 0.5, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <mesh castShadow receiveShadow>
+            <cylinderGeometry args={[rodRadius, rodRadius, 15, 32]} />
+            <meshPhysicalMaterial {...materialProps} />
+          </mesh>
+          {showLabel && <Label text={`15.0 cm Lucite Rod`} type="pipe" lineClass="h-8" />}
+        </group>
+
+        {/* === Middle Rod(s) === */}
+        {(() => {
+          if (midLength <= 0 || numMiddleSegs <= 0) return null;
+
+          const segments = [];
+          const startX = leftX + bracketOffset;
+
+          for (let i = 0; i < numMiddleSegs; i++) {
+            const segCenterX = startX + (i * segLen) + (segLen / 2);
+            // Explode away from true center
+            const explodeX = numMiddleSegs > 1 ? (Math.sign(segCenterX) * e * 0.25) : 0;
+
+            segments.push(
+              <group key={`mid-rod-${i}`} position={[segCenterX + explodeX, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+                <mesh castShadow receiveShadow>
+                  <cylinderGeometry args={[rodRadius, rodRadius, segLen, 32]} />
+                  <meshPhysicalMaterial {...materialProps} />
+                </mesh>
+                {showLabel && <Label text={`${segLen.toFixed(1)} cm Lucite Rod`} type="pipe" lineClass="h-8" />}
+              </group>
+            );
+          }
+          return <group position={[0, 0, 0]}>{segments}</group>;
+        })()}
+
+        {/* End Caps (Metal) - Explode outwards along the rod axis */}
+        <group position={[leftX - e, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <mesh castShadow receiveShadow position={[0, 1.0, 0]}>
+            <cylinderGeometry args={[rodRadius + 0.15, rodRadius + 0.15, 2.0, 32]} />
+            <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.3} roughness={colorOption.roughness - 0.2} />
+          </mesh>
+          <mesh castShadow receiveShadow position={[0, 2.0, 0]}>
+            <sphereGeometry args={[rodRadius + 0.15, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
+            <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.3} roughness={colorOption.roughness - 0.2} />
+          </mesh>
+          {showLabel && <group position={[0, 1.0, 0]}><Label text="Metal End Cap (rod)" type="fitting" lineClass="h-8" /></group>}
+        </group>
+
+        <group position={[rightX + e, 0, 0]} rotation={[0, 0, -Math.PI / 2]}>
+          <mesh castShadow receiveShadow position={[0, 1.0, 0]}>
+            <cylinderGeometry args={[rodRadius + 0.15, rodRadius + 0.15, 2.0, 32]} />
+            <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.3} roughness={colorOption.roughness - 0.2} />
+          </mesh>
+          <mesh castShadow receiveShadow position={[0, 2.0, 0]}>
+            <sphereGeometry args={[rodRadius + 0.15, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
+            <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.3} roughness={colorOption.roughness - 0.2} />
+          </mesh>
+          {showLabel && <group position={[0, 1.0, 0]}><Label text="Metal End Cap (rod)" type="fitting" lineClass="h-8" /></group>}
+        </group>
+
+        {/* Custom Brackets - Do not explode to stay fixed behind rods */}
+        {bracketXPositions.map((bx, idx) => (
+          <group key={idx} position={[bx, 0, 0]}>
+            <HandrailBracket position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+        ))}
+      </group>
+    );
+  }
+
+  if (skuType === 'sku137') {
+    const e = explode * 1.5;
+    const rodRadius = 1.6;
+    const bracketZ = -wallDistance;
+    const rodZ = bracketZ + e * 0.5;
+
+    const maxLuciteLen = 120;
+    const numSegs = Math.ceil(length / maxLuciteLen) || 1;
+    const segLen = length / numSegs;
+
+    const bracketXPositions = [];
+    for (let i = 0; i <= numSegs; i++) {
+      bracketXPositions.push(leftX + (i * segLen));
+    }
+
+    const materialProps = {
+      color: "#ffffff",
+      transparent: true,
+      opacity: 0.15,
+      roughness: 0.02,
+      metalness: 0.0,
+      transmission: 0.98,
+      thickness: 2.0,
+      ior: 1.49,
+      envMapIntensity: 1
+    };
+
+    return (
+      <group position={[0, 0, rodZ]}>
+
+        {/* Lucite Rod Segments */}
+        {(() => {
+          const segments = [];
+          for (let i = 0; i < numSegs; i++) {
+            const segCenterX = leftX + (i * segLen) + (segLen / 2);
+            const explodeX = numSegs > 1 ? (Math.sign(segCenterX) * e * 0.25) : 0;
+
+            segments.push(
+              <group key={`rod-${i}`} position={[segCenterX + explodeX, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+                <mesh castShadow receiveShadow>
+                  <cylinderGeometry args={[rodRadius, rodRadius, segLen, 32]} />
+                  <meshPhysicalMaterial {...materialProps} />
+                </mesh>
+                {showLabel && <Label text={`${segLen.toFixed(1)} cm Lucite Rod`} type="pipe" lineClass="h-8" />}
+              </group>
+            );
+          }
+          return <group position={[0, 0, 0]}>{segments}</group>;
+        })()}
+
+        {/* End Caps (Metal) conditionally added if hasShelves (Include End Caps) is true */}
+        {hasShelves && (
+          <>
+            <group position={[leftX - e, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+              <mesh castShadow receiveShadow position={[0, 1.0, 0]}>
+                <cylinderGeometry args={[rodRadius + 0.15, rodRadius + 0.15, 2.0, 32]} />
+                <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.3} roughness={colorOption.roughness - 0.2} />
+              </mesh>
+              <mesh castShadow receiveShadow position={[0, 2.0, 0]}>
+                <sphereGeometry args={[rodRadius + 0.15, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
+                <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.3} roughness={colorOption.roughness - 0.2} />
+              </mesh>
+              {showLabel && <group position={[0, 1.0, 0]}><Label text="Metal End Cap (rod)" type="fitting" lineClass="h-8" /></group>}
+            </group>
+
+            <group position={[rightX + e, 0, 0]} rotation={[0, 0, -Math.PI / 2]}>
+              <mesh castShadow receiveShadow position={[0, 1.0, 0]}>
+                <cylinderGeometry args={[rodRadius + 0.15, rodRadius + 0.15, 2.0, 32]} />
+                <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.3} roughness={colorOption.roughness - 0.2} />
+              </mesh>
+              <mesh castShadow receiveShadow position={[0, 2.0, 0]}>
+                <sphereGeometry args={[rodRadius + 0.15, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
+                <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.3} roughness={colorOption.roughness - 0.2} />
+              </mesh>
+              {showLabel && <group position={[0, 1.0, 0]}><Label text="Metal End Cap (rod)" type="fitting" lineClass="h-8" /></group>}
+            </group>
+          </>
+        )}
+
+        {/* Straight Handrail Brackets */}
+        {bracketXPositions.map((bx, idx) => (
+          <group key={idx} position={[bx, 0, 0]}>
+            <StraightHandrailBracket position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+        ))}
+      </group>
+    );
+  }
+
+  if (skuType === 'sku138') {
+    const e = explode * 1.5;
+    const rodRadius = 1.6;
+    const bracketZ = -wallDistance;
+    const rodZ = bracketZ + e * 0.5;
+
+    const materialProps = {
+      color: "#ffffff",
+      transparent: true,
+      opacity: 0.15,
+      roughness: 0.02,
+      metalness: 0.0,
+      transmission: 0.98,
+      thickness: 2.0,
+      ior: 1.49,
+      envMapIntensity: 1
+    };
+
+    return (
+      <group position={[0, height / 2, rodZ]}>
+
+        {/* The dynamic vertical Lucite Rod */}
+        <group position={[0, 0, 0]}>
+          <mesh castShadow receiveShadow>
+            <cylinderGeometry args={[rodRadius, rodRadius, length, 32]} />
+            <meshPhysicalMaterial {...materialProps} />
+          </mesh>
+          {showLabel && <Label text={`${length.toFixed(1)} cm Lucite Rod`} type="pipe" lineClass="h-8" />}
+        </group>
+
+        {/* Straight Handrail Bracket - Vertical orientation */}
+        <group position={[0, 0, -e * 0.5]}>
+          <StraightHandrailBracket position={[0, 0, 0]} rotation={[0, 0, 0]} orientation="vertical" showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+      </group>
+    );
+  }
+
+
   if (skuType === 'sku127') {
     const e = explode * 1.5;
     const legPipeLength = 20; // 20cm exact pipe requested
@@ -3415,7 +4043,274 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   }
 
 
+  if (skuType === 'sku140') {
+    const e = explode * 1.5;
+    const bracketZ = -wallDistance;
+    const railZ = bracketZ + 6.6; // wall distance - 6.6
+    const leftX = -(length / 2);
+    const rightX = (length / 2);
+    const midX = 0;
 
+    return (
+      <group position={[0, height / 2, -wallDistance / 2]}>
+        {/* Wall Flanges */}
+        <group position={[-e, 0, -e]}>
+          <Flange position={[leftX + 2.5, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <group position={[0, 0, -e]}>
+          <Flange position={[midX, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <group position={[e, 0, -e]}>
+          <Flange position={[rightX - 2.5, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Support Arms */}
+        <group position={[-e, 0, -e * 0.5]}>
+          <Pipe start={[leftX + 2.5, 0, bracketZ + 1.2]} end={[leftX + 2.5, 0, railZ - 1.5]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <group position={[0, 0, -e * 0.5]}>
+          <Pipe start={[midX, 0, bracketZ + 1.2]} end={[midX, 0, railZ - 1.5]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <group position={[e, 0, -e * 0.5]}>
+          <Pipe start={[rightX - 2.5, 0, bracketZ + 1.2]} end={[rightX - 2.5, 0, railZ - 1.5]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Front Rail */}
+        <group position={[0, 0, e * 0.5]}>
+          {/* Middle Tee */}
+          <TFitting position={[midX, 0, railZ]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          {/* Left Elbow */}
+          <Elbow position={[leftX + 2.5, 0, railZ]} rotation={[0, Math.PI, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+          {/* Right Elbow */}
+          <Elbow position={[rightX - 2.5, 0, railZ]} rotation={[0, Math.PI, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+          {/* Rail Pipes */}
+          <Pipe start={[leftX + 4.0, 0, railZ]} end={[midX - 1.5, 0, railZ]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[midX + 1.5, 0, railZ]} end={[rightX - 4.0, 0, railZ]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+      </group>
+    );
+  }
+
+  if (skuType === 'sku141') {
+    const e = explode * 1.5;
+    const leftX = -(length / 2);
+    const rightX = (length / 2);
+    const zFront = wallDistance / 2;
+    const zBack = -wallDistance / 2;
+
+    const buildLeg = (x: number, z: number, isLeft: boolean, isFront: boolean) => {
+      const xExp = isLeft ? -e : e;
+      const zExp = isFront ? e : -e;
+      return (
+        <group key={`leg-${x}-${z}`} position={[xExp, 0, zExp]}>
+          <Flange position={[x, 0, z]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[x, 1.2, z]} end={[x, height - 1.2, z]} showLabel={showLabel} colorOption={colorOption} />
+          <Flange position={[x, height, z]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+      );
+    };
+
+    return (
+      <group position={[0, 0, 0]}>
+        {buildLeg(leftX + 6, zFront, true, true)}
+        {buildLeg(leftX + 6, zBack, true, false)}
+        {buildLeg(rightX - 6, zFront, false, true)}
+        {buildLeg(rightX - 6, zBack, false, false)}
+      </group>
+    );
+  }
+
+  if (skuType === 'sku142' || skuType === 'sku171') {
+    const e = explode * 1.5;
+    const bracketZ = -wallDistance;
+    const railZ = 0;
+    const leftX = -(length / 2);
+    const rightX = (length / 2);
+
+    return (
+      <group position={[0, height / 2, -wallDistance / 2]}>
+        {/* Left Arm */}
+        <group position={[-e, 0, 0]}>
+          <Flange position={[leftX + 2.2, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[leftX + 2.2, 0, bracketZ + 1.2]} end={[leftX + 2.2, 0, railZ - 1.5]} showLabel={showLabel} colorOption={colorOption} />
+          <Elbow position={[leftX + 2.2, 0, railZ]} rotation={[0, Math.PI, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Right Arm */}
+        <group position={[e, 0, 0]}>
+          <Flange position={[rightX - 2.2, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[rightX - 2.2, 0, bracketZ + 1.2]} end={[rightX - 2.2, 0, railZ - 1.5]} showLabel={showLabel} colorOption={colorOption} />
+          <Elbow position={[rightX - 2.2, 0, railZ]} rotation={[0, Math.PI, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Horizontal Rail */}
+        <group position={[0, 0, e]}>
+          <Pipe start={[leftX + 3.7, 0, railZ]} end={[rightX - 3.7, 0, railZ]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+      </group>
+    );
+  }
+
+  if (skuType === 'sku175') {
+    const e = explode * 1.5;
+    const wallZ = -wallDistance; // -5 normally
+    const baseZ = 0;
+
+    return (
+      <group position={[0, height / 2, 0]}>
+        {/* Wall Flange */}
+        <group position={[0, 0, -e]}>
+          <Flange position={[0, 0, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* 5cm Wall Pipe */}
+        <group position={[0, 0, -e * 0.5]}>
+          <Pipe start={[0, 0, wallZ + 1.2]} end={[0, 0, baseZ - 1.5]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Lower T-Fitting: Rotation [0, 0, 0] means side port points to -Z */}
+        <group position={[0, 0, 0]}>
+          <TFitting position={[0, 0, baseZ]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          {/* Bottom In-cap to close the lower through-port */}
+          <EndCap position={[0, baseZ - 2.2, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Hex Nipple going UP (+Y) */}
+        <group position={[0, e * 0.5, 0]}>
+          <HexNipple position={[0, baseZ + 2.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Upper T-Fitting: Rotated exactly 90 degrees (Math.PI / 2). Side port (-Z) moves to -X */}
+        <group position={[0, e, 0]}>
+          <TFitting position={[0, baseZ + 4.4, 0]} rotation={[0, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+          {/* Top In-cap to close the upper through-port */}
+          <EndCap position={[0, baseZ + 4.4 + 2.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* 15cm pole pointing left (-X) */}
+        <group position={[-e, e, 0]}>
+          <Pipe start={[-1.5, baseZ + 4.4, 0]} end={[-16.5, baseZ + 4.4, 0]} showLabel={showLabel} colorOption={colorOption} />
+          {/* End cap for the peg */}
+          <EndCap position={[-16.5, baseZ + 4.4, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+      </group>
+    );
+  }
+
+  if (skuType === 'sku176') {
+    const bracketZ = -wallDistance;
+
+    return (
+      <group position={[0, height / 2, 0]}>
+        <group position={[0, 0, -explode]}>
+          <Flange position={[0, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <group position={[0, 0, explode]}>
+          <HexNipple position={[0, 0, bracketZ + 2.2]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Elbow position={[0, 0, bracketZ + 4.4]} rotation={[0, Math.PI, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+          <HexNipple position={[2.2, 0, bracketZ + 4.4]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+          <EndCap position={[4.4, 0, bracketZ + 4.4]} rotation={[0, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+      </group>
+    );
+  }
+
+  if (skuType === 'sku177') {
+    const e = explode * 1.5;
+    const numRails = Math.max(2, tiers || 3);
+    const leftX = -(length / 2) + 2.5;
+    const rightX = (length / 2) - 2.5;
+    const zBase = -wallDistance;
+    const zRail = zBase + wallDistance; // Usually 0
+
+    const bottomY = 15;
+    const vertLength = 20;
+    const topY = bottomY + (numRails - 1) * vertLength;
+
+    // Draw horizontal wall pipes and flanges
+    const drawSupports = (x: number, isLeft: boolean) => {
+      let parts = [];
+      const xExp = isLeft ? -e : e;
+      for (let i = 0; i < numRails; i++) {
+        const y = bottomY + i * vertLength;
+        parts.push(
+          <group key={`supp-${i}-${isLeft}`} position={[xExp, y, -e]}>
+            <Flange position={[x, 0, zBase]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Pipe start={[x, 0, zBase + 1.2]} end={[x, 0, zRail - 1.5]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+        );
+      }
+      return parts;
+    };
+
+    // Draw vertical poles
+    const drawVerticals = (x: number, isLeft: boolean) => {
+      let parts = [];
+      const xExp = isLeft ? -e : e;
+      
+      // Fitting at bottomY - CORNER ELBOW AS PER REQUEST
+      parts.push(
+         <group key={`c-bot-${isLeft}`} position={[xExp, bottomY, e]}>
+            <CornerFitting position={[x, 0, zRail]} rotation={[Math.PI / 2, isLeft ? 0 : -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} side={isLeft ? 'left' : 'right'} />
+         </group>
+      );
+
+      // Verticals between rails
+      for (let i = 0; i < numRails - 1; i++) {
+        const yStart = bottomY + i * vertLength;
+        const yEnd = bottomY + (i + 1) * vertLength;
+        parts.push(
+          <group key={`vert-${i}-${isLeft}`} position={[xExp, 0, e]}>
+            <Pipe start={[x, yStart + 1.5, zRail]} end={[x, yEnd - 1.5, zRail]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+        );
+        
+        // Fitting at yEnd (which is a T-fitting unless it's top and we wanted something else)
+        if (i < numRails - 2) {
+           parts.push(
+             <group key={`t-${i + 1}-${isLeft}`} position={[xExp, yEnd, e]}>
+                <TFitting position={[x, 0, zRail]} rotation={[-Math.PI / 2, isLeft ? Math.PI : 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+             </group>
+           );
+        }
+      }
+      
+      // Fitting at topY
+      parts.push(
+         <group key={`t-top-${isLeft}`} position={[xExp, topY, e]}>
+            <TFitting position={[x, 0, zRail]} rotation={[-Math.PI / 2, isLeft ? Math.PI : 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            {/* Top stub */}
+            <Pipe start={[x, 1.5, zRail]} end={[x, 5 - 1.0, zRail]} showLabel={showLabel} colorOption={colorOption} />
+            <EndCap position={[x, 5, zRail]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+         </group>
+      );
+      
+      return parts;
+    };
+
+    // Calculate dynamic total height for centering visually
+    const totalHeightRendered = topY + 5.0 - bottomY;
+
+    return (
+      <group position={[0, -totalHeightRendered / 2, -wallDistance / 2]}>
+         {drawSupports(leftX, true)}
+         {drawSupports(rightX, false)}
+         {drawVerticals(leftX, true)}
+         {drawVerticals(rightX, false)}
+         
+         {/* Bottom Horizontal Rail */}
+         <group position={[0, bottomY, e]}>
+            <Pipe start={[leftX + 1.5, 0, zRail]} end={[rightX - 1.5, 0, zRail]} showLabel={showLabel} colorOption={colorOption} />
+         </group>
+
+         {hasShelves && (
+            <group position={[0, topY + 1.5 + e * 0.5, 0]}>
+               <Shelf position={[0, 0, zBase / 2]} length={length} depth={wallDistance} woodColor={woodColor} />
+            </group>
+         )}
+      </group>
+    );
+  }
 
   const buildSide = (x: number, side: 'left' | 'right') => {
     const midY = 75 + (height - 75) / 2;
@@ -3620,11 +4515,12 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           </group>
         </>
       )}
+
     </group>
   );
 };
 
-const Scene = React.memo(({ length, height, wallDistance, explode, hasShelves, isFreestanding, colorOption, skuType, woodColor, cameraState, tiers = 4 }: { length: number, height: number, wallDistance: number, explode: number, hasShelves: boolean, isFreestanding: boolean, colorOption: ColorOption, skuType: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku888', woodColor: string, cameraState?: any, tiers?: number }) => {
+const Scene = React.memo(({ length, height, wallDistance, explode, hasShelves, isFreestanding, colorOption, skuType, woodColor, cameraState, tiers = 4 }: { length: number, height: number, wallDistance: number, explode: number, hasShelves: boolean, isFreestanding: boolean, colorOption: ColorOption, skuType: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku888', woodColor: string, cameraState?: any, tiers?: number }) => {
   return (
     <>
       <PerspectiveCamera makeDefault position={cameraState?.position || [0, 100, 250]} fov={50} />
@@ -3879,7 +4775,7 @@ export default function App() {
   const [isFreestanding, setIsFreestanding] = useState(false);
   const [colorName, setColorName] = useState('Raw grey');
   const [woodColor, setWoodColor] = useState('Natural Oak');
-  const [skuType, setSkuType] = useState<'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku888'>('standard');
+  const [skuType, setSkuType] = useState<'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku888'>('standard');
   const [tiers, setTiers] = useState(4);
   const [tubeType, setTubeType] = useState<'round' | 'square'>('round');
   const [quantity, setQuantity] = useState(1);
@@ -3926,9 +4822,17 @@ export default function App() {
   const [syncStatus, setSyncStatus] = useState<'synced' | 'syncing' | 'error' | 'disconnected'>('syncing');
   const lastSyncRef = useRef<string>('');
 
-  type SavedSKU = { name: string; length: number; height: number; wallDistance: number; hasShelves: boolean; isFreestanding: boolean; colorName: string; woodColor?: string; skuType?: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku888'; tiers?: number; tubeType?: 'round' | 'square' };
+  type SavedSKU = { name: string; length: number; height: number; wallDistance: number; hasShelves: boolean; isFreestanding: boolean; colorName: string; woodColor?: string; skuType?: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku888'; tiers?: number; tubeType?: 'round' | 'square' };
 
   const [savedSKUs, setSavedSKUs] = useState<SavedSKU[]>(() => {
+
+    // Cache bust to force users to see the new SKUs
+    const APP_VERSION = 'v6_sku177';
+    if (localStorage.getItem('app_cache_version') !== APP_VERSION) {
+      localStorage.removeItem('savedSKUs');
+      localStorage.setItem('app_cache_version', APP_VERSION);
+    }
+
     const default4210: SavedSKU = { name: 'SKU 4210', length: 120, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Raw grey', woodColor: 'Natural Oak', skuType: 'sku4210' };
     const default300: SavedSKU = { name: 'SKU 300', length: 120, height: 10, wallDistance: 8, hasShelves: false, isFreestanding: false, colorName: 'Raw grey', woodColor: 'Natural Oak', skuType: 'sku300' };
     const default103: SavedSKU = { name: 'SKU 103', length: 120, height: 10, wallDistance: 15, hasShelves: false, isFreestanding: false, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku103' };
@@ -3959,9 +4863,55 @@ export default function App() {
     const default129: SavedSKU = { name: 'SKU 129', length: 100, height: 70, wallDistance: 23, hasShelves: true, isFreestanding: false, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku129', tiers: 3 };
     const default130: SavedSKU = { name: 'SKU 130', length: 100, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku130' };
     const default131: SavedSKU = { name: 'SKU 131', length: 100, height: 160, wallDistance: 30, hasShelves: true, isFreestanding: false, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku131' };
+    const default132: SavedSKU = { name: 'SKU 132', length: 100, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku132' };
+    const default133: SavedSKU = { name: 'SKU 133', length: 60, height: 5, wallDistance: 20, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku133', woodColor: 'Natural Oak' };
+    const default134: SavedSKU = { name: 'SKU 134', length: 50, height: 0, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku134' };
+    const default135: SavedSKU = { name: 'SKU 135', length: 120, height: 100, wallDistance: 0, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku135' };
+    const default136: SavedSKU = { name: 'SKU 136', length: 100, height: 0, wallDistance: 10, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku136' };
+    const default137: SavedSKU = { name: 'SKU 137', length: 100, height: 0, wallDistance: 10, hasShelves: true, isFreestanding: false, colorName: 'Black', skuType: 'sku137' };
+    const default138: SavedSKU = { name: 'SKU 138', length: 12, height: 0, wallDistance: 10, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku138' };
+    const default140: SavedSKU = { name: 'SKU 140', length: 200, height: 0, wallDistance: 26.4, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku140' };
+    const default141: SavedSKU = { name: 'SKU 141', length: 120, height: 80, wallDistance: 40, hasShelves: false, isFreestanding: true, colorName: 'Black', skuType: 'sku141' };
+    const default142: SavedSKU = { name: 'SKU 142', length: 100, height: 0, wallDistance: 20, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku142' };
+    const default143: SavedSKU = { name: 'SKU 143', length: 200, height: 100, wallDistance: 0, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku143' };
+    const default144: SavedSKU = { name: 'SKU 144', length: 120, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku144' };
+    const default145: SavedSKU = { name: 'SKU 145', length: 120, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku145' };
+    const default146: SavedSKU = { name: 'SKU 146', length: 120, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku146' };
+    const default147: SavedSKU = { name: 'SKU 147', length: 120, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku147' };
+    const default148: SavedSKU = { name: 'SKU 148', length: 120, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku148' };
+    const default149: SavedSKU = { name: 'SKU 149', length: 120, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku149' };
+    const default150: SavedSKU = { name: 'SKU 150', length: 120, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku150' };
+    const default151: SavedSKU = { name: 'SKU 151', length: 120, height: 160, wallDistance: 23, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku151' };
+    const default152: SavedSKU = { name: 'SKU 152', length: 120, height: 160, wallDistance: 23, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku152' };
+    const default153: SavedSKU = { name: 'SKU 153', length: 120, height: 160, wallDistance: 23, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku153' };
+    const default154: SavedSKU = { name: 'SKU 154', length: 120, height: 160, wallDistance: 23, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku154' };
+    const default155: SavedSKU = { name: 'SKU 155', length: 60, height: 0, wallDistance: 20, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku155' };
+    const default156: SavedSKU = { name: 'SKU 156', length: 120, height: 92, wallDistance: 23, hasShelves: false, isFreestanding: true, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku156', tiers: 4 };
+    const default157: SavedSKU = { name: 'SKU 157', length: 120, height: 92, wallDistance: 23, hasShelves: false, isFreestanding: true, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku157', tiers: 4 };
+    const default158: SavedSKU = { name: 'SKU 158', length: 60, height: 0, wallDistance: 20, hasShelves: true, isFreestanding: false, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku158' };
+    const default159: SavedSKU = { name: 'SKU 159', length: 100, height: 0, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku159' };
+    const default160: SavedSKU = { name: 'SKU 160', length: 20, height: 0, wallDistance: 20, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku160' };
+    const default161: SavedSKU = { name: 'SKU 161', length: 60, height: 0, wallDistance: 20, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku161' };
+    const default162: SavedSKU = { name: 'SKU 162', length: 120, height: 100, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku162' };
+    const default163: SavedSKU = { name: 'SKU 163', length: 120, height: 90, wallDistance: 23, hasShelves: false, isFreestanding: true, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku163', tiers: 2 };
+    const default164: SavedSKU = { name: 'SKU 164', length: 120, height: 90, wallDistance: 15, hasShelves: false, isFreestanding: true, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku164', tiers: 2 };
+    const default165: SavedSKU = { name: 'SKU 165', length: 120, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku165' };
+    const default166: SavedSKU = { name: 'SKU 166', length: 15, height: 0, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku166' };
+    const default167: SavedSKU = { name: 'SKU 167', length: 30, height: 0, wallDistance: 0, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku167' };
+    const default168: SavedSKU = { name: 'SKU 168', length: 120, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: true, colorName: 'Black', skuType: 'sku168' };
+    const default169: SavedSKU = { name: 'SKU 169', length: 200, height: 100, wallDistance: 0, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku169' };
+    const default170: SavedSKU = { name: 'SKU 170', length: 120, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku170' };
+    const default171: SavedSKU = { name: 'SKU 171', length: 100, height: 0, wallDistance: 25, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku171' };
+    const default172: SavedSKU = { name: 'SKU 172', length: 20, height: 0, wallDistance: 0, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku172' };
+    const default173: SavedSKU = { name: 'SKU 173', length: 100, height: 0, wallDistance: 0, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku173' };
+    const default174: SavedSKU = { name: 'SKU 174', length: 15, height: 0, wallDistance: 0, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku174' };
+    const default175: SavedSKU = { name: 'SKU 175', length: 15, height: 0, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku175' };
+    const default176: SavedSKU = { name: 'SKU 176', length: 15, height: 0, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku176' };
+    const default177: SavedSKU = { name: 'SKU 177', length: 120, height: 160, wallDistance: 15, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku177', tiers: 3 };
 
     const allDefaults = [
-      default4210, default300, default103, default105, default106, default107, default108, default109, default110, default111, default112, default113, default114, default115, default116, default117, default118, default119, default120, default121, default122, default123, default124, default125, default126, default127, default128, default129, default130, default131
+      default4210, default300, default103, default105, default106, default107, default108, default109, default110, default111, default112, default113, default114, default115, default116, default117, default118, default119, default120, default121, default122, default123, default124, default125, default126, default127, default128, default129, default130, default131, default132, default133, default134, default135, default136, default137, default138,
+      default140, default141, default142, default143, default144, default145, default146, default147, default148, default149, default150, default151, default152, default153, default154, default155, default156, default157, default158, default159, default160, default161, default162, default163, default164, default165, default166, default167, default168, default169, default170, default171, default172, default173, default174, default175, default176, default177
     ];
 
     const saved = localStorage.getItem('savedSKUs');
@@ -4034,6 +4984,7 @@ export default function App() {
       { name: 'SKU 000', length: 100, height: 80, wallDistance: 30, hasShelves: true, isFreestanding: false, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku000' },
       { name: 'SKU 102', length: 120, height: 0, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Raw grey', woodColor: 'Natural Oak', skuType: 'sku102' },
       { name: 'SKU 200', length: 80, height: 0, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Raw grey', woodColor: 'Natural Oak', skuType: 'sku200' },
+      { name: 'SKU 137', length: 100, height: 0, wallDistance: 10, hasShelves: true, isFreestanding: false, colorName: 'Black', skuType: 'sku137' },
       ...allDefaults
     ];
   });
@@ -5544,7 +6495,7 @@ export default function App() {
                       </div>
                       <input
                         type="range"
-                        min={skuType === 'sku116' ? 50 : 30} max="400" step="5"
+                        min={skuType === 'sku116' ? 50 : 30} max={(skuType === 'sku136' || skuType === 'sku137') ? "600" : "400"} step="5"
                         value={length}
                         onChange={(e) => setLength(Number(e.target.value))}
                         className="w-full accent-black h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
@@ -5552,7 +6503,7 @@ export default function App() {
                     </div>
                   )}
 
-                  {(skuType === 'sku106' || skuType === 'sku107' || skuType === 'sku129') && (
+                  {(skuType === 'sku106' || skuType === 'sku107' || skuType === 'sku129' || skuType === 'sku177') && (
                     <div>
                       <div className="flex justify-between mb-2">
                         <label className="text-xs font-bold text-gray-700">Tiers</label>
@@ -5568,7 +6519,7 @@ export default function App() {
                     </div>
                   )}
 
-                  {((skuType as string) === 'standard' || skuType === 'sku000' || skuType === 'sku100' || skuType === 'sku4210' || skuType === 'sku105' || skuType === 'sku114' || skuType === 'sku116' || skuType === 'sku112' || skuType === 'sku111' || skuType === 'sku113' || skuType === 'sku117' || skuType === 'sku118' || skuType === 'sku119' || skuType === 'sku120' || skuType === 'sku121' || skuType === 'sku122' || skuType === 'sku123' || skuType === 'sku126' || skuType === 'sku127' || skuType === 'sku128' || skuType === 'sku130' || skuType === 'sku131') && (
+                  {((skuType as string) === 'standard' || skuType === 'sku000' || skuType === 'sku100' || skuType === 'sku4210' || skuType === 'sku105' || skuType === 'sku114' || skuType === 'sku116' || skuType === 'sku112' || skuType === 'sku111' || skuType === 'sku113' || skuType === 'sku117' || skuType === 'sku118' || skuType === 'sku119' || skuType === 'sku120' || skuType === 'sku121' || skuType === 'sku122' || skuType === 'sku123' || skuType === 'sku126' || skuType === 'sku127' || skuType === 'sku128' || skuType === 'sku130' || skuType === 'sku131' || skuType === 'sku132' || skuType === 'sku133' || skuType === 'sku135') && (
                     <div>
                       <div className="flex justify-between mb-2">
                         <label className="text-xs font-bold text-gray-700">Height</label>
@@ -5576,7 +6527,7 @@ export default function App() {
                       </div>
                       <input
                         type="range"
-                        min={skuType === 'sku119' ? 5 : skuType === 'sku116' ? 30 : skuType === 'sku122' ? 2 : skuType === 'sku128' ? 15 : 20} max={skuType === 'sku122' ? 10 : skuType === 'sku128' ? 100 : 250} step={skuType === 'sku122' ? 1 : 5}
+                        min={skuType === 'sku119' ? 5 : skuType === 'sku116' || skuType === 'sku133' ? 5 : skuType === 'sku122' ? 2 : skuType === 'sku128' ? 15 : 20} max={skuType === 'sku122' ? 10 : skuType === 'sku133' ? 30 : skuType === 'sku128' ? 100 : 250} step={skuType === 'sku122' || skuType === 'sku133' ? 1 : 5}
                         value={height}
                         onChange={(e) => setHeight(Number(e.target.value))}
                         className="w-full accent-black h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
@@ -5696,11 +6647,11 @@ export default function App() {
                   </div>
                 </div>
 
-                {(skuType === 'standard' || skuType === 'sku107' || skuType === 'sku108' || skuType === 'sku109' || skuType === 'sku110' || skuType === 'sku115' || skuType === 'sku127' || skuType === 'sku128' || skuType === 'sku131') && (
+                {(skuType === 'standard' || skuType === 'sku107' || skuType === 'sku108' || skuType === 'sku109' || skuType === 'sku110' || skuType === 'sku115' || skuType === 'sku127' || skuType === 'sku128' || skuType === 'sku131' || skuType === 'sku133' || skuType === 'sku137') && (
                   <>
                     <div className="flex items-center justify-between p-3 bg-gray-50 rounded-2xl border border-gray-100">
                       <div className="flex items-center gap-2">
-                        <label className="text-xs font-bold text-gray-700">Include Shelves</label>
+                        <label className="text-xs font-bold text-gray-700">{skuType === 'sku137' ? 'Include End Caps' : 'Include Shelves'}</label>
                         <Tooltip text="Add wooden shelves to the rack">
                           <InfoIcon />
                         </Tooltip>

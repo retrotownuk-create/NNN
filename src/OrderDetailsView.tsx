@@ -109,7 +109,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       const numPipes = Math.ceil(length / 120);
       const numMounts = numPipes + 1;
       extra += getExtraCouplings(wallDistance - 6.6, numMounts);
-    } else if (skuType === 'sku105' || skuType === 'sku113') {
+    } else if (skuType === 'sku105' || skuType === 'sku113' || skuType === 'sku136' || skuType === 'sku137' || skuType === 'sku138') {
       extra = 0;
     } else if (skuType === 'sku114') {
       extra += getExtraCouplings(wallDistance - 6.6, 4);
@@ -135,12 +135,28 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       extra += getExtraCouplings(height - 3, numLegs); // vertical legs
       extra += getExtraCouplings(segmentLength - 3, numSegments); // 4 horizontal segments
     } else if (skuType === 'sku117' || skuType === 'sku118' || skuType === 'sku119') {
-      extra += getExtraCouplings(skuType === 'sku119' ? height - 4.4 : wallDistance - 4.4, 2);
+      extra += getExtraCouplings(skuType === 'sku119' ? height - 4.4 : wallDistance - 3.7, 2);
       if (length > 120) {
         extra += getExtraCouplings((length - 4.4) / 2, 2);
       } else {
         extra += getExtraCouplings(length - 4.4, 1);
       }
+    } else if (skuType === 'sku155') {
+      // Couplings calculation for sku155 is handled completely locally in its SKU block
+    } else if (skuType === 'sku158') {
+      if (length > 120) {
+        extra += getExtraCouplings((length - 8) / 2, 2);
+      } else {
+        extra += getExtraCouplings(length - 8, 1);
+      }
+    } else if (skuType === 'sku159' || skuType === 'sku160' || skuType === 'sku161') {
+      if (length > 120) {
+        extra += getExtraCouplings((length - 8) / 2, 2);
+      } else {
+        extra += getExtraCouplings(length - 8, 1);
+      }
+    } else if (skuType === 'sku162' || skuType === 'sku163' || skuType === 'sku164' || skuType === 'sku165' || skuType === 'sku166' || skuType === 'sku167' || skuType === 'sku168') {
+      extra = 0;
     } else {
       if (hasShelves) {
         extra += getExtraCouplings(33.5, 2);
@@ -176,6 +192,35 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     else addPipes(length - 3, 2, 'p-horiz-bars');
   } else if (skuType === 'sku106') {
     addPipes(23, 2 * (tiers - 1), 'p-vert-tier');
+  } else if (skuType === 'sku156') {
+    addPipes(23, 2 * (tiers - 1), 'p-vert-tier');
+    addPipes(5, 4, 'p-feet');
+  } else if (skuType === 'sku157') {
+    addPipes(23, 2 * (tiers - 1), 'p-vert-tier');
+    addPipes(5, 4, 'p-feet');
+  } else if (skuType === 'sku158') {
+    addPipes(8, 2, 'p-wall-conn');
+    addPipes(5, 2, 'p-fwd-conn'); // from Tee to Elbow
+    addPipes(5, 2, 'p-up-conn'); // from Tee to top Flange
+    addPipes(length - 8, 1, 'p-horiz-bar');
+  } else if (skuType === 'sku159') {
+    addPipes(30, 2, 'p-wall-conn');
+    addPipes(35, 2, 'p-angled');
+    if (length > 120) addPipes((length - 8) / 2, 2, 'p-horiz-bar');
+    else addPipes(length - 8, 1, 'p-horiz-bar');
+  } else if (skuType === 'sku160') {
+    addPipes(wallDistance - 6.6, 2, 'p-wall-conn');
+    const angledLength = Math.sqrt(Math.pow(wallDistance, 2) + Math.pow(wallDistance, 2));
+    addPipes(angledLength, 1, 'p-angled');
+    const hLen = length / 2 - 2.2;
+    addPipes(hLen, 2, 'p-horiz-bar');
+  } else if (skuType === 'sku161') {
+    addPipes(30, 2, 'p-wall-conn');
+    addPipes(35, 3, 'p-angled');
+    const pLen = Math.max(0, (length / 2) - 10.1);
+    addPipes(pLen, 2, 'p-horiz-bar');
+  } else if (skuType === 'sku162') {
+    // Only shelf
   } else if (skuType === 'sku107') {
     addPipes(23, 2 * tiers, 'p-vert-tier');
     addPipes(27 - 6.6, 2 * (tiers + 1), 'p-wall-conn');
@@ -195,14 +240,13 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     } else {
       addPipes(length - 3, 2, 'p-horiz-rail');
     }
-  } else if (hasShelves && skuType !== 'sku108' && skuType !== 'sku109' && skuType !== 'sku110' && skuType !== 'sku111' && skuType !== 'sku112' && skuType !== 'sku113' && skuType !== 'sku114' && skuType !== 'sku115' && skuType !== 'sku116' && skuType !== 'sku117' && skuType !== 'sku118' && skuType !== 'sku119' && skuType !== 'sku120' && skuType !== 'sku121' && skuType !== 'sku122' && skuType !== 'sku123' && skuType !== 'sku124' && skuType !== 'sku125' && skuType !== 'sku126' && skuType !== 'sku127' && skuType !== 'sku128' && skuType !== 'sku129' && skuType !== 'sku130' && skuType !== 'sku131') {
-    addPipes(33.5, 2, 'p-vert-bot');
+  } else if (hasShelves && skuType !== 'sku108' && skuType !== 'sku109' && skuType !== 'sku110' && skuType !== 'sku111' && skuType !== 'sku112' && skuType !== 'sku113' && skuType !== 'sku114' && skuType !== 'sku115' && skuType !== 'sku116' && skuType !== 'sku117' && skuType !== 'sku118' && skuType !== 'sku119' && skuType !== 'sku120' && skuType !== 'sku121' && skuType !== 'sku122' && skuType !== 'sku123' && skuType !== 'sku124' && skuType !== 'sku125' && skuType !== 'sku126' && skuType !== 'sku127' && skuType !== 'sku128' && skuType !== 'sku129' && skuType !== 'sku130' && skuType !== 'sku131' && skuType !== 'sku132' && skuType !== 'sku133' && skuType !== 'sku134' && skuType !== 'sku135' && skuType !== 'sku136' && skuType !== 'sku137' && skuType !== 'sku138' && skuType !== 'sku140' && skuType !== 'sku141' && skuType !== 'sku142' && skuType !== 'sku143' && skuType !== 'sku144' && skuType !== 'sku145' && skuType !== 'sku146' && skuType !== 'sku147' && skuType !== 'sku148' && skuType !== 'sku149' && skuType !== 'sku150' && skuType !== 'sku151' && skuType !== 'sku152' && skuType !== 'sku153' && skuType !== 'sku154' && skuType !== 'sku155' && skuType !== 'sku156' && skuType !== 'sku157' && skuType !== 'sku158' && skuType !== 'sku159' && skuType !== 'sku160' && skuType !== 'sku161' && skuType !== 'sku162' && skuType !== 'sku163' && skuType !== 'sku164' && skuType !== 'sku165' && skuType !== 'sku166' && skuType !== 'sku167' && skuType !== 'sku168' && skuType !== 'sku169' && skuType !== 'sku170' && skuType !== 'sku171' && skuType !== 'sku172' && skuType !== 'sku173' && skuType !== 'sku174' && skuType !== 'sku175' && skuType !== 'sku176' && skuType !== 'sku177') {
     addPipes(40.0, 2, 'p-vert-mid');
     addPipes((height - 75) / 2, 2, 'p-vert-top1');
     addPipes((height - 75) / 2, 2, 'p-vert-top2');
     addPipes(wallDistance - 6.6, 6, 'p-wall-conn');
   } else if (skuType === 'sku117' || skuType === 'sku118') {
-    addPipes(wallDistance - 6.6, 2, 'p-wall-conn');
+    addPipes(wallDistance - 3.7, 2, 'p-wall-conn');
     addPipes(height - 1.5 - (skuType === 'sku118' ? 1.5 : 0), 2, 'p-vert');
     if (length > 120) addPipes((length - 4.4) / 2, 2, 'p-horiz-bar');
     else addPipes(length - 4.4, 1, 'p-horiz-bar');
@@ -279,15 +323,23 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     if (skuType === 'sku111' || skuType === 'sku113' || skuType === 'sku119') {
       addPipes(height - 4.4, (skuType === 'sku113' ? 1 : 2), 'p-vert-drop');
     } else {
-      // SKU 117, 118: Wall-mounted rails with hex nipple connections
-      addPipes(wallDistance - 6.6, 2, 'p-wall-conn');
-      addFitting('f-hex-nipples', 'Hex Nipples', quantity * 2);
-      addFitting('f-couplings', 'Couplings', quantity * 2);
+      // SKU 117, 118: Wall-mounted rails
+      addPipes(wallDistance - 3.7, 2, 'p-wall-conn');
     }
     if (length > 120) addPipes((length - 4.4) / 2, 2, 'p-horiz-bar');
     else addPipes(length - 4.4, 1, 'p-horiz-bar');
-  } else if (skuType !== 'sku108' && skuType !== 'sku109' && skuType !== 'sku110' && skuType !== 'sku111' && skuType !== 'sku112' && skuType !== 'sku113' && skuType !== 'sku114' && skuType !== 'sku115' && skuType !== 'sku116' && skuType !== 'sku117' && skuType !== 'sku118' && skuType !== 'sku119' && skuType !== 'sku120' && skuType !== 'sku121' && skuType !== 'sku122' && skuType !== 'sku123' && skuType !== 'sku124' && skuType !== 'sku125' && skuType !== 'sku126' && skuType !== 'sku127' && skuType !== 'sku128') {
+  } else if (skuType === 'sku177') {
+    const numPipes = Math.ceil(length / 120);
+    const numMounts = numPipes + 1;
+    addPipes(Math.max(0, wallDistance - 3.0), (numMounts * 1), 'p-wall-conn');
+    addPipes(height - 3, 2, 'p-vert-drop');
+    const pipes = getPipesForLength(length);
+    pipes.forEach((p, i) => addPipes(p, 1, `p-horiz-${i}`));
+  } else if (skuType !== 'sku108' && skuType !== 'sku109' && skuType !== 'sku110' && skuType !== 'sku111' && skuType !== 'sku112' && skuType !== 'sku113' && skuType !== 'sku114' && skuType !== 'sku115' && skuType !== 'sku116' && skuType !== 'sku117' && skuType !== 'sku118' && skuType !== 'sku119' && skuType !== 'sku120' && skuType !== 'sku121' && skuType !== 'sku122' && skuType !== 'sku123' && skuType !== 'sku124' && skuType !== 'sku125' && skuType !== 'sku126' && skuType !== 'sku127' && skuType !== 'sku128' && skuType !== 'sku129' && skuType !== 'sku130' && skuType !== 'sku131' && skuType !== 'sku132' && skuType !== 'sku133' && skuType !== 'sku134' && skuType !== 'sku135' && skuType !== 'sku136' && skuType !== 'sku137' && skuType !== 'sku138' && skuType !== 'sku140' && skuType !== 'sku141' && skuType !== 'sku142' && skuType !== 'sku143' && skuType !== 'sku144' && skuType !== 'sku145' && skuType !== 'sku146' && skuType !== 'sku147' && skuType !== 'sku148' && skuType !== 'sku149' && skuType !== 'sku150' && skuType !== 'sku151' && skuType !== 'sku152' && skuType !== 'sku153' && skuType !== 'sku154' && skuType !== 'sku155' && skuType !== 'sku156' && skuType !== 'sku157' && skuType !== 'sku158' && skuType !== 'sku159' && skuType !== 'sku160' && skuType !== 'sku161' && skuType !== 'sku162' && skuType !== 'sku163' && skuType !== 'sku164' && skuType !== 'sku165' && skuType !== 'sku166' && skuType !== 'sku167' && skuType !== 'sku168' && skuType !== 'sku169' && skuType !== 'sku170' && skuType !== 'sku171' && skuType !== 'sku172' && skuType !== 'sku173' && skuType !== 'sku174' && skuType !== 'sku175' && skuType !== 'sku176' && skuType !== 'sku177') {
     addPipes(height - (isFreestanding ? 7 : 1.5), 2, 'p-vert');
+    addPipes(wallDistance - 6.6, 2, 'p-wall-conn');
+    if (length > 120) addPipes((length - 3) / 2, 2, 'p-horiz-bar');
+    else addPipes(length - 3, 1, 'p-horiz-bar');
   }
   if (skuType === 'standard') {
     if (length > 120) addPipes((length - 3) / 2, 2, 'p-horiz-bar');
@@ -378,8 +430,103 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-couplings', 'Couplings', quantity * 3);
   } else if (skuType === 'sku106') {
     addFitting('f-wall-flanges', 'Flanges', quantity * 4 * (tiers - 1));
-    if (tiers > 1) {
-      addFitting('f-t-fittings', 'T-Fittings', quantity * 2 * (tiers - 1));
+  } else if (skuType === 'sku156') {
+    addFitting('f-wall-flanges', 'Flanges', quantity * (4 * (tiers - 1) + 8)); // 8 flanges for the 4 x 5cm feet (one top, one bottom)
+  } else if (skuType === 'sku157') {
+    addFitting('f-wall-flanges', 'Flanges', quantity * (4 * (tiers - 1) + 4)); // 4 less flanges because bottom 4 are reducers
+    addFitting('f-reducers', 'Reducers', quantity * 4); // 4 bottom feet
+  } else if (skuType === 'sku158') {
+    addFitting('f-wall-flanges', 'Flanges', quantity * 4);
+    addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
+    addFitting('f-90-elbows', '90° Elbows', quantity * 2);
+  } else if (skuType === 'sku159') {
+    addFitting('f-wall-flanges', 'Flanges', quantity * 4);
+    addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
+    addFitting('f-45-elbows', '45° Elbows', quantity * 2);
+    addFitting('f-90-elbows', '90° Elbows', quantity * 2);
+    addFitting('f-close-nipples', 'Close Nipples', quantity * 4);
+  } else if (skuType === 'sku160') {
+    addFitting('f-wall-flanges', 'Flanges', quantity * 3);
+    addFitting('f-t-fittings', 'T-Fittings', quantity * 1);
+    addFitting('f-45-elbows', '45° Elbows', quantity * 1);
+    addFitting('f-90-elbows', '90° Elbows', quantity * 2);
+    addFitting('f-close-nipples', 'Close Nipples', quantity * 1);
+    addFitting('f-couplings', 'Couplings', quantity * (getExtraCouplings(length / 2 - 2.2, 1) * 2));
+  } else if (skuType === 'sku161') {
+    addFitting('f-wall-flanges', 'Flanges', quantity * 5);
+    addFitting('f-t-fittings', 'T-Fittings', quantity * 3);
+    addFitting('f-45-elbows', '45° Elbows', quantity * 3);
+    addFitting('f-90-elbows', '90° Elbows', quantity * 2);
+    addFitting('f-close-nipples', 'Close Nipples', quantity * 5);
+    const pLen = Math.max(0, (length / 2) - 10.1);
+    const cQty = getExtraCouplings(pLen, 1);
+    if (cQty > 0) addFitting('f-couplings', 'Couplings', quantity * cQty * 2);
+  } else if (skuType === 'sku162') {
+    // Nothing, this SKU only has a shelf
+  } else if (skuType === 'sku163' || skuType === 'sku164') {
+    addPipes(height - 5, 2, 'p-legs');
+    addFitting('f-floor-flanges', 'Flanges', quantity * 4);
+    const legCouplings = getExtraCouplings(height - 5, 2);
+    if (legCouplings > 0) {
+      addFitting('f-couplings', 'Couplings', quantity * legCouplings);
+    }
+  } else if (skuType === 'sku165') {
+    addPipes(height - 5, 1, 'p-down-leg');
+    addPipes(wallDistance - 6.6, 2, 'p-wall-conn');
+    const railLength = (length - 4.4) / 2;
+    addPipes(railLength, 2, 'p-horiz-bar');
+
+    addFitting('f-elbows', 'Elbows (90°)', quantity * 2);
+    addFitting('f-tees', 'T-Fittings', quantity * 1);
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
+    addFitting('f-floor-flanges', 'Floor Flanges', quantity * 1);
+
+    const legCouplings = getExtraCouplings(height - 5, 1);
+    const railCouplings = getExtraCouplings(railLength, 2);
+    const totalCouplings = legCouplings + railCouplings;
+    if (totalCouplings > 0) {
+      addFitting('f-couplings', 'Couplings', quantity * totalCouplings);
+    }
+  } else if (skuType === 'sku166') {
+    addPipes(5, 1, 'p-wall-conn');
+    addPipes(15, 2, 'p-arms');
+
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
+    addFitting('f-corner-elbows', 'Corner Elbows (3-way)', quantity * 1);
+    addFitting('f-end-caps', 'End Caps', quantity * 2);
+  } else if (skuType === 'sku167') {
+    addPipes(length, 1, 'p-pole');
+    addFitting('f-floor-flanges', 'Flanges', quantity * 2);
+
+    // Calculate and add couplings if pipe gets split
+    const railCouplings = getExtraCouplings(length, 1);
+    if (railCouplings > 0) {
+      addFitting('f-couplings', 'Couplings', quantity * railCouplings);
+    }
+  } else if (skuType === 'sku168') {
+    const baseArmHeight = 5.75;
+    const spreadArm = wallDistance / 2;
+    const unionHeight = (height + baseArmHeight) / 2;
+
+    // Pipes
+    addPipes((height - baseArmHeight) / 2 - 3.6, 4, 'p-leg');
+    addPipes(length - 3.0, 2, 'p-horiz-rail');
+    addPipes(spreadArm - 2.0, 4, 'p-stabilizer-arm');
+
+    // Fittings
+    addFitting('f-hex-nipples', 'Hex Nipples', quantity * 8); // 6 down feet + 2 outward horizontal
+    addFitting('f-90-elbows', '90° Elbows', quantity * 8);
+    addFitting('f-unions', 'Unions', quantity * 2);
+    addFitting('f-5way-fittings', '5-Way Fittings', quantity * 2);
+    addFitting('f-floor-flanges', 'Floor Flanges', quantity * 6);
+
+    // Couplings
+    let couplings = 0;
+    couplings += getExtraCouplings((height - baseArmHeight) / 2 - 3.6, 4);
+    couplings += getExtraCouplings(length - 3.0, 2);
+    couplings += getExtraCouplings(spreadArm - 2.0, 4);
+    if (couplings > 0) {
+      addFitting('f-couplings', 'Couplings', quantity * couplings);
     }
   } else if (skuType === 'sku107') {
     const numWallMounts = 2 * (tiers + 1);
@@ -512,6 +659,343 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-t-fittings', 'T-Fittings', quantity * 3);
     addFitting('f-hex-nipples', 'Hex Nipples', quantity * 3);
     addFitting('f-couplings', 'Couplings', quantity * 3);
+  } else if (skuType === 'sku140') {
+    // Wall-mounted triple support rack with Elbows at ends
+    addPipes(wallDistance - 6.6, 3, 'p-support-arm');
+    addPipes(length / 2 - 5.0, 2, 'p-horizontal-rail');
+    addFitting('f-floor-flanges', 'Floor Flanges', quantity * 3);
+    addFitting('f-t-fittings', 'T-Fittings', quantity * 1);
+    addFitting('f-90-elbows', '90° Elbows', quantity * 2);
+    addFitting('f-hex-nipples', 'Hex Nipples', quantity * 3);
+    addFitting('f-couplings', 'Couplings', quantity * 3);
+  } else if (skuType === 'sku141') {
+    addPipes(Math.max(0.1, height - 5.2), 4, 'p-leg-vert'); // 4 vertical legs
+    addPipes(wallDistance, 2, 'p-leg-depth'); // 2 depth crossbars
+
+    addFitting('f-floor-flanges', 'Floor Flanges', quantity * 4);
+    addFitting('f-top-flanges', 'Top Flanges', quantity * 4);
+    addFitting('f-t-fittings', 'T-Fittings', quantity * 4);
+    addFitting('f-hex-nipples', 'Hex Nipples', quantity * 4);
+  } else if (skuType === 'sku142') {
+    addPipes(Math.max(0, wallDistance - 2), 2, 'p-wall-arms');
+    addPipes(Math.max(0, length - 4.4), 1, 'p-horizontal-rail');
+
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
+    addFitting('f-90-elbows', '90° Elbows', quantity * 2);
+    addFitting('f-couplings', 'Couplings', quantity * getExtraCouplings(Math.max(0, length - 4.4), 1));
+  } else if (skuType === 'sku171') {
+    addPipes(Math.max(0, wallDistance - 5), 2, 'p-wall-arms');
+    addPipes(Math.max(0, length - 10), 1, 'p-horizontal-rail');
+
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
+    addFitting('f-90-elbows', '90° Elbows', quantity * 2);
+    addFitting('f-couplings', 'Couplings', quantity * getExtraCouplings(Math.max(0, length - 10), 1));
+  } else if (skuType === 'sku173') {
+    addPipes(Math.max(0, length - 10), 1, 'p-diagonal');
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
+    addFitting('f-45-elbows', '45° Elbows', quantity * 2);
+    addFitting('f-hex-nipples', 'Hex Nipples', quantity * 2);
+    addFitting('f-couplings', 'Couplings', quantity * getExtraCouplings(Math.max(0, length - 10), 1));
+  } else if (skuType === 'sku176') {
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
+    addFitting('f-90-elbows', '90° Elbows', quantity * 1);
+    addFitting('f-hex-nipples', 'Hex Nipples', quantity * 2);
+    addFitting('f-end-caps', 'Metal End Caps (rod)', quantity * 1);
+  } else if (skuType === 'sku177') {
+    const numRails = Math.max(2, config.tiers || 3);
+    const bottomY = 15;
+    const topY = height;
+
+    // The user requested 20cm pipes "inbetween"
+    const vertLength = 20;
+
+    // Vertical pipes: 2 poles, each has (numRails-1) segments + 1 top stub
+    addPipes(vertLength, (numRails - 1) * 2, 'p-vert');
+    addPipes(5, 2, 'p-stub-top');
+
+    // Wall pipes: 2 poles * numRails
+    addPipes(Math.max(0, wallDistance - 3.3), numRails * 2, 'p-wall-conn');
+
+    // Bottom rail
+    addPipes(Math.max(0, length - 3.6), 1, 'p-bottom-rail');
+
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * numRails * 2);
+    addFitting('f-corner-elbows', 'Corner Elbows', quantity * 2);
+
+    if (numRails > 2) {
+      addFitting('f-t-fittings', 'T-Fittings', quantity * (numRails - 2) * 2);
+    }
+    // Top uses T-fitting as well
+    addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
+    addFitting('f-end-caps', 'In caps', quantity * 2);
+  } else if (skuType === 'sku175') {
+    addPipes(15, 1, 'p-peg');
+    addPipes(5, 1, 'p-wall-conn');
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
+    addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
+    addFitting('f-hex-nipples', 'Hex Nipples', quantity * 1);
+    addFitting('f-in-caps', 'In caps', quantity * 2);
+    addFitting('f-end-caps', 'Metal End Caps (rod)', quantity * 1);
+  } else if (skuType === 'sku174') {
+    addPipes(Math.max(0, length), 1, 'p-peg');
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
+    addFitting('f-90-elbows', '90° Elbows', quantity * 1);
+    addFitting('f-hex-nipples', 'Hex Nipples', quantity * 1);
+    addFitting('f-in-caps', 'In caps', quantity * 1);
+  } else if (skuType === 'sku172') {
+    addPipes(Math.max(0, length), 1, 'p-peg');
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
+    addFitting('f-end-caps', 'End Caps', quantity * 1);
+  } else if (skuType === 'sku143') {
+    const numMounts = Math.max(2, Math.ceil(length / 120) + 1);
+    const hd = config.handrailDiameter || '33mm';
+
+    // Main handrail pipes (segments separated by T-fittings)
+    const mountSpacing = length / (numMounts - 1);
+    const railLength = Math.max(0, mountSpacing - 3.0);
+    const railPipes = getPipesForLength(railLength);
+    const railCounts: Record<number, number> = {};
+    railPipes.forEach(p => railCounts[p] = (railCounts[p] || 0) + ((numMounts - 1) * quantity));
+
+    Object.entries(railCounts).forEach(([size, c]) => {
+      items.push({ id: `pipe-rail-${size}`, partName: `${size} cm pipe (${hd} Handrail)`, qty: c, type: 'pipe', color: colorName });
+    });
+
+    const numRailCouplings = Math.max(0, railPipes.length - 1) * (numMounts - 1);
+    if (numRailCouplings > 0) {
+      items.push({ id: `f-couplings-rail-${hd}`, partName: `Couplings (${hd} Handrail)`, qty: numRailCouplings * quantity, type: 'fitting', color: colorName });
+    }
+
+    // Wall stem pipes
+    const stemPipes = getPipesForLength(Math.max(0, wallDistance - 2));
+    const stemCounts: Record<number, number> = {};
+    stemPipes.forEach(p => stemCounts[p] = (stemCounts[p] || 0) + (numMounts * quantity));
+
+    Object.entries(stemCounts).forEach(([size, c]) => {
+      items.push({ id: `pipe-stem-${size}`, partName: `${size} cm pipe (${hd} Wall-Mount)`, qty: c, type: 'pipe', color: colorName });
+    });
+
+    // Fittings
+    items.push({ id: `f-wall-flanges-${hd}`, partName: `Wall Flanges (${hd})`, qty: numMounts * quantity, type: 'fitting', color: colorName });
+    items.push({ id: `f-90-elbows-${hd}`, partName: `90° Elbows (${hd})`, qty: 2 * quantity, type: 'fitting', color: colorName });
+
+    if (numMounts > 2) {
+      items.push({ id: `f-t-fittings-${hd}`, partName: `T-Fittings (${hd})`, qty: (numMounts - 2) * quantity, type: 'fitting', color: colorName });
+    }
+  } else if (skuType === 'sku169') {
+    const numMounts = Math.max(2, Math.ceil(length / 120) + 1);
+    const hd = config.handrailDiameter || '33mm';
+
+    // Main diagonal handrail pipes (segments separated by T-fittings)
+    const mountSpacing = length / (numMounts - 1);
+    const railLength = Math.max(0, mountSpacing - 3.0);
+    const railPipes = getPipesForLength(railLength);
+    const railCounts: Record<number, number> = {};
+    railPipes.forEach(p => railCounts[p] = (railCounts[p] || 0) + ((numMounts - 1) * quantity));
+
+    Object.entries(railCounts).forEach(([size, c]) => {
+      items.push({ id: `pipe-rail-${size}`, partName: `${size} cm pipe (${hd} Handrail)`, qty: c, type: 'pipe', color: colorName });
+    });
+
+    const numRailCouplings = Math.max(0, railPipes.length - 1) * (numMounts - 1);
+    if (numRailCouplings > 0) {
+      items.push({ id: `f-couplings-rail-${hd}`, partName: `Couplings (${hd} Handrail)`, qty: numRailCouplings * quantity, type: 'fitting', color: colorName });
+    }
+
+    // Fittings Bracket specifically uses explicit Hex Nipples + Base elbows instead of stem pipes
+    items.push({ id: `f-wall-flanges-${hd}`, partName: `Wall Flanges (${hd})`, qty: numMounts * quantity, type: 'fitting', color: colorName });
+    items.push({ id: `f-hex-nipples-${hd}`, partName: `Hex Nipples (${hd})`, qty: (numMounts * 2) * quantity, type: 'fitting', color: colorName }); // Down + Inward nipples
+    items.push({ id: `f-90-elbows-${hd}`, partName: `90° Elbows (${hd})`, qty: (numMounts + 2) * quantity, type: 'fitting', color: colorName }); // Corner bases + 2 ends
+
+    if (numMounts > 2) {
+      items.push({ id: `f-t-fittings-${hd}`, partName: `T-Fittings (${hd})`, qty: (numMounts - 2) * quantity, type: 'fitting', color: colorName });
+    }
+  } else if (skuType === 'sku170') {
+    const numMounts = Math.max(3, Math.ceil(length / 80) + 1);
+    const mountSpacing = length / (numMounts - 1);
+
+    // Wall stem: wallDistance - 2 = pipe cut length (23cm pipe + 2cm fittings = 25cm total)
+    addPipes(wallDistance - 2, numMounts, 'p-wall');
+
+
+    // Drop pipes: 2.5cm offset each end = 5cm total deduction
+    addPipes(Math.max(0, height - 5), 2, 'p-drop');
+
+    // Rail pipes: 2.5cm offset each end = 5cm total deduction
+    addPipes(Math.max(0, mountSpacing - 5), numMounts - 1, 'p-rail');
+
+    // Fittings
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * numMounts);
+    addFitting('f-90-elbows', '90° Elbows', quantity * 4); // 2 top + 2 bottom corners
+    addFitting('f-t-fittings', 'T-Fittings', quantity * (numMounts - 2));
+
+    // Couplings
+    const stemCouplings = numMounts * getExtraCouplings(wallDistance - 2, 1);
+    const dropCouplings = 2 * getExtraCouplings(Math.max(0, height - 5), 1);
+    const railCouplings = (numMounts - 1) * getExtraCouplings(Math.max(0, mountSpacing - 5), 1);
+    const totalCouplings = stemCouplings + dropCouplings + railCouplings;
+    if (totalCouplings > 0) {
+      addFitting('f-couplings', 'Couplings', quantity * totalCouplings);
+    }
+  } else if (skuType === 'sku144') {
+    // Wall-mounted toilet paper holder (Flange -> Pipe -> T-Fitting -> Cap + Pipe/Cap)
+    addPipes(Math.max(0, wallDistance - 2), 1, 'p-wall');
+    addPipes(Math.max(0, length), 1, 'p-roll-holder');
+
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
+    addFitting('f-t-fittings', 'T-Fittings', quantity * 1);
+    addFitting('f-in-caps', 'In caps', quantity * 2);
+  } else if (skuType === 'sku145') {
+    // Floor-to-wall clothing rack with 4 wall ties
+    addPipes(Math.max(0, length - 4.4), 1, 'p-horiz');
+    addPipes(Math.max(0, (height / 2) - 3), 2, 'p-vert-bot');
+    addPipes(Math.max(0, (height / 2) - 4), 2, 'p-vert-top');
+    addPipes(Math.max(0, wallDistance - 2), 4, 'p-wall-arms');
+
+    addFitting('f-floor-flanges', 'Floor Flanges', quantity * 2);
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 4);
+    addFitting('f-3way-corner-elbows', '3-Way Corner Elbows', quantity * 2);
+    addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
+    addFitting('f-couplings', 'Couplings', quantity * getExtraCouplings(Math.max(0, length - 4.4), 1));
+  } else if (skuType === 'sku146') {
+    // Twin brackets supporting an optional shelf
+    // Two pipes back to wall, two front pipes, and two vertical stubs under shelf
+    const zCenter = -wallDistance / 2;
+    const backLength = Math.max(0, Math.abs(-wallDistance + 1.25 - (zCenter - 2.2)));
+    const frontLength = Math.max(0, Math.abs(-1.8 - (zCenter + 2.2)));
+
+    addPipes(backLength, 2, 'p-bracket-back');
+    addPipes(frontLength, 2, 'p-bracket-front');
+    addPipes(2.3, 2, 'p-bracket-up'); // Standard short pipe underneath the shelf
+
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 4); // 2 wall, 2 shelf
+    addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
+    addFitting('f-in-caps', 'In caps', quantity * 2);
+
+    if (hasShelves) {
+      items.push({ id: `wood-shelf-${length}x${wallDistance}`, partName: `${length}x${wallDistance}x3cm Wooden Shelf`, qty: 1 * quantity, type: 'wood', color: woodColor });
+    }
+  } else if (skuType === 'sku147') {
+    // Wall-mounted two-level rack (5cm drop gap between elbows and T-fitting)
+    addPipes(Math.max(0, length - 10), 1, 'p-horiz');
+    addPipes(Math.max(0, wallDistance - 2), 4, 'p-wall-arms');
+
+    // The exact distance between 90-deg Elbow and T-Fitting is 5cm.
+    addPipes(5, 4, 'p-vert-drop');
+
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 4);
+    addFitting('f-90deg-elbows', '90° Elbows', quantity * 4);
+    addFitting('f-tees', 'T-Fittings', quantity * 2);
+    addFitting('f-couplings', 'Couplings', quantity * getExtraCouplings(Math.max(0, length - 10), 1));
+  } else if (skuType === 'sku148') {
+    // Single L-shaped Floor-to-Wall point
+    addPipes(Math.max(0, height - 2.5), 1, 'p-vert');
+    addPipes(Math.max(0, length - 2.5), 1, 'p-wall-conn');
+
+    addFitting('f-floor-flanges', 'Floor Flanges', quantity * 1);
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
+    addFitting('f-90deg-elbows', '90° Elbows', quantity * 1);
+
+    // Coupling calculation for potentially long pipes
+    const vertCouplings = getExtraCouplings(Math.max(0, height - 2.5), 1);
+    const horizCouplings = getExtraCouplings(Math.max(0, length - 2.5), 1);
+    const totalCouplings = vertCouplings + horizCouplings;
+    if (totalCouplings > 0) {
+      addFitting('f-couplings', 'Couplings', quantity * totalCouplings);
+    }
+  } else if (skuType === 'sku149') {
+    // Wall-mounted U-shaped clothes rack
+    addPipes(Math.max(0, length - 4.4), 1, 'p-horiz');       // Main cross bar
+    addPipes(Math.max(0, wallDistance - 3.5), 2, 'p-wall');  // Wall standoffs
+    addPipes(Math.max(0, height - 3.5), 2, 'p-vert');        // Vertical drops
+
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
+    addFitting('f-90deg-elbows', '90° Elbows', quantity * 4);
+
+    // Check for large gap couplings horizontally or vertically
+    const horizCouplings = getExtraCouplings(Math.max(0, length - 4.4), 1);
+    const vertCouplings = getExtraCouplings(Math.max(0, height - 3.5), 2);
+    const depthCouplings = getExtraCouplings(Math.max(0, wallDistance - 3.5), 2);
+    const totalCouplings = horizCouplings + vertCouplings + depthCouplings;
+    if (totalCouplings > 0) {
+      addFitting('f-couplings', 'Couplings', quantity * totalCouplings);
+    }
+  } else if (skuType === 'sku150') {
+    // Multi-leg floor-to-wall rack
+    const legs = length > 120 ? 3 : 2; // For standard sizing
+    const segments = legs - 1;
+
+    addPipes(Math.max(0, height - 2.5), legs, 'p-vert');       // Vertical drops
+    addPipes(Math.max(0, wallDistance - 2.5), legs, 'p-wall'); // Wall standoffs
+    addPipes(Math.max(0, (length - 4.4) / segments), segments, 'p-horiz');
+
+    addFitting('f-floor-flanges', 'Floor Flanges', quantity * legs);
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * legs);
+    addFitting('f-3way-corner-elbows', '3-Way Corner Elbows', quantity * 2);
+
+    if (legs > 2) {
+      addFitting('f-4way-fittings', '4-Way Fittings', quantity * (legs - 2));
+    }
+
+    // Couplings
+    const horizCouplings = getExtraCouplings((length - 4.4) / segments, segments);
+    const vertCouplings = getExtraCouplings(Math.max(0, height - 2.5), legs);
+    const totalCouplings = horizCouplings + vertCouplings;
+    if (totalCouplings > 0) {
+      addFitting('f-couplings', 'Couplings', quantity * totalCouplings);
+    }
+  } else if (skuType === 'sku151') {
+    // Ceiling light fixture - NO parts list exactly as requested!
+    addFitting('f-ceiling-light', 'Ceiling Light', quantity);
+  } else if (skuType === 'sku152') {
+    // Wall-mounted toilet roll holder
+    const isWallHex = wallDistance <= 5;
+
+    if (!isWallHex) {
+      addPipes(Math.max(0, wallDistance - 3.5), 1, 'p-wall');
+    }
+
+    // Exact requested pole size
+    addPipes(length, 1, 'p-horiz');
+
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
+    addFitting('f-90-elbows', '90° Elbows', quantity * 2);
+    addFitting('f-hex-nipples', 'Hex Nipples', quantity * (isWallHex ? 2 : 1));
+    addFitting('f-end-caps', 'End Caps', quantity * 1);
+  } else if (skuType === 'sku153') {
+    // 4 Independent Table Legs
+    addPipes(height, 4, 'p-vert');
+    addFitting('f-floor-flanges', 'Floor Flanges', quantity * 8);
+
+    const legCouplings = getExtraCouplings(height, 4);
+    if (legCouplings > 0) {
+      addFitting('f-couplings', 'Couplings', quantity * legCouplings);
+    }
+  } else if (skuType === 'sku154') {
+    // 1 Independent Table Leg
+    addPipes(height, 1, 'p-vert');
+    addFitting('f-floor-flanges', 'Floor Flanges', quantity * 2);
+
+    const legCouplings = getExtraCouplings(height, 1);
+    if (legCouplings > 0) {
+      addFitting('f-couplings', 'Couplings', quantity * legCouplings);
+    }
+  } else if (skuType === 'sku155') {
+    // Wall-mounted Double Towel Rack: 4 horizontal bars total (2 inner + 2 outer), same length
+    addPipes(wallDistance, 2, 'p-wall-conn');
+    addPipes(Math.max(0, length - 4.4), 2, 'p-horiz'); // 2 bars: 1 inner, 1 outer
+
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
+    addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
+    addFitting('f-hex-nipples', 'Hex Nipples', quantity * 4);
+    addFitting('f-unions', 'Unions', quantity * 2);
+    addFitting('f-elbows', '90-degree Elbows', quantity * 2);
+
+    // Couplings only needed when a single bar exceeds 120cm
+    const horizBarCouplings = getExtraCouplings(Math.max(0, length - 4.4), 2);
+    if (horizBarCouplings > 0) {
+      addFitting('f-couplings', 'Couplings', quantity * horizBarCouplings);
+    }
   } else if (skuType === 'sku125') {
     // Wall-mounted industrial hook (Single arm) - Direct Hex Nipple Connection
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
@@ -625,7 +1109,159 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     if (totalCouplings > 0) {
       addFitting('f-couplings', 'Couplings', quantity * totalCouplings);
     }
-  } else if (skuType !== 'sku108' && skuType !== 'sku109' && skuType !== 'sku110' && skuType !== 'sku111' && skuType !== 'sku113' && skuType !== 'sku116' && skuType !== 'sku119' && skuType !== 'sku120' && skuType !== 'sku121' && skuType !== 'sku122' && skuType !== 'sku123' && skuType !== 'sku124' && skuType !== 'sku125' && skuType !== 'sku126' && skuType !== 'sku127' && skuType !== 'sku128' && skuType !== 'sku129' && skuType !== 'sku130' && skuType !== 'sku131') {
+  } else if (skuType === 'sku132') {
+    // L-shaped: 2 floor posts with couplings at mid, top rail, 2 wall arms
+    const topY = height / 2;
+    const bottomY = -height / 2;
+    const pipeSpan = (topY - 2.2) - (bottomY + 1.2);
+    const pipeLen = (pipeSpan - 2.4) / 2; // Subtract Coupling space
+
+    // exact identical lengths for both halves
+    const lowerLen = pipeLen;
+    const upperLen = pipeLen;
+
+    const lowerPipes = getPipesForLength(lowerLen);
+    lowerPipes.forEach((p, i) => addPipes(p, 2, `p-lower-${i}`));
+
+    const upperPipes = getPipesForLength(upperLen);
+    upperPipes.forEach((p, i) => addPipes(p, 2, `p-upper-${i}`));
+
+    const horizPipes = getPipesForLength(length - 4.4);
+    horizPipes.forEach((p, i) => addPipes(p, 1, `p-rail-${i}`));
+
+    // Left wall arm + right wall arm
+    addPipes(wallDistance - 3.4, 2, 'p-wall-arm');
+
+    const totalCouplings132 = ((lowerPipes.length - 1) * 2) + ((upperPipes.length - 1) * 2) + (horizPipes.length - 1) + 2; // +2 = 1 per leg (mid coupling)
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
+    addFitting('f-floor-flanges', 'Floor Flanges', quantity * 2);
+    addFitting('f-corner-elbows', '3-Way Fitting', quantity * 2);  // both top corners
+    addFitting('f-couplings', 'Couplings', quantity * totalCouplings132);
+  } else if (skuType === 'sku133') {
+    // 2 independent wall brackets
+    const standoffPipeLen = Math.max(height, 2);
+
+    addPipes((wallDistance / 2) - 3.4, 2, 'p-wall-arm-back');
+    addPipes((wallDistance / 2) - 4.4, 2, 'p-wall-arm-front');
+    addPipes(standoffPipeLen, 4, 'p-standoff');
+
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
+    addFitting('f-floor-flanges', 'Floor Flanges', quantity * 4);
+    addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
+    addFitting('f-90-elbows', '90° Elbows', quantity * 2);
+  } else if (skuType === 'sku134') {
+    // Single T bar wall mount (1 flange -> wall pipe -> elbow -> hex nipple -> T-fitting -> 2 arm pipes -> 2 elbows up)
+    addPipes(wallDistance - 3.4, 1, 'p-wall-arm'); // wall flange + elbow
+
+    // Hanging bar is split exactly in half by the T-fitting.
+    // T-fitting deduction = 1.8cm for each side. End Elbow = 2.2cm.
+    // Total deduction per arm = left elbow(2.2) + T-fitting_left(1.8) = 4.0cm.
+    const armLen = length / 2;
+    const armPipes = getPipesForLength(armLen - 4.0); // T-fitting + end Elbow
+    armPipes.forEach((p, i) => addPipes(p, 2, `p-hang-arm-${i}`));
+    const extraCouplings = ((armPipes.length - 1) * 2);
+
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
+    addFitting('f-t-fittings', 'T-Fittings', quantity * 1);
+    addFitting('f-90-elbows', '90° Elbows', quantity * 3); // 2 ends + 1 center drop
+    addFitting('f-hex-nipples', 'Hex Nipples', quantity * 1);
+
+    if (extraCouplings > 0) {
+      addFitting('f-couplings', 'Couplings', quantity * extraCouplings);
+    }
+  } else if (skuType === 'sku135') {
+    // Ceiling-to-Wall L-bracket
+    // Horizontal pipe from wall flange to elbow
+    const horizPipes = getPipesForLength(length - 3.4);
+    horizPipes.forEach(p => addPipes(p, 1, 'p-wall-arm'));
+
+    // Vertical pipe from ceiling flange to elbow
+    const vertPipes = getPipesForLength(height - 3.4);
+    vertPipes.forEach(p => addPipes(p, 1, 'p-ceiling-drop'));
+
+    const numCouplings = (horizPipes.length > 0 ? horizPipes.length - 1 : 0) + (vertPipes.length > 0 ? vertPipes.length - 1 : 0);
+
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
+    addFitting('f-floor-flanges', 'Ceiling Flanges (Floor/Wall type)', quantity * 1);
+    addFitting('f-90-elbows', '90° Elbows', quantity * 1);
+
+    if (numCouplings > 0) {
+      addFitting('f-couplings', 'Couplings', quantity * numCouplings);
+    }
+  } else if (skuType === 'sku136') {
+    // Lucite Handrail
+
+    const addLucite = (size: number, count: number) => {
+      items.push({
+        id: `lucite-rod-${size.toFixed(1)}`,
+        partName: `${size.toFixed(1)} cm Lucite Rod`,
+        qty: count * quantity,
+        type: 'pipe', // Renders in the "Pipes" section
+        color: 'Clear' // Show clear as its special color
+      });
+    };
+
+    // The Lucite Rod itself
+    // Outer rods: two 15cm pieces
+    addLucite(15, 2);
+
+    // Middle rods
+    const bracketOffset = 15;
+    const middleLength = Math.max(0, length - bracketOffset * 2);
+    let numBrackets = 2; // base 2 brackets (ends)
+
+    if (middleLength > 0) {
+      const maxLuciteLen = 120;
+      const numMiddleSegs = Math.ceil(middleLength / maxLuciteLen);
+      const segLen = middleLength / numMiddleSegs;
+
+      numBrackets += (numMiddleSegs - 1);
+
+      addLucite(segLen, numMiddleSegs);
+    }
+
+    // End caps for the rod
+    addFitting('f-stop-end-caps', 'Metal End Caps (rod)', quantity * 2);
+
+    // Consolidated bracket listing
+    addFitting('f-handrail-brackets', 'Handrail Bracket', quantity * numBrackets);
+
+  } else if (skuType === 'sku138') {
+    items.push({
+      id: `lucite-rod-${length.toFixed(1)}`,
+      partName: `${length.toFixed(1)} cm Lucite Rod`,
+      qty: 1 * quantity,
+      type: 'pipe',
+      color: 'Clear'
+    });
+    addFitting('f-straight-brackets', 'Straight Handrail Bracket', quantity * 1);
+
+  } else if (skuType === 'sku137') {
+    // Straight Lucite Handrail
+    const addLucite = (size: number, count: number) => {
+      items.push({
+        id: `lucite-rod-${size.toFixed(1)}`,
+        partName: `${size.toFixed(1)} cm Lucite Rod`,
+        qty: count * quantity,
+        type: 'pipe',
+        color: 'Clear'
+      });
+    };
+
+    const maxLuciteLen = 120;
+    const numSegs = Math.ceil(length / maxLuciteLen) || 1;
+    const segLen = length / numSegs;
+
+    addLucite(segLen, numSegs);
+
+    const numBrackets = numSegs + 1;
+    addFitting('f-straight-brackets', 'Straight Handrail Bracket', quantity * numBrackets);
+
+    if (hasShelves) {
+      addFitting('f-stop-end-caps', 'Metal End Caps (rod)', quantity * 2);
+    }
+
+  } else if (skuType !== 'sku108' && skuType !== 'sku109' && skuType !== 'sku110' && skuType !== 'sku111' && skuType !== 'sku113' && skuType !== 'sku116' && skuType !== 'sku119' && skuType !== 'sku120' && skuType !== 'sku121' && skuType !== 'sku122' && skuType !== 'sku123' && skuType !== 'sku124' && skuType !== 'sku125' && skuType !== 'sku126' && skuType !== 'sku127' && skuType !== 'sku128' && skuType !== 'sku129' && skuType !== 'sku130' && skuType !== 'sku131' && skuType !== 'sku132' && skuType !== 'sku133' && skuType !== 'sku134' && skuType !== 'sku135' && skuType !== 'sku136' && skuType !== 'sku137' && skuType !== 'sku138' && skuType !== 'sku140' && skuType !== 'sku141' && skuType !== 'sku142' && skuType !== 'sku143' && skuType !== 'sku144' && skuType !== 'sku145' && skuType !== 'sku146' && skuType !== 'sku147' && skuType !== 'sku148' && skuType !== 'sku149' && skuType !== 'sku150' && skuType !== 'sku151' && skuType !== 'sku152' && skuType !== 'sku153' && skuType !== 'sku154' && skuType !== 'sku155' && skuType !== 'sku156' && skuType !== 'sku157' && skuType !== 'sku158' && skuType !== 'sku159' && skuType !== 'sku160' && skuType !== 'sku161' && skuType !== 'sku162' && skuType !== 'sku163' && skuType !== 'sku164' && skuType !== 'sku165' && skuType !== 'sku169' && skuType !== 'sku171' && skuType !== 'sku172' && skuType !== 'sku173' && skuType !== 'sku174' && skuType !== 'sku175' && skuType !== 'sku176') {
     addFitting('f-floor-flanges', 'Floor Flanges', quantity * (isFreestanding ? 4 : 2));
     if (hasShelves && !isFreestanding) {
       addFitting('f-wall-flanges', 'Wall Flanges', quantity * 6);
@@ -648,9 +1284,11 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
   if (skuType === 'sku000') {
     addWood('w-shelf', 'Shelf', quantity, `${length} × ${wallDistance} cm`);
   }
-  if ((skuType === 'sku106' || skuType === 'sku107') && hasShelves) {
-    addWood('w-shelf', 'Shelf', quantity, `${length} × 23 cm`);
-    addWood('w-shelf-tier', 'Tier Shelf', quantity * tiers, `${length} × ${wallDistance} cm`);
+  if ((skuType === 'sku106' || skuType === 'sku156' || skuType === 'sku157' || skuType === 'sku107') && hasShelves) {
+    addWood('w-shelf', 'Wood Shelf', quantity * tiers, `${length} × ${wallDistance} cm`);
+  }
+  if (skuType === 'sku158' && hasShelves) {
+    addWood('w-shelf', 'Wood Shelf', quantity, `${length} × ${wallDistance} cm`);
   }
   if (skuType === 'sku131' && hasShelves) {
     addWood('w-shelf', 'Shelf', quantity, `${length + 10} × ${wallDistance} cm`);
@@ -677,6 +1315,18 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
   if (skuType === 'sku129' && hasShelves) {
     const numShelves = tiers || 3;
     addWood('w-shelf', 'Shelf', quantity * numShelves, `${length} × ${wallDistance} cm`);
+  }
+  if (skuType === 'sku133' && hasShelves) {
+    addWood('w-shelf', 'Wood Shelf', quantity, `${length + 10} × ${wallDistance} cm`);
+  }
+  if (skuType === 'sku141' && hasShelves) {
+    addWood('w-shelf', 'Bench Top', quantity, `${length + 20} × ${wallDistance + 20} cm`);
+  }
+  if (skuType === 'sku162') {
+    addWood('w-shelf', 'Display Shelf', quantity, `${length} × ${wallDistance} cm`);
+  }
+  if (skuType === 'sku163' || skuType === 'sku164') {
+    addWood('w-shelf', 'Console Shelf', quantity, `${length} × ${wallDistance} cm`);
   }
 
   return items;
@@ -794,7 +1444,7 @@ export const OrderDetailsView = ({ order, onBack, onOrderChange, onAddSubOrder, 
                 )}
               </button>
               <button
-                onClick={() => onOpenInConfigurator?.(order.items[0])}
+                onClick={() => onOpenInConfigurator?.(order.items[0], 0)}
                 className="flex-1 py-4 flex items-center justify-center gap-2 bg-gray-50 text-gray-700 font-bold text-lg rounded-2xl border border-gray-200 hover:bg-gray-100 transition-colors shadow-sm"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
@@ -836,7 +1486,7 @@ export const OrderDetailsView = ({ order, onBack, onOrderChange, onAddSubOrder, 
                         ${calculatePrice(getCutlistItems(config)).toFixed(2)}
                       </div>
                       <button
-                        onClick={() => onOpenInConfigurator?.(config)}
+                        onClick={() => onOpenInConfigurator?.(config, idx)}
                         className="text-xs bg-gray-50 text-gray-700 border border-gray-200 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors font-bold flex items-center gap-1.5"
                         title="Open in Configurator"
                       >

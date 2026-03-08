@@ -26,34 +26,34 @@ export const WOOD_COLORS: Record<string, string> = {
 };
 
 const AVAILABLE_PIPE_SIZES = [
-  5, 8, 10, 12, 15, 17, 20, 23, 25, 
-  30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120
+  5, 8, 10, 12, 15, 17, 20, 23, 25,
+  30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 120
 ];
 
 export const getPipesForLength = (target: number): number[] => {
   if (target <= 0) return [];
-  
+
   const numPipes = Math.ceil(target / 120);
   const idealLength = target / numPipes;
-  
+
   const pipes: number[] = [];
   let remainingTarget = target;
-  
+
   for (let i = 0; i < numPipes; i++) {
     if (i === numPipes - 1) {
-      const closest = AVAILABLE_PIPE_SIZES.reduce((prev, curr) => 
+      const closest = AVAILABLE_PIPE_SIZES.reduce((prev, curr) =>
         Math.abs(curr - remainingTarget) < Math.abs(prev - remainingTarget) ? curr : prev
       );
       pipes.push(closest);
     } else {
-      const closest = AVAILABLE_PIPE_SIZES.reduce((prev, curr) => 
+      const closest = AVAILABLE_PIPE_SIZES.reduce((prev, curr) =>
         Math.abs(curr - idealLength) < Math.abs(prev - idealLength) ? curr : prev
       );
       pipes.push(closest);
       remainingTarget -= closest;
     }
   }
-  
+
   return pipes;
 };
 
