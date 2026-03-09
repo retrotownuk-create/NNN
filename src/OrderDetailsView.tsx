@@ -848,6 +848,39 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * numMounts);
     addFitting('f-90-elbows', '90° Elbows', quantity * (numMounts + 2));
     addFitting('f-t-fittings', 'T-Fittings', quantity * (numMounts - 2));
+  } else if (skuType === 'sku178') {
+    // Same parts as SKU 170 (flipped orientation doesn't change the bill of materials)
+    const dropHeight = 10;
+    const numMounts = Math.max(3, Math.ceil(length / 120) + 1);
+    const railLength = Math.max(0, length - (numMounts * 5));
+    const railPipes = getEqualSplitPipes(railLength, numMounts - 1);
+
+    const allPipeCounts: Record<number, number> = {};
+    const addToConsolidated178 = (size: number, count: number) => {
+      allPipeCounts[size] = (allPipeCounts[size] || 0) + count;
+    };
+
+    const wallStemPipes = getPipesForLength(wallDistance - 2);
+    wallStemPipes.forEach(p => addToConsolidated178(p, numMounts * quantity));
+
+    const dropPipes = getPipesForLength(Math.max(0, dropHeight - 5));
+    dropPipes.forEach(p => addToConsolidated178(p, numMounts * quantity));
+
+    railPipes.forEach(rp => addToConsolidated178(rp, quantity));
+
+    Object.entries(allPipeCounts).forEach(([size, c]) => {
+      items.push({
+        id: `pipe-${size}`,
+        partName: `${size} cm ${tubeType === 'square' ? 'square ' : ''}pipe`,
+        qty: c,
+        type: 'pipe',
+        color: colorName
+      });
+    });
+
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * numMounts);
+    addFitting('f-90-elbows', '90° Elbows', quantity * (numMounts + 2));
+    addFitting('f-t-fittings', 'T-Fittings', quantity * (numMounts - 2));
   } else if (skuType === 'sku144') {
     // Wall-mounted toilet paper holder (Flange -> Pipe -> T-Fitting -> Cap + Pipe/Cap)
     addPipes(Math.max(0, wallDistance - 2), 1, 'p-wall');
