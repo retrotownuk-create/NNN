@@ -4605,7 +4605,10 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   if (skuType === 'sku163' || skuType === 'sku164') {
     const e = explode * 1.5;
     return (
-      <group position={[0, 0, 0]}>
+      <group position={[0, -height / 2, 0]}>
+        <group position={[0, e, 0]}>
+          <Shelf position={[0, height + 1.5, 0]} length={length} depth={wallDistance} woodColor={woodColor} highlightFront={true} />
+        </group>
         <group position={[-e, 0, 0]}>
           <Flange position={[-(length / 2) + 5, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           <Pipe start={[-(length / 2) + 5, 1.2, 0]} end={[-(length / 2) + 5, height - 1.2, 0]} showLabel={showLabel} colorOption={colorOption} />
