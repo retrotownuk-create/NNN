@@ -4513,7 +4513,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   if (skuType === 'sku169') {
     const numMounts = Math.max(2, Math.ceil(length / 80) + 1);
     const e = explode * 1.5;
-    const baseZ = -wallDistance;
+    const baseZ = -8; // Fixed 8cm wall distance
     const handrailZ = baseZ + 5; // Fixed 5cm depth based on HexNipple + Elbow
 
     const startX = -length / 2;
@@ -4549,7 +4549,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             <group key={`mount-${i}`} position={[xExp, 0, 0]}>
               {/* Flange */}
               <group position={[0, 0, -e]}>
-                <Flange position={[x, y, baseZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                <Flange position={[x, y, baseZ]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
               <group position={[0, 0, -e * 0.75]}>
@@ -4758,8 +4758,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   if (skuType === 'sku143') {
     const numMounts = Math.max(2, Math.ceil(length / 80) + 1);
     const e = explode * 1.5;
-    const baseZ = -wallDistance;
-    const bracketLen = Math.max(0, wallDistance - 2);
+    const baseZ = -8; // Fixed 8cm wall distance
+    const bracketLen = 6; // 6cm total depth to center (5cm pipe + 1cm fitting offset)
     const handrailZ = baseZ + bracketLen;
 
     const startX = -length / 2;
@@ -4794,11 +4794,11 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             <group key={`mount-${i}`} position={[xExp, 0, 0]}>
               {/* Flange */}
               <group position={[0, 0, -e]}>
-                <Flange position={[x, y, baseZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                <Flange position={[x, y, baseZ]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
               {/* Stem */}
               <group position={[0, 0, -e * 0.5]}>
-                <Pipe start={[x, y, baseZ + 1.2]} end={[x, y, handrailZ - 1.5]} showLabel={showLabel} colorOption={colorOption} />
+                <Pipe start={[x, y, baseZ + 0.6]} end={[x, y, baseZ + 5.6]} showLabel={showLabel} colorOption={colorOption} />
               </group>
               {/* Handrail Connection */}
               <group position={[x, y, handrailZ]}>
@@ -7335,7 +7335,7 @@ export default function App() {
                     </div>
                   )}
 
-                  {skuType !== 'sku108' && skuType !== 'sku109' && skuType !== 'sku110' && skuType !== 'sku111' && skuType !== 'sku113' && skuType !== 'sku116' && skuType !== 'sku119' && skuType !== 'sku120' && skuType !== 'sku121' && skuType !== 'sku122' && skuType !== 'sku123' && (
+                  {skuType !== 'sku108' && skuType !== 'sku109' && skuType !== 'sku110' && skuType !== 'sku111' && skuType !== 'sku113' && skuType !== 'sku116' && skuType !== 'sku119' && skuType !== 'sku120' && skuType !== 'sku121' && skuType !== 'sku122' && skuType !== 'sku123' && skuType !== 'sku143' && skuType !== 'sku169' && (
                     <div>
                       <div className="flex justify-between mb-2">
                         <label className="text-xs font-bold text-gray-700">{((skuType as string) === 'sku000' || (skuType as string) === 'sku106' || (skuType as string) === 'sku107' || (skuType as string) === 'sku129') ? 'Shelf Depth' : ((skuType as string) === 'sku111' || (skuType as string) === 'sku113' || (skuType as string) === 'sku116' || (skuType as string) === 'sku119' || (skuType as string) === 'sku124' || (skuType as string) === 'sku125') ? 'Drop Depth' : 'Depth'}</label>

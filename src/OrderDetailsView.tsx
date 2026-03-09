@@ -766,8 +766,8 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       items.push({ id: `f-couplings-rail-${hd}`, partName: `Couplings (${hd} Handrail)`, qty: numRailCouplings * quantity, type: 'fitting', color: colorName });
     }
 
-    // Wall stem pipes
-    const stemPipes = getPipesForLength(Math.max(0, wallDistance - 2));
+    // Wall stem pipes (Fixed 5cm stems for handrails)
+    const stemPipes = getPipesForLength(5);
     const stemCounts: Record<number, number> = {};
     stemPipes.forEach(p => stemCounts[p] = (stemCounts[p] || 0) + (numMounts * quantity));
 
