@@ -4902,8 +4902,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           const startX = -length / 2 + i * mountSpacing;
           const endX = startX + mountSpacing;
           return (
-            <group key={'rail' + i} position={[0, -e, e]}>
-              <Pipe start={[startX + 2.2, -height, 0]} end={[endX - 2.2, -height, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <group key={'rail' + i} position={[0, -e, 0]}>
+              <Pipe start={[startX + 2.2, -dropHeight, 0]} end={[endX - 2.2, -dropHeight, 0]} showLabel={showLabel} colorOption={colorOption} />
             </group>
           );
         })}
