@@ -4234,7 +4234,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const zRail = zBase + wallDistance; // Usually 0
 
     const bottomY = 15;
-    const vertLength = 20;
+    const vertLength = 23;
     const topY = bottomY + (numRails - 1) * vertLength;
 
     const getEY = (i: number) => {
