@@ -4528,107 +4528,6 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     );
   }
 
-  if (skuType === 'sku169') {
-    // Brackets every 120cm max
-    const numMounts = Math.max(2, Math.ceil(length / 120) + 1);
-    const e = explode * 1.5;
-    const wallZ = -8;          // fixed wall depth
-    const stemLen = 5;         // 5cm horizontal stem projection (achieved via Nipple + Elbow + Nipple structure)
-    const railZ = wallZ + stemLen;
-
-    const startX = -length / 2;
-    const endX = length / 2;
-    const startY = height / 2;
-    const endY = -height / 2;
-
-    const isThin = tubeType === 'square';
-    const railRad = isThin ? 1.35 : 1.65;
-
-    // Slope angle θ of the rail
-    const θ = Math.atan2(endY - startY, endX - startX);
-
-    // Exact same fitting rotation math as sku143
-    const startElbowRot: [number, number, number] = [0, 0, Math.PI / 2 + θ];
-    const endElbowRot: [number, number, number] = [0, 0, θ - Math.PI / 2];
-    const tFitRot: [number, number, number] = [0, 0, θ - Math.PI / 2];
-
-    return (
-      <group position={[0, height / 2, -wallZ / 2]}>
-        {/* Mount brackets */}
-        {Array.from({ length: numMounts }).map((_, i) => {
-          const t = i / (numMounts - 1);
-          const mx = startX + t * (endX - startX);
-          const my = startY + t * (endY - startY);
-
-          const isFirst = i === 0;
-          const isLast = i === numMounts - 1;
-          const xExp = isFirst ? -e : (isLast ? e : 0);
-
-          return (
-            <group key={`mount-${i}`} position={[xExp, 0, 0]}>
-              {/* Flange */}
-              <group position={[0, 0, -e]}>
-                <Flange position={[mx, my, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-              </group>
-
-              {/* SKU169 specific base structure: Nipple into Elbow pointing down, then Nipple up to rail fitting */}
-              <group position={[0, 0, -e * 0.75]}>
-                <HexNipple position={[mx, my, wallZ + 2.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-              </group>
-
-              <group position={[0, -e * 0.5, -e * 0.5]}>
-                <Elbow position={[mx, my, railZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-              </group>
-
-              <group position={[0, -e * 0.25, -e * 0.25]}>
-                <HexNipple position={[mx, my - 2.5, railZ]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-              </group>
-
-              {/* Top Fitting connecting to diagonal rail (Rail sits 5cm below the mountY due to the downward elbow structure) */}
-              <group position={[mx, my - 5, railZ]}>
-                {isFirst ? (
-                  <Elbow position={[0, 0, 0]} rotation={startElbowRot} showLabel={showLabel} colorOption={colorOption} />
-                ) : isLast ? (
-                  <Elbow position={[0, 0, 0]} rotation={endElbowRot} showLabel={showLabel} colorOption={colorOption} />
-                ) : (
-                  <TFitting position={[0, 0, 0]} rotation={tFitRot} showLabel={showLabel} colorOption={colorOption} />
-                )}
-              </group>
-            </group>
-          );
-        })}
-
-        {/* Diagonal Rail Pipes */}
-        {Array.from({ length: numMounts - 1 }).map((_, i) => {
-          const t1 = i / (numMounts - 1);
-          const t2 = (i + 1) / (numMounts - 1);
-
-          const sx = startX + t1 * (endX - startX);
-          // Shift rail down 5cm because sku169 bracket drops down by 5cm
-          const sy = startY + t1 * (endY - startY) - 5;
-          const ex = startX + t2 * (endX - startX);
-          const ey = startY + t2 * (endY - startY) - 5;
-
-          const segLen = Math.hypot(ex - sx, ey - sy);
-          const f = 1.7 / segLen;
-
-          return (
-            <group key={`rail-${i}`} position={[0, 0, e]}>
-              <Pipe
-                radius={railRad}
-                start={[sx + (ex - sx) * f, sy + (ey - sy) * f, railZ]}
-                end={[ex - (ex - sx) * f, ey - (ey - sy) * f, railZ]}
-                showLabel={showLabel}
-                colorOption={colorOption}
-              />
-            </group>
-          );
-        })}
-      </group>
-    );
-  }
-
-
   if (skuType === 'sku160') {
     const e = explode * 1.5;
     const bracketZ = -wallDistance;
@@ -4774,7 +4673,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     );
   }
 
-  if (skuType === 'sku143') {
+  if (skuType === 'sku143' || skuType === 'sku169') {
     // Brackets every 120cm max (matching max pipe length)
     const numMounts = Math.max(2, Math.ceil(length / 120) + 1);
     const e = explode * 1.5;
@@ -4789,30 +4688,19 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const isThin = tubeType === 'square';
     const railRad = isThin ? 1.35 : 1.65;
 
-    // Slope angle θ of the rail in the XY plane (e.g. ~-30° going down-right)
+    // Slope angle θ of the rail in the XY plane
     const θ = Math.atan2(endY - startY, endX - startX);
 
-    // === Rotation derivations ===
-    // Elbow ports:    Port1 → -Y,  Port2 → +Z
-    // TFitting ports: Body  → ±Y,  Branch → -Z
-    //
-    // Stem enters the fitting from -Z direction (wall behind, stem goes +Z toward viewer).
-    // Elbow +Z port naturally receives the stem. ✓
-    // TFitting branch (-Z) naturally receives the stem. ✓
-    //
-    // Only Z-axis rotation is used (all parts lie in XY plane + Z stem).
-    // RotateZ(α) maps: -Y → (sinα, -cosα)
-    //
-    // Start elbow: Port1 (-Y) must point DOWN the slope → (cosθ, sinθ)
-    //   sinα = cosθ, -cosα = sinθ  →  α = π/2 + θ
-    // End elbow: Port1 (-Y) must point UP the slope → (-cosθ, -sinθ)
-    //   sinα = -cosθ, -cosα = -sinθ  →  α = θ - π/2
-    // T-Fitting: Body Y must align with slope → rotate Y to (cosθ, sinθ)
-    //   RotateZ(α) maps Y → (-sinα, cosα). Want (-sinα, cosα) = (cosθ, sinθ)
-    //   -sinα = cosθ → sinα = -cosθ = sin(θ-π/2)  →  α = θ - π/2
-    const startElbowRot: [number, number, number] = [0, 0, Math.PI / 2 + θ];
-    const endElbowRot: [number, number, number] = [0, 0, θ - Math.PI / 2];
-    const tFitRot: [number, number, number] = [0, 0, θ - Math.PI / 2];
+    // Wall bracket alignment: 
+    // They extend straight down exactly perpendicular to the slope θ.
+    const perpDirX = Math.sin(θ);
+    const perpDirY = -Math.cos(θ);
+
+    const startElbowRot: [number, number, number] = [0, -Math.PI / 2, θ + Math.PI / 2];
+    const endElbowRot: [number, number, number] = [0, Math.PI / 2, θ - Math.PI / 2];
+    const tFitRot: [number, number, number] = [0, -Math.PI / 2, θ - Math.PI / 2];
+    const perpNippleRot: [number, number, number] = [0, 0, θ - Math.PI];
+    const baseElbowRot: [number, number, number] = [0, Math.PI, θ - Math.PI];
 
     return (
       <group position={[0, height / 2, -wallZ / 2]}>
@@ -4826,25 +4714,31 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           const isLast = i === numMounts - 1;
           const xExp = isFirst ? -e : (isLast ? e : 0);
 
+          const nx = mx + 2.7 * perpDirX;
+          const ny = my + 2.7 * perpDirY;
+
+          const ex = mx + 5.0 * perpDirX;
+          const ey = my + 5.0 * perpDirY;
+
           return (
             <group key={`mount-${i}`} position={[xExp, 0, 0]}>
               <group position={[0, 0, -e]}>
-                <Flange position={[mx, my - 5.0, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                <Flange position={[ex, ey, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
               <group position={[0, 0, -e * 0.75]}>
-                <HexNipple position={[mx, my - 5.0, wallZ + 2.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                <HexNipple position={[ex, ey, wallZ + 2.4]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
               <group position={[0, -e * 0.5, -e * 0.5]}>
-                <Elbow position={[mx, my - 5.0, railZ]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                <Elbow position={[ex, ey, railZ]} rotation={baseElbowRot} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
               <group position={[0, -e * 0.25, -e * 0.25]}>
-                <HexNipple position={[mx, my - 2.5, railZ]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                <HexNipple position={[nx, ny, railZ]} rotation={perpNippleRot} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
-              {/* Fitting at rail — connects vertical nipple to diagonal rail */}
+              {/* Fitting at rail connects perpendicular downward nipple to diagonal rail */}
               <group position={[mx, my, railZ]}>
                 {isFirst ? (
                   <Elbow position={[0, 0, 0]} rotation={startElbowRot} showLabel={showLabel} colorOption={colorOption} />
