@@ -4565,14 +4565,22 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
               </group>
 
               {/* Handrail Connection */}
-              <group position={[0, 0, 0]} scale={[hScale, hScale, hScale]}>
-                {isFirst ? (
-                  <Elbow position={[x / hScale, (y - 5) / hScale, handrailZ / hScale]} rotation={[0, 0, startElbowZ]} showLabel={showLabel} colorOption={colorOption} />
-                ) : isLast ? (
-                  <Elbow position={[x / hScale, (y - 5) / hScale, handrailZ / hScale]} rotation={[0, 0, endElbowZ]} showLabel={showLabel} colorOption={colorOption} />
-                ) : (
-                  <TFitting position={[x / hScale, (y - 5) / hScale, handrailZ / hScale]} rotation={[0, 0, tBodyZ]} showLabel={showLabel} colorOption={colorOption} />
-                )}
+              <group position={[x, y - 5, handrailZ]}>
+                <group scale={[hScale, hScale, hScale]}>
+                  {isFirst ? (
+                    <group rotation={[0, 0, Math.atan2(dx, -dy)]}>
+                      <Elbow position={[0, 0, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+                    </group>
+                  ) : isLast ? (
+                    <group rotation={[0, 0, Math.atan2(-dx, dy)]}>
+                      <Elbow position={[0, 0, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+                    </group>
+                  ) : (
+                    <group rotation={[0, 0, Math.atan2(-dx, dy)]}>
+                      <TFitting position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                    </group>
+                  )}
+                </group>
               </group>
             </group>
           );
@@ -4793,14 +4801,22 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
                 <Pipe start={[x, y, baseZ + 1.2]} end={[x, y, handrailZ - 1.5]} showLabel={showLabel} colorOption={colorOption} />
               </group>
               {/* Handrail Connection */}
-              <group position={[0, 0, 0]} scale={[hScale, hScale, hScale]}>
-                {isFirst ? (
-                  <Elbow position={[x / hScale, y / hScale, handrailZ / hScale]} rotation={[0, 0, startElbowZ]} showLabel={showLabel} colorOption={colorOption} />
-                ) : isLast ? (
-                  <Elbow position={[x / hScale, y / hScale, handrailZ / hScale]} rotation={[0, 0, endElbowZ]} showLabel={showLabel} colorOption={colorOption} />
-                ) : (
-                  <TFitting position={[x / hScale, y / hScale, handrailZ / hScale]} rotation={[0, 0, tBodyZ]} showLabel={showLabel} colorOption={colorOption} />
-                )}
+              <group position={[x, y, handrailZ]}>
+                <group scale={[hScale, hScale, hScale]}>
+                  {isFirst ? (
+                    <group rotation={[0, 0, Math.atan2(dx, -dy)]}>
+                      <Elbow position={[0, 0, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+                    </group>
+                  ) : isLast ? (
+                    <group rotation={[0, 0, Math.atan2(-dx, dy)]}>
+                      <Elbow position={[0, 0, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+                    </group>
+                  ) : (
+                    <group rotation={[0, 0, Math.atan2(-dx, dy)]}>
+                      <TFitting position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                    </group>
+                  )}
+                </group>
               </group>
             </group>
           );
