@@ -5161,12 +5161,12 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
         {/* Top Rail */}
         <group position={[0, e, 0]}>
-          <Pipe start={[-(hPipeLength / 2), height, 0]} end={[(hPipeLength / 2), height, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[-(length / 2 - 3.0), height, 0]} end={[(length / 2 - 3.0), height, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Bottom Rail connecting 5-Way Hubs */}
         <group position={[0, -e, 0]}>
-          <Pipe start={[-(hPipeLength / 2), baseArmHeight, 0]} end={[(hPipeLength / 2), baseArmHeight, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[-(length / 2 - 3.0), baseArmHeight, 0]} end={[(length / 2 - 3.0), baseArmHeight, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );
