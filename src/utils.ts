@@ -32,6 +32,38 @@ const AVAILABLE_PIPE_SIZES = [
 
 export const getPipesForLength = (target: number): number[] => {
   if (target <= 0) return [];
+
+  const numPipes = Math.ceil(target / 120);
+  const idealLength = target / numPipes;
+
+  const pipes: number[] = [];
+  let remainingTarget = target;
+
+  for (let i = 0; i < numPipes; i++) {
+    if (i === numPipes - 1) {
+      const closest = AVAILABLE_PIPE_SIZES.reduce((prev, curr) =>
+        Math.abs(curr - remainingTarget) < Math.abs(prev - remainingTarget) ? curr : prev
+      );
+      pipes.push(closest);
+    } else {
+      const closest = AVAILABLE_PIPE_SIZES.reduce((prev, curr) =>
+        Math.abs(curr - idealLength) < Math.abs(prev - idealLength) ? curr : prev
+      );
+      pipes.push(closest);
+      remainingTarget -= closest;
+    }
+  }
+
+  return pipes;
+};
+
+export const getExtraCouplings = (target: number, count: number) => {
+  const pipes = getPipesForLength(target);
+  return (pipes.length - 1) * count;
+};
+
+export const getGreedyPipes = (target: number): number[] => {
+  if (target <= 0) return [];
   const pipes: number[] = [];
   let remaining = target;
   while (remaining > 0) {
@@ -49,9 +81,4 @@ export const getPipesForLength = (target: number): number[] => {
     }
   }
   return pipes;
-};
-
-export const getExtraCouplings = (target: number, count: number) => {
-  const pipes = getPipesForLength(target);
-  return (pipes.length - 1) * count;
 };

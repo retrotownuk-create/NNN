@@ -11,7 +11,7 @@ import * as THREE from 'three';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import html2canvas from 'html2canvas';
-import { COLORS, WOOD_COLORS, ColorOption, getPipesForLength, getExtraCouplings } from './utils';
+import { COLORS, WOOD_COLORS, ColorOption, getPipesForLength, getGreedyPipes, getExtraCouplings } from './utils';
 import { fetchOrders, saveOrders } from './api';
 
 // --- Components ---
@@ -4533,7 +4533,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const endElbowRot: [number, number, number] = [0, 0, θ - Math.PI / 2];
     const tFitRot: [number, number, number] = [0, 0, θ - Math.PI / 2];
 
-    const hcPipes = getPipesForLength(length);
+    const hcPipes = getGreedyPipes(length);
     const numMounts = hcPipes.length + 1;
     const mountTValues = [0];
     let currentLen = 0;
@@ -4781,7 +4781,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const endElbowRot: [number, number, number] = [0, 0, θ - Math.PI / 2];
     const tFitRot: [number, number, number] = [0, 0, θ - Math.PI / 2];
 
-    const hcPipes = getPipesForLength(length);
+    const hcPipes = getGreedyPipes(length);
     const numMounts = hcPipes.length + 1;
     const mountTValues = [0];
     let currentLen = 0;
