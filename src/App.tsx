@@ -5116,7 +5116,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
             {/* Center Foot */}
             <group position={[0, -e * 0.5, 0]}>
-              <HexNipple position={[x, baseArmHeight - 2.3, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+              <HexNipple position={[x, baseArmHeight - 2.3, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
             </group>
             <group position={[0, -e * 1.0, 0]}>
               <Flange position={[x, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
@@ -5128,7 +5128,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
               <Elbow position={[x, baseArmHeight, spreadArm]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
 
               <group position={[0, -e * 0.5, 0]}>
-                <HexNipple position={[x, baseArmHeight - 2.3, spreadArm]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                <HexNipple position={[x, baseArmHeight - 2.3, spreadArm]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
               <group position={[0, -e * 1.0, 0]}>
                 <Flange position={[x, 0, spreadArm]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
@@ -5141,7 +5141,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
               <Elbow position={[x, baseArmHeight, -spreadArm]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
 
               <group position={[0, -e * 0.5, 0]}>
-                <HexNipple position={[x, baseArmHeight - 2.3, -spreadArm]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                <HexNipple position={[x, baseArmHeight - 2.3, -spreadArm]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
               <group position={[0, -e * 1.0, 0]}>
                 <Flange position={[x, 0, -spreadArm]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
