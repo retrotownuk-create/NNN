@@ -5141,7 +5141,6 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   if (skuType === 'sku173') {
     const e = explode * 1.5;
     const bracketZ = -wallDistance;
-    const diagLen = length - 10;
 
     return (
       <group position={[0, height / 2, 0]}>
@@ -5151,10 +5150,10 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             <Flange position={[-length / 2, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           <group position={[0, 0, -e * 0.5]}>
-            <HexNipple position={[-length / 2, 0, bracketZ + 1.2]} quaternion={new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI / 2, 0, 0))} showLabel={showLabel} colorOption={colorOption} />
+            <HexNipple position={[-length / 2, 0, bracketZ + 1.2]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           <group position={[0, 0, 0]}>
-            <FortyFiveElbow position={[-length / 2 + 2, 0, bracketZ + 3.2]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Elbow position={[-length / 2, 0, bracketZ + 3.2]} rotation={[Math.PI / 2, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
         </group>
 
@@ -5164,16 +5163,16 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             <Flange position={[length / 2, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           <group position={[0, 0, -e * 0.5]}>
-            <HexNipple position={[length / 2, 0, bracketZ + 1.2]} quaternion={new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI / 2, 0, 0))} showLabel={showLabel} colorOption={colorOption} />
+            <HexNipple position={[length / 2, 0, bracketZ + 1.2]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           <group position={[0, 0, 0]}>
-            <FortyFiveElbow position={[length / 2 - 2, 0, bracketZ + 3.2]} rotation={[0, 0, Math.PI]} showLabel={showLabel} colorOption={colorOption} />
+            <Elbow position={[length / 2, 0, bracketZ + 3.2]} rotation={[Math.PI / 2, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
         </group>
 
-        {/* Center Connecting Diagonal Pipe: Static Center Explode */}
+        {/* Center Connecting Horizontal Pipe: Static Center Explode */}
         <group position={[0, 0, 0]}>
-          <Pipe start={[-length / 2 + 2.8, 0, bracketZ + 4.0]} end={[length / 2 - 2.8, 0, bracketZ + 4.0]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[-length / 2 + 2.2, 0, bracketZ + 3.2]} end={[length / 2 - 2.2, 0, bracketZ + 3.2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );
