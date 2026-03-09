@@ -4864,14 +4864,15 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   if (skuType === 'sku170') {
     const dropHeight = 10;
     const numMounts = Math.max(3, Math.ceil(length / 120) + 1);
-    const mountSpacing = length / (numMounts - 1);
+    const bracketSpan = length - 5;
+    const mountSpacing = bracketSpan / (numMounts - 1);
     const e = explode * 1.5;
     const zWall = -wallDistance;
 
     return (
       <group position={[0, height / 2, 0]}>
         {Array.from({ length: numMounts }).map((_, i) => {
-          const x = -length / 2 + i * mountSpacing;
+          const x = -bracketSpan / 2 + i * mountSpacing;
           const isEnd = i === 0 || i === numMounts - 1;
           const xExp = i === 0 ? -e : (i === numMounts - 1 ? e : 0);
           return (
@@ -4899,11 +4900,11 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           );
         })}
         {Array.from({ length: numMounts - 1 }).map((_, i) => {
-          const startX = -length / 2 + i * mountSpacing;
+          const startX = -bracketSpan / 2 + i * mountSpacing;
           const endX = startX + mountSpacing;
           return (
             <group key={'rail' + i} position={[0, -e, 0]}>
-              <Pipe start={[startX + 2.2, -dropHeight, 0]} end={[endX - 2.2, -dropHeight, 0]} showLabel={showLabel} colorOption={colorOption} />
+              <Pipe start={[startX + 2.5, -dropHeight, 0]} end={[endX - 2.5, -dropHeight, 0]} showLabel={showLabel} colorOption={colorOption} />
             </group>
           );
         })}

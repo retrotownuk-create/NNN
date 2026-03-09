@@ -813,27 +813,26 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
   } else if (skuType === 'sku170') {
     const dropHeight = 10;
     const numMounts = Math.max(3, Math.ceil(length / 120) + 1);
-    const mountSpacing = length / (numMounts - 1);
+    const railLength = (length - (numMounts * 5)) / (numMounts - 1);
 
     // Wall stem: wallDistance - 2 = pipe cut length (23cm pipe + 2cm fittings = 25cm total)
     addPipes(wallDistance - 2, numMounts, 'p-wall');
 
-
     // Drop pipes: 2.5cm offset each end = 5cm total deduction
-    addPipes(Math.max(0, dropHeight - 5), 2, 'p-drop');
+    addPipes(Math.max(0, dropHeight - 5), numMounts, 'p-drop');
 
-    // Rail pipes: 2.5cm offset each end = 5cm total deduction
-    addPipes(Math.max(0, mountSpacing - 5), numMounts - 1, 'p-rail');
+    // Rail pipes
+    addPipes(Math.max(0, railLength), numMounts - 1, 'p-rail');
 
     // Fittings
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * numMounts);
-    addFitting('f-90-elbows', '90° Elbows', quantity * 4); // 2 top + 2 bottom corners
+    addFitting('f-90-elbows', '90° Elbows', quantity * (numMounts + 2)); // Top elbows + 2 bottom corners
     addFitting('f-t-fittings', 'T-Fittings', quantity * (numMounts - 2));
 
     // Couplings
     const stemCouplings = numMounts * getExtraCouplings(wallDistance - 2, 1);
-    const dropCouplings = 2 * getExtraCouplings(Math.max(0, dropHeight - 5), 1);
-    const railCouplings = (numMounts - 1) * getExtraCouplings(Math.max(0, mountSpacing - 5), 1);
+    const dropCouplings = numMounts * getExtraCouplings(Math.max(0, dropHeight - 5), 1);
+    const railCouplings = (numMounts - 1) * getExtraCouplings(Math.max(0, railLength), 1);
     const totalCouplings = stemCouplings + dropCouplings + railCouplings;
     if (totalCouplings > 0) {
       addFitting('f-couplings', 'Couplings', quantity * totalCouplings);
