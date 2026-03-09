@@ -4756,30 +4756,52 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   }
 
   if (skuType === 'sku143') {
-    const numMounts = Math.max(2, Math.ceil(length / 80) + 1);
+    // Brackets every 120cm max (matching max pipe length)
+    const numMounts = Math.max(2, Math.ceil(length / 120) + 1);
     const e = explode * 1.5;
-    const wallZ = -8;      // wall face at Z = -8
-    const stemLen = 5;     // 5cm horizontal stem out from wall
-    const railZ = wallZ + stemLen;  // diagonal rail sits at Z = wallZ + stemLen = -3
+    const wallZ = -8;          // wall face position in Z
+    const railZ = wallZ + 5;   // rail at 5cm out from wall (Z = -3)
 
     const startX = -length / 2;
     const endX = length / 2;
-    const startY = height / 2;   // high end
-    const endY = -height / 2;    // low end
+    const startY = height / 2;   // high end (top of stairs)
+    const endY = -height / 2;   // low end (bottom of stairs)
 
     const isThin = tubeType === 'square';
     const railRad = isThin ? 1.35 : 1.65;
 
-    // The diagonal slope angle in XY plane
-    const slopeAngle = Math.atan2(endY - startY, endX - startX);
+    // Slope angle θ of the rail in the XY plane (e.g. ~-30° going down-right)
+    const θ = Math.atan2(endY - startY, endX - startX);
+
+    // === Rotation derivations ===
+    // Elbow ports:    Port1 → -Y,  Port2 → +Z
+    // TFitting ports: Body  → ±Y,  Branch → -Z
+    //
+    // Stem enters the fitting from -Z direction (wall behind, stem goes +Z toward viewer).
+    // Elbow +Z port naturally receives the stem. ✓
+    // TFitting branch (-Z) naturally receives the stem. ✓
+    //
+    // Only Z-axis rotation is used (all parts lie in XY plane + Z stem).
+    // RotateZ(α) maps: -Y → (sinα, -cosα)
+    //
+    // Start elbow: Port1 (-Y) must point DOWN the slope → (cosθ, sinθ)
+    //   sinα = cosθ, -cosα = sinθ  →  α = π/2 + θ
+    // End elbow: Port1 (-Y) must point UP the slope → (-cosθ, -sinθ)
+    //   sinα = -cosθ, -cosα = -sinθ  →  α = θ - π/2
+    // T-Fitting: Body Y must align with slope → rotate Y to (cosθ, sinθ)
+    //   RotateZ(α) maps Y → (-sinα, cosα). Want (-sinα, cosα) = (cosθ, sinθ)
+    //   -sinα = cosθ → sinα = -cosθ = sin(θ-π/2)  →  α = θ - π/2
+    const startElbowRot: [number, number, number] = [0, 0, Math.PI / 2 + θ];
+    const endElbowRot: [number, number, number] = [0, 0, θ - Math.PI / 2];
+    const tFitRot: [number, number, number] = [0, 0, θ - Math.PI / 2];
 
     return (
       <group position={[0, height / 2, -wallZ / 2]}>
-        {/* --- Brackets (one per mount position) --- */}
+        {/* --- Wall Brackets --- */}
         {Array.from({ length: numMounts }).map((_, i) => {
           const t = i / (numMounts - 1);
-          const mountX = startX + t * (endX - startX);
-          const mountY = startY + t * (endY - startY);
+          const mx = startX + t * (endX - startX);
+          const my = startY + t * (endY - startY);
 
           const isFirst = i === 0;
           const isLast = i === numMounts - 1;
@@ -4787,24 +4809,24 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
           return (
             <group key={`mount-${i}`} position={[xExp, 0, 0]}>
-              {/* Wall Flange — plate against wall, socket pointing +Z toward viewer */}
+              {/* Wall Flange — flat plate against wall, socket points +Z toward viewer */}
               <group position={[0, 0, -e]}>
-                <Flange position={[mountX, mountY, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                <Flange position={[mx, my, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
-              {/* Stem pipe — horizontal out of wall */}
+              {/* Stem pipe — horizontal +Z out of wall (5cm) */}
               <group position={[0, 0, -e * 0.5]}>
-                <Pipe start={[mountX, mountY, wallZ + 1.2]} end={[mountX, mountY, railZ - 1.6]} showLabel={showLabel} colorOption={colorOption} />
+                <Pipe start={[mx, my, wallZ + 1.2]} end={[mx, my, railZ - 1.6]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
-              {/* Fitting at rail — Elbow at ends, T-Fitting in middle */}
-              <group position={[mountX, mountY, railZ]}>
+              {/* Fitting at rail — connects horizontal stem to diagonal rail */}
+              <group position={[mx, my, railZ]}>
                 {isFirst ? (
-                  <Elbow position={[0, 0, 0]} rotation={[slopeAngle, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                  <Elbow position={[0, 0, 0]} rotation={startElbowRot} showLabel={showLabel} colorOption={colorOption} />
                 ) : isLast ? (
-                  <Elbow position={[0, 0, 0]} rotation={[slopeAngle + Math.PI, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                  <Elbow position={[0, 0, 0]} rotation={endElbowRot} showLabel={showLabel} colorOption={colorOption} />
                 ) : (
-                  <TFitting position={[0, 0, 0]} rotation={[slopeAngle, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                  <TFitting position={[0, 0, 0]} rotation={tFitRot} showLabel={showLabel} colorOption={colorOption} />
                 )}
               </group>
             </group>
@@ -4821,16 +4843,19 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           const ex = startX + t2 * (endX - startX);
           const ey = startY + t2 * (endY - startY);
 
+          // Push pipe ends 1.7cm into fitting collars so no gap
           const segLen = Math.hypot(ex - sx, ey - sy);
-          const pushFrac = 1.6 / segLen;
-          const psx = sx + (ex - sx) * pushFrac;
-          const psy = sy + (ey - sy) * pushFrac;
-          const pex = ex - (ex - sx) * pushFrac;
-          const pey = ey - (ey - sy) * pushFrac;
+          const f = 1.7 / segLen;
 
           return (
             <group key={`rail-${i}`} position={[0, 0, e]}>
-              <Pipe radius={railRad} start={[psx, psy, railZ]} end={[pex, pey, railZ]} showLabel={showLabel} colorOption={colorOption} />
+              <Pipe
+                radius={railRad}
+                start={[sx + (ex - sx) * f, sy + (ey - sy) * f, railZ]}
+                end={[ex - (ex - sx) * f, ey - (ey - sy) * f, railZ]}
+                showLabel={showLabel}
+                colorOption={colorOption}
+              />
             </group>
           );
         })}
@@ -4838,405 +4863,399 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     );
   }
 
-  if (skuType === 'sku170') {
-    const numMounts = Math.max(3, Math.ceil(length / 80) + 1);
-    const mountSpacing = length / (numMounts - 1);
-    const e = explode * 1.5;
-    const zWall = -wallDistance;
-
-    return (
-      <group position={[0, height / 2, 0]}>
-        {Array.from({ length: numMounts }).map((_, i) => {
-          const x = -length / 2 + i * mountSpacing;
-          const isEnd = i === 0 || i === numMounts - 1;
-          const xExp = i === 0 ? -e : (i === numMounts - 1 ? e : 0);
-          return (
-            <group key={i} position={[xExp, 0, 0]}>
-              <group position={[0, 0, -e]}>
-                <Flange position={[x, 0, zWall]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-              </group>
-              <group position={[0, 0, -e * 0.5]}>
-                <Pipe start={[x, 0, zWall + 1.2]} end={[x, 0, -2.2]} showLabel={showLabel} colorOption={colorOption} />
-              </group>
-              <group position={[0, 0, 0]}>
-                <Elbow position={[x, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-              </group>
-              <group position={[0, -e * 0.5, 0]}>
-                <Pipe start={[x, -2.2, 0]} end={[x, -height + 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
-              </group>
-              <group position={[0, -e, 0]}>
-                {isEnd ? (
-                  <Elbow position={[x, -height, 0]} rotation={[0, i === 0 ? Math.PI : 0, i === 0 ? -Math.PI / 2 : Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
-                ) : (
-                  <TFitting position={[x, -height, 0]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-                )}
-              </group>
+  return (
+    <group position={[0, height / 2, 0]}>
+      {Array.from({ length: numMounts }).map((_, i) => {
+        const x = -length / 2 + i * mountSpacing;
+        const isEnd = i === 0 || i === numMounts - 1;
+        const xExp = i === 0 ? -e : (i === numMounts - 1 ? e : 0);
+        return (
+          <group key={i} position={[xExp, 0, 0]}>
+            <group position={[0, 0, -e]}>
+              <Flange position={[x, 0, zWall]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
             </group>
-          );
-        })}
-        {Array.from({ length: numMounts - 1 }).map((_, i) => {
-          const startX = -length / 2 + i * mountSpacing;
-          const endX = startX + mountSpacing;
-          return (
-            <group key={'rail' + i} position={[0, -e, e]}>
-              <Pipe start={[startX + 2.2, -height, 0]} end={[endX - 2.2, -height, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <group position={[0, 0, -e * 0.5]}>
+              <Pipe start={[x, 0, zWall + 1.2]} end={[x, 0, -2.2]} showLabel={showLabel} colorOption={colorOption} />
             </group>
-          );
-        })}
+            <group position={[0, 0, 0]}>
+              <Elbow position={[x, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            </group>
+            <group position={[0, -e * 0.5, 0]}>
+              <Pipe start={[x, -2.2, 0]} end={[x, -height + 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
+            </group>
+            <group position={[0, -e, 0]}>
+              {isEnd ? (
+                <Elbow position={[x, -height, 0]} rotation={[0, i === 0 ? Math.PI : 0, i === 0 ? -Math.PI / 2 : Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+              ) : (
+                <TFitting position={[x, -height, 0]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              )}
+            </group>
+          </group>
+        );
+      })}
+      {Array.from({ length: numMounts - 1 }).map((_, i) => {
+        const startX = -length / 2 + i * mountSpacing;
+        const endX = startX + mountSpacing;
+        return (
+          <group key={'rail' + i} position={[0, -e, e]}>
+            <Pipe start={[startX + 2.2, -height, 0]} end={[endX - 2.2, -height, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+        );
+      })}
+    </group>
+  );
+}
+
+
+if (skuType === 'sku161') {
+  const e = explode * 1.5;
+  const bracketZ = -wallDistance;
+  const angledLength = 35; // from cutlist
+  const yTop = 0;
+
+  return (
+    <group position={[0, height / 2, 0]}>
+      {/* Placeholder for complex 161 geometry */}
+      <group position={[0, 0, -e]}>
+        <Flange position={[0, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
       </group>
-    );
-  }
-
-
-  if (skuType === 'sku161') {
-    const e = explode * 1.5;
-    const bracketZ = -wallDistance;
-    const angledLength = 35; // from cutlist
-    const yTop = 0;
-
-    return (
-      <group position={[0, height / 2, 0]}>
-        {/* Placeholder for complex 161 geometry */}
-        <group position={[0, 0, -e]}>
-          <Flange position={[0, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-        <group position={[0, 0, -e * 0.5]}>
-          <Pipe start={[0, 0, bracketZ + 1.2]} end={[0, 0, -1.5]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-        <group position={[0, 0, 0]}>
-          <TFitting position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
+      <group position={[0, 0, -e * 0.5]}>
+        <Pipe start={[0, 0, bracketZ + 1.2]} end={[0, 0, -1.5]} showLabel={showLabel} colorOption={colorOption} />
       </group>
-    );
-  }
-
-  if (skuType === 'sku165') {
-    const e = explode * 1.5;
-    const bracketZ = -wallDistance;
-    const actualPipeHeight = height - 5;
-    const barY = -height / 2 + 3.4 + actualPipeHeight;
-    const railLength = (length - 4.4) / 2;
-
-    return (
       <group position={[0, 0, 0]}>
-        <group position={[0, 0, e]}>
-          <Flange position={[0, -height / 2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          <Pipe start={[0, -height / 2 + 1.2, 0]} end={[0, barY - 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
-          <TFitting position={[0, barY, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-
-        {/* Rails */}
-        <group position={[-e, 0, e]}>
-          <Pipe start={[-2.2, barY, 0]} end={[-railLength - 2.2, barY, 0]} showLabel={showLabel} colorOption={colorOption} />
-          <Elbow position={[-railLength - 2.2, barY, 0]} rotation={[0, Math.PI, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-        <group position={[e, 0, e]}>
-          <Pipe start={[2.2, barY, 0]} end={[railLength + 2.2, barY, 0]} showLabel={showLabel} colorOption={colorOption} />
-          <Elbow position={[railLength + 2.2, barY, 0]} rotation={[0, Math.PI, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-
-        {/* Wall connectors */}
-        <group position={[-e, 0, -e]}>
-          <Pipe start={[-railLength - 2.2, barY, -1.5]} end={[-railLength - 2.2, barY, bracketZ + 1.2]} showLabel={showLabel} colorOption={colorOption} />
-          <Flange position={[-railLength - 2.2, barY, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-        <group position={[e, 0, -e]}>
-          <Pipe start={[railLength + 2.2, barY, -1.5]} end={[railLength + 2.2, barY, bracketZ + 1.2]} showLabel={showLabel} colorOption={colorOption} />
-          <Flange position={[railLength + 2.2, barY, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
+        <TFitting position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
       </group>
-    );
-  }
+    </group>
+  );
+}
 
-  if (skuType === 'sku166') {
-    const e = explode * 1.5;
-    const bracketZ = -wallDistance; // actually uses 5cm pipe
+if (skuType === 'sku165') {
+  const e = explode * 1.5;
+  const bracketZ = -wallDistance;
+  const actualPipeHeight = height - 5;
+  const barY = -height / 2 + 3.4 + actualPipeHeight;
+  const railLength = (length - 4.4) / 2;
+
+  return (
+    <group position={[0, 0, 0]}>
+      <group position={[0, 0, e]}>
+        <Flange position={[0, -height / 2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        <Pipe start={[0, -height / 2 + 1.2, 0]} end={[0, barY - 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
+        <TFitting position={[0, barY, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+      </group>
+
+      {/* Rails */}
+      <group position={[-e, 0, e]}>
+        <Pipe start={[-2.2, barY, 0]} end={[-railLength - 2.2, barY, 0]} showLabel={showLabel} colorOption={colorOption} />
+        <Elbow position={[-railLength - 2.2, barY, 0]} rotation={[0, Math.PI, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+      </group>
+      <group position={[e, 0, e]}>
+        <Pipe start={[2.2, barY, 0]} end={[railLength + 2.2, barY, 0]} showLabel={showLabel} colorOption={colorOption} />
+        <Elbow position={[railLength + 2.2, barY, 0]} rotation={[0, Math.PI, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+      </group>
+
+      {/* Wall connectors */}
+      <group position={[-e, 0, -e]}>
+        <Pipe start={[-railLength - 2.2, barY, -1.5]} end={[-railLength - 2.2, barY, bracketZ + 1.2]} showLabel={showLabel} colorOption={colorOption} />
+        <Flange position={[-railLength - 2.2, barY, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+      </group>
+      <group position={[e, 0, -e]}>
+        <Pipe start={[railLength + 2.2, barY, -1.5]} end={[railLength + 2.2, barY, bracketZ + 1.2]} showLabel={showLabel} colorOption={colorOption} />
+        <Flange position={[railLength + 2.2, barY, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+      </group>
+    </group>
+  );
+}
+
+if (skuType === 'sku166') {
+  const e = explode * 1.5;
+  const bracketZ = -wallDistance; // actually uses 5cm pipe
+  return (
+    <group position={[0, height / 2, 0]}>
+      <group position={[0, 0, -e]}>
+        <Flange position={[0, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+      </group>
+      <group position={[0, 0, -e * 0.5]}>
+        <Pipe start={[0, 0, bracketZ + 1.2]} end={[0, 0, -2.2]} showLabel={showLabel} colorOption={colorOption} />
+      </group>
+      <group position={[0, 0, 0]}>
+        <CornerFitting position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} side="left" showLabel={showLabel} colorOption={colorOption} />
+      </group>
+      {/* Horns */}
+      <group position={[-e, e, 0]}>
+        <Pipe start={[-1.5, 1.5, 0]} end={[-10.6, 10.6, 0]} showLabel={showLabel} colorOption={colorOption} />
+      </group>
+      <group position={[e, e, 0]}>
+        <Pipe start={[1.5, 1.5, 0]} end={[10.6, 10.6, 0]} showLabel={showLabel} colorOption={colorOption} />
+      </group>
+    </group>
+  );
+}
+
+if (skuType === 'sku168') {
+  const e = explode * 1.5;
+  const baseArmHeight = 5.75;
+  const unionHeight = (height + baseArmHeight) / 2;
+  const spreadArm = wallDistance / 2;
+  const legLength = (height - baseArmHeight) / 2 - 3.6;
+
+  const buildLeg = (x: number, isLeft: boolean) => {
+    const xExp = isLeft ? -e : e;
     return (
-      <group position={[0, height / 2, 0]}>
-        <group position={[0, 0, -e]}>
-          <Flange position={[0, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+      <group key={'leg' + x} position={[xExp, 0, 0]}>
+        <group position={[0, e, 0]}>
+          <Pipe start={[x, baseArmHeight + 3.0, 0]} end={[x, unionHeight - 2.0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <TFitting position={[x, unionHeight, 0]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[x, unionHeight + 2.0, 0]} end={[x, height - 1.5, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Elbow position={[x, height, 0]} rotation={[0, isLeft ? Math.PI : 0, isLeft ? -Math.PI / 2 : Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
-        <group position={[0, 0, -e * 0.5]}>
-          <Pipe start={[0, 0, bracketZ + 1.2]} end={[0, 0, -2.2]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-        <group position={[0, 0, 0]}>
-          <CornerFitting position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} side="left" showLabel={showLabel} colorOption={colorOption} />
-        </group>
-        {/* Horns */}
-        <group position={[-e, e, 0]}>
-          <Pipe start={[-1.5, 1.5, 0]} end={[-10.6, 10.6, 0]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-        <group position={[e, e, 0]}>
-          <Pipe start={[1.5, 1.5, 0]} end={[10.6, 10.6, 0]} showLabel={showLabel} colorOption={colorOption} />
+
+        {/* Base */}
+        <group position={[0, -e, 0]}>
+          <TFitting position={[x, baseArmHeight, 0]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[x, baseArmHeight - 2.2, -spreadArm]} end={[x, baseArmHeight - 2.2, spreadArm]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );
   }
 
-  if (skuType === 'sku168') {
-    const e = explode * 1.5;
-    const baseArmHeight = 5.75;
-    const unionHeight = (height + baseArmHeight) / 2;
-    const spreadArm = wallDistance / 2;
-    const legLength = (height - baseArmHeight) / 2 - 3.6;
+  return (
+    <group position={[0, -height / 2, 0]}>
+      {buildLeg(-(length / 2 - 1.5), true)}
+      {buildLeg((length / 2 - 1.5), false)}
+      <group position={[0, e, 0]}>
+        <Pipe start={[-(length / 2 - 3.0), height, 0]} end={[(length / 2 - 3.0), height, 0]} showLabel={showLabel} colorOption={colorOption} />
+      </group>
+    </group>
+  );
+}
 
-    const buildLeg = (x: number, isLeft: boolean) => {
-      const xExp = isLeft ? -e : e;
+if (skuType === 'sku173') {
+  const e = explode * 1.5;
+  const bracketZ = -wallDistance;
+  const diagLen = length - 10;
+
+  return (
+    <group position={[0, height / 2, 0]}>
+      <group position={[0, 0, -e]}>
+        <Flange position={[-length / 2, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        <Flange position={[length / 2, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+      </group>
+      <group position={[0, 0, 0]}>
+        <FortyFiveElbow position={[-length / 2 + 2, 0, bracketZ + 2]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        <Pipe start={[-length / 2 + 2.8, 0, bracketZ + 2.8]} end={[length / 2 - 2.8, 0, bracketZ + 2.8]} showLabel={showLabel} colorOption={colorOption} />
+        <FortyFiveElbow position={[length / 2 - 2, 0, bracketZ + 2]} rotation={[0, 0, Math.PI]} showLabel={showLabel} colorOption={colorOption} />
+      </group>
+    </group>
+  );
+}
+
+const buildSide = (x: number, side: 'left' | 'right') => {
+  const midY = 75 + (height - 75) / 2;
+  const e = explode * 1.5;
+  const sideX = side === 'left' ? -e : e;
+  const wallZ = -wallDistance;
+  const actualWallDist = wallDistance;
+  const renderVerticalPipe = (startY: number) => {
+    const pipeLength = height - startY;
+    if (pipeLength > 120) {
+      const splitY = startY + pipeLength / 2;
       return (
-        <group key={'leg' + x} position={[xExp, 0, 0]}>
-          <group position={[0, e, 0]}>
-            <Pipe start={[x, baseArmHeight + 3.0, 0]} end={[x, unionHeight - 2.0, 0]} showLabel={showLabel} colorOption={colorOption} />
-            <TFitting position={[x, unionHeight, 0]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-            <Pipe start={[x, unionHeight + 2.0, 0]} end={[x, height - 1.5, 0]} showLabel={showLabel} colorOption={colorOption} />
-            <Elbow position={[x, height, 0]} rotation={[0, isLeft ? Math.PI : 0, isLeft ? -Math.PI / 2 : Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        <>
+          <group position={[sideX, e * 0.5, 0]}>
+            <Pipe start={[x, startY, 0]} end={[x, splitY, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-
-          {/* Base */}
-          <group position={[0, -e, 0]}>
-            <TFitting position={[x, baseArmHeight, 0]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-            <Pipe start={[x, baseArmHeight - 2.2, -spreadArm]} end={[x, baseArmHeight - 2.2, spreadArm]} showLabel={showLabel} colorOption={colorOption} />
+          <group position={[sideX, e * 1.0, 0]}>
+            <Coupling position={[x, splitY, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-        </group>
+          <group position={[sideX, e * 1.5, 0]}>
+            <Pipe start={[x, splitY, 0]} end={[x, height, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+        </>
       );
     }
-
     return (
-      <group position={[0, -height / 2, 0]}>
-        {buildLeg(-(length / 2 - 1.5), true)}
-        {buildLeg((length / 2 - 1.5), false)}
-        <group position={[0, e, 0]}>
-          <Pipe start={[-(length / 2 - 3.0), height, 0]} end={[(length / 2 - 3.0), height, 0]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-      </group>
-    );
-  }
-
-  if (skuType === 'sku173') {
-    const e = explode * 1.5;
-    const bracketZ = -wallDistance;
-    const diagLen = length - 10;
-
-    return (
-      <group position={[0, height / 2, 0]}>
-        <group position={[0, 0, -e]}>
-          <Flange position={[-length / 2, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          <Flange position={[length / 2, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-        <group position={[0, 0, 0]}>
-          <FortyFiveElbow position={[-length / 2 + 2, 0, bracketZ + 2]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          <Pipe start={[-length / 2 + 2.8, 0, bracketZ + 2.8]} end={[length / 2 - 2.8, 0, bracketZ + 2.8]} showLabel={showLabel} colorOption={colorOption} />
-          <FortyFiveElbow position={[length / 2 - 2, 0, bracketZ + 2]} rotation={[0, 0, Math.PI]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-      </group>
-    );
-  }
-
-  const buildSide = (x: number, side: 'left' | 'right') => {
-    const midY = 75 + (height - 75) / 2;
-    const e = explode * 1.5;
-    const sideX = side === 'left' ? -e : e;
-    const wallZ = -wallDistance;
-    const actualWallDist = wallDistance;
-    const renderVerticalPipe = (startY: number) => {
-      const pipeLength = height - startY;
-      if (pipeLength > 120) {
-        const splitY = startY + pipeLength / 2;
-        return (
-          <>
-            <group position={[sideX, e * 0.5, 0]}>
-              <Pipe start={[x, startY, 0]} end={[x, splitY, 0]} showLabel={showLabel} colorOption={colorOption} />
-            </group>
-            <group position={[sideX, e * 1.0, 0]}>
-              <Coupling position={[x, splitY, 0]} showLabel={showLabel} colorOption={colorOption} />
-            </group>
-            <group position={[sideX, e * 1.5, 0]}>
-              <Pipe start={[x, splitY, 0]} end={[x, height, 0]} showLabel={showLabel} colorOption={colorOption} />
-            </group>
-          </>
-        );
-      }
-      return (
-        <group position={[sideX, e * 0.5, 0]}>
-          <Pipe start={[x, startY, 0]} end={[x, height, 0]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-      );
-    };
-
-    return (
-      <group key={side}>
-        {isFreestanding ? (
-          <>
-            <group position={[sideX, -e, e * 0.5]}>
-              <Flange position={[x, 0, 15]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-            </group>
-            <group position={[sideX, -e, -e * 0.5]}>
-              <Flange position={[x, 0, -15]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-            </group>
-            <group position={[sideX, -e * 0.5, e * 0.5]}>
-              <Pipe start={[x, 1.5, 15]} end={[x, 4, 15]} showLabel={showLabel} colorOption={colorOption} />
-            </group>
-            <group position={[sideX, -e * 0.5, -e * 0.5]}>
-              <Pipe start={[x, 1.5, -15]} end={[x, 4, -15]} showLabel={showLabel} colorOption={colorOption} />
-            </group>
-            <group position={[sideX, 0, e * 0.5]}>
-              <Elbow position={[x, 5.5, 15]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
-            </group>
-            <group position={[sideX, 0, -e * 0.5]}>
-              <Elbow position={[x, 5.5, -15]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-            </group>
-            <group position={[sideX, 0, e * 0.25]}>
-              <Pipe start={[x, 5.5, 1.5]} end={[x, 5.5, 13.5]} showLabel={showLabel} colorOption={colorOption} />
-            </group>
-            <group position={[sideX, 0, -e * 0.25]}>
-              <Pipe start={[x, 5.5, -1.5]} end={[x, 5.5, -13.5]} showLabel={showLabel} colorOption={colorOption} />
-            </group>
-            <group position={[sideX, 0, 0]}>
-              <TFitting position={[x, 5.5, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-            </group>
-            {renderVerticalPipe(7)}
-          </>
-        ) : (
-          <>
-            <group position={[sideX, -e, 0]}>
-              <Flange position={[x, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-            </group>
-
-            {hasShelves ? (
-              <>
-                <group position={[sideX, -e * 0.5, 0]}>
-                  <Pipe start={[x, 1.5, 0]} end={[x, 35, 0]} showLabel={showLabel} colorOption={colorOption} />
-                </group>
-                <group position={[sideX, 0, 0]}>
-                  <TFitting position={[x, 35, 0]} showLabel={showLabel} colorOption={colorOption} />
-                </group>
-                <group position={[sideX, 0, -e * 0.5]}>
-                  <Pipe start={[x, 35, -actualWallDist + 4.35]} end={[x, 35, -1.5]} showLabel={showLabel} colorOption={colorOption} />
-                </group>
-                {/* Hex Nipple */}
-                <group position={[sideX, 0, -e * 0.75]}>
-                  <HexNipple position={[x, 35, -actualWallDist + 2.65]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-                </group>
-                {/* Coupling */}
-                <group position={[sideX, 0, -e * 0.625]}>
-                  <Coupling position={[x, 35, -actualWallDist + 4.35]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-                </group>
-                <group position={[sideX, 0, -e]}>
-                  <Flange position={[x, 35, -actualWallDist]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-                </group>
-
-                <group position={[sideX, e * 0.5, 0]}>
-                  <Pipe start={[x, 35, 0]} end={[x, 75, 0]} showLabel={showLabel} colorOption={colorOption} />
-                </group>
-                <group position={[sideX, e, 0]}>
-                  <TFitting position={[x, 75, 0]} showLabel={showLabel} colorOption={colorOption} />
-                </group>
-                <group position={[sideX, e, -e * 0.5]}>
-                  <Pipe start={[x, 75, -actualWallDist + 4.35]} end={[x, 75, -1.5]} showLabel={showLabel} colorOption={colorOption} />
-                </group>
-                {/* Hex Nipple */}
-                <group position={[sideX, e, -e * 0.75]}>
-                  <HexNipple position={[x, 75, -actualWallDist + 2.65]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-                </group>
-                {/* Coupling */}
-                <group position={[sideX, e, -e * 0.625]}>
-                  <Coupling position={[x, 75, -actualWallDist + 4.35]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-                </group>
-                <group position={[sideX, e, -e]}>
-                  <Flange position={[x, 75, -actualWallDist]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-                </group>
-
-                <group position={[sideX, e * 1.5, 0]}>
-                  <Pipe start={[x, 75, 0]} end={[x, midY, 0]} showLabel={showLabel} colorOption={colorOption} />
-                </group>
-              </>
-            ) : (
-              renderVerticalPipe(1.5)
-            )}
-          </>
-        )}
-
-        {hasShelves ? (
-          <>
-            <group position={[sideX, e * 2, 0]}>
-              <Coupling position={[x, midY, 0]} showLabel={showLabel} colorOption={colorOption} />
-            </group>
-            <group position={[sideX, e * 2.5, 0]}>
-              <Pipe start={[x, midY, 0]} end={[x, height, 0]} showLabel={showLabel} colorOption={colorOption} />
-            </group>
-          </>
-        ) : null}
-
-        <group position={[sideX, e * 3, 0]}>
-          {isFreestanding ? (
-            <Elbow position={[x, height, 0]} rotation={[0, side === 'left' ? Math.PI / 2 : -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
-          ) : (
-            <CornerFitting position={[x, height, 0]} side={side} showLabel={showLabel} colorOption={colorOption} />
-          )}
-        </group>
-
-        {!isFreestanding && hasShelves && (
-          <>
-            <group position={[sideX, e * 3, -e * 0.5]}>
-              <Pipe start={[x, height, wallZ + 4.35]} end={[x, height, -1.5]} showLabel={showLabel} colorOption={colorOption} />
-            </group>
-            <group position={[sideX, e * 3, -e * 1.5]}>
-              <Flange position={[x, height, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-            </group>
-            {/* Hex Nipple from wall */}
-            <group position={[sideX, e * 3, -e * 1.1]}>
-              <HexNipple position={[x, height, wallZ + 2.65]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-            </group>
-            {/* Coupling after Hex Nipple */}
-            <group position={[sideX, e * 3, -e * 0.8]}>
-              <Coupling position={[x, height, wallZ + 4.35]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-            </group>
-          </>
-        )}
+      <group position={[sideX, e * 0.5, 0]}>
+        <Pipe start={[x, startY, 0]} end={[x, height, 0]} showLabel={showLabel} colorOption={colorOption} />
       </group>
     );
   };
 
-  const shelfDepth = wallDistance + 5;
-  const shelfZ = -wallDistance / 2 + 3.5;
-
   return (
-    <group>
-      {buildSide(leftX, 'left')}
-      {buildSide(rightX, 'right')}
-
-      {length > 120 ? (
+    <group key={side}>
+      {isFreestanding ? (
         <>
-          <group position={[-explode * 0.75, explode * 4.5, 0]}>
-            <Pipe start={[leftX + 1.5, height, 0]} end={[0, height, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <group position={[sideX, -e, e * 0.5]}>
+            <Flange position={[x, 0, 15]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[0, explode * 4.5, 0]}>
-            <Coupling position={[0, height, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+          <group position={[sideX, -e, -e * 0.5]}>
+            <Flange position={[x, 0, -15]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[explode * 0.75, explode * 4.5, 0]}>
-            <Pipe start={[0, height, 0]} end={[rightX - 1.5, height, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <group position={[sideX, -e * 0.5, e * 0.5]}>
+            <Pipe start={[x, 1.5, 15]} end={[x, 4, 15]} showLabel={showLabel} colorOption={colorOption} />
           </group>
+          <group position={[sideX, -e * 0.5, -e * 0.5]}>
+            <Pipe start={[x, 1.5, -15]} end={[x, 4, -15]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[sideX, 0, e * 0.5]}>
+            <Elbow position={[x, 5.5, 15]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[sideX, 0, -e * 0.5]}>
+            <Elbow position={[x, 5.5, -15]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[sideX, 0, e * 0.25]}>
+            <Pipe start={[x, 5.5, 1.5]} end={[x, 5.5, 13.5]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[sideX, 0, -e * 0.25]}>
+            <Pipe start={[x, 5.5, -1.5]} end={[x, 5.5, -13.5]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[sideX, 0, 0]}>
+            <TFitting position={[x, 5.5, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          {renderVerticalPipe(7)}
         </>
       ) : (
-        <group position={[0, explode * 4.5, 0]}>
-          <Pipe start={[leftX + 1.5, height, 0]} end={[rightX - 1.5, height, 0]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
+        <>
+          <group position={[sideX, -e, 0]}>
+            <Flange position={[x, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+
+          {hasShelves ? (
+            <>
+              <group position={[sideX, -e * 0.5, 0]}>
+                <Pipe start={[x, 1.5, 0]} end={[x, 35, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+              <group position={[sideX, 0, 0]}>
+                <TFitting position={[x, 35, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+              <group position={[sideX, 0, -e * 0.5]}>
+                <Pipe start={[x, 35, -actualWallDist + 4.35]} end={[x, 35, -1.5]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+              {/* Hex Nipple */}
+              <group position={[sideX, 0, -e * 0.75]}>
+                <HexNipple position={[x, 35, -actualWallDist + 2.65]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+              {/* Coupling */}
+              <group position={[sideX, 0, -e * 0.625]}>
+                <Coupling position={[x, 35, -actualWallDist + 4.35]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+              <group position={[sideX, 0, -e]}>
+                <Flange position={[x, 35, -actualWallDist]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              <group position={[sideX, e * 0.5, 0]}>
+                <Pipe start={[x, 35, 0]} end={[x, 75, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+              <group position={[sideX, e, 0]}>
+                <TFitting position={[x, 75, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+              <group position={[sideX, e, -e * 0.5]}>
+                <Pipe start={[x, 75, -actualWallDist + 4.35]} end={[x, 75, -1.5]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+              {/* Hex Nipple */}
+              <group position={[sideX, e, -e * 0.75]}>
+                <HexNipple position={[x, 75, -actualWallDist + 2.65]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+              {/* Coupling */}
+              <group position={[sideX, e, -e * 0.625]}>
+                <Coupling position={[x, 75, -actualWallDist + 4.35]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+              <group position={[sideX, e, -e]}>
+                <Flange position={[x, 75, -actualWallDist]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              <group position={[sideX, e * 1.5, 0]}>
+                <Pipe start={[x, 75, 0]} end={[x, midY, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+            </>
+          ) : (
+            renderVerticalPipe(1.5)
+          )}
+        </>
       )}
 
+      {hasShelves ? (
+        <>
+          <group position={[sideX, e * 2, 0]}>
+            <Coupling position={[x, midY, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[sideX, e * 2.5, 0]}>
+            <Pipe start={[x, midY, 0]} end={[x, height, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+        </>
+      ) : null}
 
+      <group position={[sideX, e * 3, 0]}>
+        {isFreestanding ? (
+          <Elbow position={[x, height, 0]} rotation={[0, side === 'left' ? Math.PI / 2 : -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+        ) : (
+          <CornerFitting position={[x, height, 0]} side={side} showLabel={showLabel} colorOption={colorOption} />
+        )}
+      </group>
 
       {!isFreestanding && hasShelves && (
         <>
-          <group position={[0, explode * 0.75, 0]}>
-            <Shelf position={[0, 37.75, shelfZ]} length={length} depth={shelfDepth} woodColor={woodColor} />
+          <group position={[sideX, e * 3, -e * 0.5]}>
+            <Pipe start={[x, height, wallZ + 4.35]} end={[x, height, -1.5]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[0, explode * 2.25, 0]}>
-            <Shelf position={[0, 77.75, shelfZ]} length={length} depth={shelfDepth} woodColor={woodColor} />
+          <group position={[sideX, e * 3, -e * 1.5]}>
+            <Flange position={[x, height, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          {/* Hex Nipple from wall */}
+          <group position={[sideX, e * 3, -e * 1.1]}>
+            <HexNipple position={[x, height, wallZ + 2.65]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          {/* Coupling after Hex Nipple */}
+          <group position={[sideX, e * 3, -e * 0.8]}>
+            <Coupling position={[x, height, wallZ + 4.35]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
         </>
       )}
-
     </group>
   );
+};
+
+const shelfDepth = wallDistance + 5;
+const shelfZ = -wallDistance / 2 + 3.5;
+
+return (
+  <group>
+    {buildSide(leftX, 'left')}
+    {buildSide(rightX, 'right')}
+
+    {length > 120 ? (
+      <>
+        <group position={[-explode * 0.75, explode * 4.5, 0]}>
+          <Pipe start={[leftX + 1.5, height, 0]} end={[0, height, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <group position={[0, explode * 4.5, 0]}>
+          <Coupling position={[0, height, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <group position={[explode * 0.75, explode * 4.5, 0]}>
+          <Pipe start={[0, height, 0]} end={[rightX - 1.5, height, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+      </>
+    ) : (
+      <group position={[0, explode * 4.5, 0]}>
+        <Pipe start={[leftX + 1.5, height, 0]} end={[rightX - 1.5, height, 0]} showLabel={showLabel} colorOption={colorOption} />
+      </group>
+    )}
+
+
+
+    {!isFreestanding && hasShelves && (
+      <>
+        <group position={[0, explode * 0.75, 0]}>
+          <Shelf position={[0, 37.75, shelfZ]} length={length} depth={shelfDepth} woodColor={woodColor} />
+        </group>
+        <group position={[0, explode * 2.25, 0]}>
+          <Shelf position={[0, 77.75, shelfZ]} length={length} depth={shelfDepth} woodColor={woodColor} />
+        </group>
+      </>
+    )}
+
+  </group>
+);
 };
 
 const Scene = React.memo(({ length, height, wallDistance, explode, hasShelves, isFreestanding, colorOption, skuType, woodColor, cameraState, tiers = 4, tubeType = 'round' }: { length: number, height: number, wallDistance: number, explode: number, hasShelves: boolean, isFreestanding: boolean, colorOption: ColorOption, skuType: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku888', woodColor: string, cameraState?: any, tiers?: number, tubeType?: 'round' | 'square' }) => {
