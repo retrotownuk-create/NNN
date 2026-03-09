@@ -5852,6 +5852,8 @@ export default function App() {
     const default141: SavedSKU = { name: 'SKU 141', length: 120, height: 80, wallDistance: 40, hasShelves: false, isFreestanding: true, colorName: 'Black', skuType: 'sku141' };
     const default142: SavedSKU = { name: 'SKU 142', length: 100, height: 0, wallDistance: 20, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku142' };
     const default143: SavedSKU = { name: 'SKU 143', length: 200, height: 100, wallDistance: 8, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku143' };
+    const default161: SavedSKU = { name: 'SKU 161', length: 120, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: true, colorName: 'Black', skuType: 'sku161' };
+    const default162: SavedSKU = { name: 'SKU 162', length: 100, height: 0, wallDistance: 23, hasShelves: true, isFreestanding: false, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku162' };
     const default163: SavedSKU = { name: 'SKU 163', length: 120, height: 90, wallDistance: 23, hasShelves: false, isFreestanding: true, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku163', tiers: 2 };
     const default164: SavedSKU = { name: 'SKU 164', length: 120, height: 90, wallDistance: 15, hasShelves: false, isFreestanding: true, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku164', tiers: 2 };
     const default165: SavedSKU = { name: 'SKU 165', length: 120, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku165' };
@@ -5871,7 +5873,7 @@ export default function App() {
 
     const allDefaults = [
       default4210, default300, default103, default105, default106, default107, default108, default109, default110, default111, default112, default113, default114, default115, default116, default117, default118, default119, default120, default121, default122, default123, default124, default125, default126, default127, default128, default129, default130, default131, default132, default133, default134, default135, default136, default137, default138,
-      default140, default141, default142, default143, default163, default164, default165, default166, default167, default168, default169, default170, default171, default172, default173, default174, default175, default176, default177, default178
+      default140, default141, default142, default143, default161, default162, default163, default164, default165, default166, default167, default168, default169, default170, default171, default172, default173, default174, default175, default176, default177, default178
     ];
 
     const saved = localStorage.getItem('savedSKUs');
@@ -7560,7 +7562,7 @@ export default function App() {
                         <label className="text-xs font-bold text-gray-700">{((skuType as string) === 'sku000' || (skuType as string) === 'sku106' || (skuType as string) === 'sku107' || (skuType as string) === 'sku129') ? 'Shelf Depth' : ((skuType as string) === 'sku111' || (skuType as string) === 'sku113' || (skuType as string) === 'sku116' || (skuType as string) === 'sku119' || (skuType as string) === 'sku124' || (skuType as string) === 'sku125') ? 'Drop Depth' : 'Depth'}</label>
                         <span className="text-xs font-mono font-bold text-black">{wallDistance} cm</span>
                       </div>
-                      {skuType === 'sku000' || skuType === 'sku129' ? (
+                      {skuType === 'sku000' || skuType === 'sku129' || skuType === 'sku162' ? (
                         <input
                           type="range"
                           min="15" max="23" step="8"
