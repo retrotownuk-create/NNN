@@ -5135,7 +5135,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             <HexNipple position={[x + outerDir * 2.875, baseArmHeight, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
             <group position={[x + outerDir * 5.75, baseArmHeight, 0]}>
               <group position={[outerDir * e * 0.5, 0, 0]}>
-                <Elbow position={[0, 0, 0]} rotation={[0, isLeft ? -Math.PI / 2 : Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+                <Elbow position={[0, 0, 0]} rotation={[0, isLeft ? Math.PI / 2 : -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
                 <group position={[0, -e * 0.5, 0]}>
                   <HexNipple position={[0, -2.875, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
                   <group position={[0, -e * 0.5, 0]}>
@@ -5199,7 +5199,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     );
   }
 
-  if (skuType === 'sku173')  {
+  if (skuType === 'sku173') {
     const e = explode * 2.0;
     const bracketZ = -wallDistance;
     const lHalf = length / 2;
