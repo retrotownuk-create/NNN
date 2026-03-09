@@ -4384,13 +4384,13 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const e = explode * 1.5;
 
     const zElbow = 0;
-    const zWallSurface = -30.0;
+    const zWallSurface = -wallDistance;
     const yTee = 0;
 
     const leftTx = leftX + 5.0;
     const rightTx = rightX - 5.0;
 
-    const eZ = zWallSurface + 4.5;
+    const eZ = zWallSurface + 4.4; // 1.2 flange + 3.2 nipple = 4.4
     const eY = eZ;
 
     const diagTopY = yTee - 1.556;
@@ -4402,7 +4402,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     return (
       <group position={[0, -height / 2 + 10, 0]}>
         {/* Left Side */}
-        <group position={[0, 0, 0]}>
+        <group position={[-e, 0, 0]}>
           <group position={[0, 0, -e]}>
             <Flange position={[leftX, yTee, zWallSurface + 0.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
@@ -4413,29 +4413,29 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             <Elbow position={[leftX, yTee, zElbow]} rotation={[0, Math.PI, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
           </group>
 
-          <group position={[e * 0.5, 0, 0]}>
+          <group position={[0, 0, 0]}>
             <HexNipple position={[leftX + 3.2, yTee, zElbow]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[e * 1.0, 0, 0]}>
+          <group position={[0, 0, 0]}>
             <TFitting position={[leftTx, yTee, zElbow]} rotation={[-Math.PI / 4, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
           </group>
 
-          <group position={[e * 1.0, -e * 0.5, -e * 0.5]}>
+          <group position={[0, -e * 0.5, -e * 0.5]}>
             <Pipe start={[leftTx, diagTopY, diagTopZ]} end={[leftTx, diagBotY, diagBotZ]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[e * 1.0, -e * 1.0, -e * 1.0]}>
+          <group position={[0, -e * 1.0, -e * 1.0]}>
             <FortyFiveElbow position={[leftTx, eY, eZ]} rotation={[Math.PI / 2, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[e * 1.0, -e * 1.5, -e * 1.5]}>
+          <group position={[0, -e * 1.2, -e * 1.5]}>
             <HexNipple position={[leftTx, eY, zWallSurface + 1.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[e * 1.0, -e * 2.0, -e * 2.0]}>
+          <group position={[0, -e * 1.5, -e * 2.0]}>
             <Flange position={[leftTx, eY, zWallSurface + 0.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
         </group>
 
         {/* Right Side */}
-        <group position={[0, 0, 0]}>
+        <group position={[e, 0, 0]}>
           <group position={[0, 0, -e]}>
             <Flange position={[rightX, yTee, zWallSurface + 0.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
@@ -4446,29 +4446,29 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             <Elbow position={[rightX, yTee, zElbow]} rotation={[0, Math.PI, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
           </group>
 
-          <group position={[-e * 0.5, 0, 0]}>
+          <group position={[0, 0, 0]}>
             <HexNipple position={[rightX - 3.2, yTee, zElbow]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[-e * 1.0, 0, 0]}>
+          <group position={[0, 0, 0]}>
             <TFitting position={[rightTx, yTee, zElbow]} rotation={[-Math.PI / 4, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
           </group>
 
-          <group position={[-e * 1.0, -e * 0.5, -e * 0.5]}>
+          <group position={[0, -e * 0.5, -e * 0.5]}>
             <Pipe start={[rightTx, diagTopY, diagTopZ]} end={[rightTx, diagBotY, diagBotZ]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[-e * 1.0, -e * 1.0, -e * 1.0]}>
+          <group position={[0, -e * 1.0, -e * 1.0]}>
             <FortyFiveElbow position={[rightTx, eY, eZ]} rotation={[Math.PI / 2, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[-e * 1.0, -e * 1.5, -e * 1.5]}>
+          <group position={[0, -e * 1.2, -e * 1.5]}>
             <HexNipple position={[rightTx, eY, zWallSurface + 1.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[-e * 1.0, -e * 2.0, -e * 2.0]}>
+          <group position={[0, -e * 1.5, -e * 2.0]}>
             <Flange position={[rightTx, eY, zWallSurface + 0.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
         </group>
 
         {/* Horizontal Bar */}
-        <group position={[0, 0, e * 1.0]}>
+        <group position={[0, 0, 0]}>
           {(() => {
             const hPipes = getPipesForLength(length);
             const railL_base = leftTx + 1.8;
@@ -4478,27 +4478,22 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             const pipeGap = hPipes.length > 1 ? e * 2 : 0;
             const segW = totalW / hPipes.length;
 
-            return (
-              <group>
-                {hPipes.map((p, idx) => {
-                  const startX_n = railL_base + (idx * segW);
-                  const endX_n = railL_base + ((idx + 1) * segW);
+            return hPipes.map((pLen, idx) => {
+              const startX = railL_base + idx * segW;
+              const endX = startX + segW;
 
-                  const centerSep = (idx - (hPipes.length - 1) / 2) * pipeGap;
-                  const startX = startX_n + centerSep + (idx === 0 ? -e : idx === hPipes.length - 1 ? e : 0);
-                  const endX = endX_n + centerSep + (idx === 0 ? -e : idx === hPipes.length - 1 ? e : 0);
+              const xLeft = startX + (idx > 0 ? e : 0);
+              const xRight = endX - (idx < hPipes.length - 1 ? e : 0);
 
-                  return (
-                    <group key={idx}>
-                      <Pipe start={[startX, yTee, zElbow]} end={[endX, yTee, zElbow]} colorOption={colorOption} showLabel={showLabel} />
-                      {idx < hPipes.length - 1 && (
-                        <Coupling position={[endX + pipeGap / 2, yTee, zElbow]} rotation={[0, 0, Math.PI / 2]} colorOption={colorOption} showLabel={showLabel} />
-                      )}
-                    </group>
-                  );
-                })}
-              </group>
-            );
+              return (
+                <group key={`h-${idx}`}>
+                  <Pipe start={[xLeft, yTee, zElbow]} end={[xRight, yTee, zElbow]} showLabel={showLabel} colorOption={colorOption} />
+                  {idx < hPipes.length - 1 && (
+                    <Coupling position={[endX, yTee, zElbow]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                  )}
+                </group>
+              );
+            });
           })()}
         </group>
       </group>
