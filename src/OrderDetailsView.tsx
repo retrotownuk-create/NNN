@@ -884,6 +884,14 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-90-elbows', '90° Elbows', quantity * 4);
     // Middle brackets each use a T-fitting instead of an elbow
     addFitting('f-t-fittings', 'T-Fittings', quantity * (numMounts - 2));
+
+    // Couplings
+    const stemCouplings = numMounts * getExtraCouplings(wallDistance - 2, 1);
+    const dropCouplings = 2 * getExtraCouplings(Math.max(0, dropHeight - 5), 1);
+    const totalCouplings = stemCouplings + dropCouplings;
+    if (totalCouplings > 0) {
+      addFitting('f-couplings', 'Couplings', quantity * totalCouplings);
+    }
   } else if (skuType === 'sku144') {
     // Wall-mounted toilet paper holder (Flange -> Pipe -> T-Fitting -> Cap + Pipe/Cap)
     addPipes(Math.max(0, wallDistance - 2), 1, 'p-wall');
