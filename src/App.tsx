@@ -5141,38 +5141,42 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   if (skuType === 'sku173') {
     const e = explode * 1.5;
     const bracketZ = -wallDistance;
+    const lHalf = length / 2;
+
+    const lxElbow = -lHalf + 2;
+    const rxElbow = lHalf - 2;
+
+    // Vector from left elbow to left wall is (-0.7071, 0, -0.7071)
+    const lxHex = lxElbow - 2.6 * 0.7071;
+    const lzHex = bracketZ - 2.6 * 0.7071;
+    const lxFlange = lxElbow - 3.6 * 0.7071;
+    const lzFlange = bracketZ - 3.6 * 0.7071;
+
+    // Vector from right elbow to right wall is (0.7071, 0, -0.7071)
+    const rxHex = rxElbow + 2.6 * 0.7071;
+    const rzHex = bracketZ - 2.6 * 0.7071;
+    const rxFlange = rxElbow + 3.6 * 0.7071;
+    const rzFlange = bracketZ - 3.6 * 0.7071;
 
     return (
       <group position={[0, height / 2, 0]}>
-        {/* Left Side Component Group: Left-Explode */}
-        <group position={[-e, 0, 0]}>
-          <group position={[0, 0, -e]}>
-            <Flange position={[-length / 2, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
-          <group position={[0, 0, -e * 0.5]}>
-            <HexNipple position={[-length / 2, 0, bracketZ + 1.2]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
-          <group position={[0, 0, 0]}>
-            <Elbow position={[-length / 2, 0, bracketZ + 3.2]} rotation={[Math.PI / 2, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
+        {/* Left Side Group */}
+        <group position={[-e, 0, -e]}>
+          <Flange position={[lxFlange, 0, lzFlange]} rotation={[0.9553, -0.5236, -0.9553]} showLabel={showLabel} colorOption={colorOption} />
+          <HexNipple position={[lxHex, 0, lzHex]} rotation={[0.9553, -0.5236, -0.9553]} showLabel={showLabel} colorOption={colorOption} />
+          <FortyFiveElbow position={[lxElbow, 0, bracketZ]} rotation={[-Math.PI, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
-        {/* Right Side Component Group: Right-Explode */}
-        <group position={[e, 0, 0]}>
-          <group position={[0, 0, -e]}>
-            <Flange position={[length / 2, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
-          <group position={[0, 0, -e * 0.5]}>
-            <HexNipple position={[length / 2, 0, bracketZ + 1.2]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
-          <group position={[0, 0, 0]}>
-            <Elbow position={[length / 2, 0, bracketZ + 3.2]} rotation={[Math.PI / 2, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
+        {/* Right Side Group */}
+        <group position={[e, 0, -e]}>
+          <Flange position={[rxFlange, 0, rzFlange]} rotation={[0.9553, 0.5236, 0.9553]} showLabel={showLabel} colorOption={colorOption} />
+          <HexNipple position={[rxHex, 0, rzHex]} rotation={[0.9553, 0.5236, 0.9553]} showLabel={showLabel} colorOption={colorOption} />
+          <FortyFiveElbow position={[rxElbow, 0, bracketZ]} rotation={[-Math.PI, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
-        {/* Center Connecting Horizontal Pipe: Static Center Explode */}
+        {/* Center Diagonal Pipe */}
         <group position={[0, 0, 0]}>
-          <Pipe start={[-length / 2 + 2.2, 0, bracketZ + 3.2]} end={[length / 2 - 2.2, 0, bracketZ + 3.2]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[lxElbow + 0.8, 0, bracketZ]} end={[rxElbow - 0.8, 0, bracketZ]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );

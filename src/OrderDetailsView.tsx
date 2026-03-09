@@ -691,11 +691,11 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-90-elbows', '90° Elbows', quantity * 2);
     addFitting('f-couplings', 'Couplings', quantity * getExtraCouplings(Math.max(0, length - 10), 1));
   } else if (skuType === 'sku173') {
-    addPipes(Math.max(0, length - 4.4), 1, 'p-horiz-bar');
+    addPipes(Math.max(0, length - 10), 1, 'p-diagonal');
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
-    addFitting('f-90-elbows', '90° Elbows', quantity * 2);
+    addFitting('f-45-elbows', '45° Elbows', quantity * 2);
     addFitting('f-hex-nipples', 'Hex Nipples', quantity * 2);
-    addFitting('f-couplings', 'Couplings', quantity * getExtraCouplings(Math.max(0, length - 4.4), 1));
+    addFitting('f-couplings', 'Couplings', quantity * getExtraCouplings(Math.max(0, length - 10), 1));
   } else if (skuType === 'sku176') {
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
     addFitting('f-90-elbows', '90° Elbows', quantity * 1);
