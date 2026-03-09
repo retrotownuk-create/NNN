@@ -4549,7 +4549,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             <group key={`mount-${i}`} position={[xExp, 0, 0]}>
               {/* Flange */}
               <group position={[0, 0, -e]}>
-                <Flange position={[x, y, baseZ]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                <Flange position={[x, y, baseZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
               <group position={[0, 0, -e * 0.75]}>
@@ -4794,7 +4794,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             <group key={`mount-${i}`} position={[xExp, 0, 0]}>
               {/* Flange */}
               <group position={[0, 0, -e]}>
-                <Flange position={[x, y, baseZ]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                <Flange position={[x, y, baseZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
               {/* Stem */}
               <group position={[0, 0, -e * 0.5]}>
