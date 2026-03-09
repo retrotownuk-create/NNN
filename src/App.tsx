@@ -4696,8 +4696,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const perpDirX = Math.sin(θ);
     const perpDirY = -Math.cos(θ);
 
-    const startElbowRot: [number, number, number] = [0, -Math.PI / 2, θ + Math.PI / 2];
-    const endElbowRot: [number, number, number] = [0, Math.PI / 2, θ - Math.PI / 2];
+    const startElbowRot: [number, number, number] = [0, -Math.PI / 2, θ];
+    const endElbowRot: [number, number, number] = [0, Math.PI / 2, θ];
     const tFitRot: [number, number, number] = [0, -Math.PI / 2, θ - Math.PI / 2];
     const perpNippleRot: [number, number, number] = [0, 0, θ - Math.PI];
     const baseElbowRot: [number, number, number] = [0, Math.PI, θ - Math.PI];
@@ -4717,8 +4717,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           const nx = mx + 2.7 * perpDirX;
           const ny = my + 2.7 * perpDirY;
 
-          const ex = mx + 5.0 * perpDirX;
-          const ey = my + 5.0 * perpDirY;
+          const ex = mx + 5.4 * perpDirX;
+          const ey = my + 5.4 * perpDirY;
 
           return (
             <group key={`mount-${i}`} position={[xExp, 0, 0]}>
@@ -4727,14 +4727,14 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
               </group>
 
               <group position={[0, 0, -e * 0.75]}>
-                <HexNipple position={[ex, ey, wallZ + 2.4]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                <HexNipple position={[ex, ey, wallZ + 2.35]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
-              <group position={[0, -e * 0.5, -e * 0.5]}>
+              <group position={[0, 0, -e * 0.5]}>
                 <Elbow position={[ex, ey, railZ]} rotation={baseElbowRot} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
-              <group position={[0, -e * 0.25, -e * 0.25]}>
+              <group position={[0, 0, -e * 0.25]}>
                 <HexNipple position={[nx, ny, railZ]} rotation={perpNippleRot} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
