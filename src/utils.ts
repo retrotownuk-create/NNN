@@ -61,3 +61,19 @@ export const getExtraCouplings = (target: number, count: number) => {
   const pipes = getPipesForLength(target);
   return (pipes.length - 1) * count;
 };
+
+export const getEqualSplitPipes = (totalLength: number, numSegments: number): number[] => {
+  if (totalLength <= 0 || numSegments <= 0) return [];
+  const pipes: number[] = [];
+  let remaining = totalLength;
+  for (let i = 0; i < numSegments; i++) {
+    const segmentsLeft = numSegments - i;
+    const currentIdeal = remaining / segmentsLeft;
+    const closest = AVAILABLE_PIPE_SIZES.reduce((prev, curr) =>
+      Math.abs(curr - currentIdeal) < Math.abs(prev - currentIdeal) ? curr : prev
+    );
+    pipes.push(closest);
+    remaining -= closest;
+  }
+  return pipes;
+};

@@ -11,7 +11,7 @@ import * as THREE from 'three';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import html2canvas from 'html2canvas';
-import { COLORS, WOOD_COLORS, ColorOption, getPipesForLength, getExtraCouplings } from './utils';
+import { COLORS, WOOD_COLORS, ColorOption, getPipesForLength, getExtraCouplings, getEqualSplitPipes } from './utils';
 import { fetchOrders, saveOrders } from './api';
 
 // --- Components ---
@@ -4865,14 +4865,24 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const dropHeight = 10;
     const numMounts = Math.max(3, Math.ceil(length / 120) + 1);
     const bracketSpan = length - 5;
-    const mountSpacing = bracketSpan / (numMounts - 1);
+    const railLength = Math.max(0, length - (numMounts * 5));
+    const railPipes = getEqualSplitPipes(railLength, numMounts - 1);
+
+    const mtX: number[] = [];
+    let currX = -bracketSpan / 2;
+    mtX.push(currX);
+    for (const rp of railPipes) {
+      currX += rp + 5;
+      mtX.push(currX);
+    }
+
     const e = explode * 1.5;
     const zWall = -wallDistance;
 
     return (
       <group position={[0, height / 2, 0]}>
         {Array.from({ length: numMounts }).map((_, i) => {
-          const x = -bracketSpan / 2 + i * mountSpacing;
+          const x = mtX[i];
           const isEnd = i === 0 || i === numMounts - 1;
           const xExp = i === 0 ? -e : (i === numMounts - 1 ? e : 0);
           return (
@@ -4891,17 +4901,17 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
               </group>
               <group position={[0, -e, 0]}>
                 {isEnd ? (
-                  <Elbow position={[x, -dropHeight, 0]} rotation={[-Math.PI / 2, 0, i === 0 ? Math.PI / 2 : -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                  <Elbow position={[x, -dropHeight, 0]} rotation={[0, i === 0 ? Math.PI / 2 : -Math.PI / 2, Math.PI]} showLabel={showLabel} colorOption={colorOption} />
                 ) : (
-                  <TFitting position={[x, -dropHeight, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                  <TFitting position={[x, -dropHeight, 0]} rotation={[Math.PI / 2, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
                 )}
               </group>
             </group>
           );
         })}
-        {Array.from({ length: numMounts - 1 }).map((_, i) => {
-          const startX = -bracketSpan / 2 + i * mountSpacing;
-          const endX = startX + mountSpacing;
+        {railPipes.map((pipeLen, i) => {
+          const startX = mtX[i];
+          const endX = mtX[i + 1];
           return (
             <group key={'rail' + i} position={[0, -e, 0]}>
               <Pipe start={[startX + 2.5, -dropHeight, 0]} end={[endX - 2.5, -dropHeight, 0]} showLabel={showLabel} colorOption={colorOption} />

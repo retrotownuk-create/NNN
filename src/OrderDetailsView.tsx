@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { COLORS, WOOD_COLORS, getPipesForLength, getExtraCouplings } from './utils';
+import { COLORS, WOOD_COLORS, getPipesForLength, getExtraCouplings, getEqualSplitPipes } from './utils';
 
 export type CutlistItem = {
   id: string;
@@ -813,7 +813,8 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
   } else if (skuType === 'sku170') {
     const dropHeight = 10;
     const numMounts = Math.max(3, Math.ceil(length / 120) + 1);
-    const railLength = (length - (numMounts * 5)) / (numMounts - 1);
+    const railLength = Math.max(0, length - (numMounts * 5));
+    const railPipes = getEqualSplitPipes(railLength, numMounts - 1);
 
     // Wall stem: wallDistance - 2 = pipe cut length (23cm pipe + 2cm fittings = 25cm total)
     addPipes(wallDistance - 2, numMounts, 'p-wall');
@@ -822,7 +823,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addPipes(Math.max(0, dropHeight - 5), numMounts, 'p-drop');
 
     // Rail pipes
-    addPipes(Math.max(0, railLength), numMounts - 1, 'p-rail');
+    railPipes.forEach(rp => addPipes(rp, 1, 'p-rail'));
 
     // Fittings
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * numMounts);
@@ -832,8 +833,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     // Couplings
     const stemCouplings = numMounts * getExtraCouplings(wallDistance - 2, 1);
     const dropCouplings = numMounts * getExtraCouplings(Math.max(0, dropHeight - 5), 1);
-    const railCouplings = (numMounts - 1) * getExtraCouplings(Math.max(0, railLength), 1);
-    const totalCouplings = stemCouplings + dropCouplings + railCouplings;
+    const totalCouplings = stemCouplings + dropCouplings;
     if (totalCouplings > 0) {
       addFitting('f-couplings', 'Couplings', quantity * totalCouplings);
     }
