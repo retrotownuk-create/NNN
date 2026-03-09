@@ -206,8 +206,12 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
   } else if (skuType === 'sku159') {
     addPipes(30, 2, 'p-wall-conn');
     addPipes(35, 2, 'p-angled');
-    if (length > 120) addPipes((length - 25) / 2, 2, 'p-horiz-bar');
-    else addPipes(length - 25, 1, 'p-horiz-bar');
+    if (length > 120) {
+      const split = getEqualSplitPipes(length - 25, 2);
+      split.forEach(p => addPipes(p, 1, 'p-horiz-bar'));
+    } else {
+      addPipes(length - 25, 1, 'p-horiz-bar');
+    }
   } else if (skuType === 'sku160') {
     addPipes(wallDistance - 6.6, 2, 'p-wall-conn');
     const angledLength = Math.sqrt(Math.pow(wallDistance, 2) + Math.pow(wallDistance, 2));
@@ -217,8 +221,8 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
   } else if (skuType === 'sku161') {
     addPipes(30, 2, 'p-wall-conn');
     addPipes(35, 3, 'p-angled');
-    const pLen = Math.max(0, (length - 30) / 2);
-    addPipes(pLen, 2, 'p-horiz-bar');
+    const split = getEqualSplitPipes(Math.max(0, length - 30), 2);
+    split.forEach(p => addPipes(p, 1, 'p-horiz-bar'));
   } else if (skuType === 'sku162') {
     // Only shelf
   } else if (skuType === 'sku107') {
