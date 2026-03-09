@@ -5145,14 +5145,35 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
     return (
       <group position={[0, height / 2, 0]}>
-        <group position={[0, 0, -e]}>
-          <Flange position={[-length / 2, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          <Flange position={[length / 2, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        {/* Left Side Component Group: Left-Explode */}
+        <group position={[-e, 0, 0]}>
+          <group position={[0, 0, -e]}>
+            <Flange position={[-length / 2, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[0, 0, -e * 0.5]}>
+            <HexNipple position={[-length / 2, 0, bracketZ + 1.2]} quaternion={new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI / 2, 0, 0))} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[0, 0, 0]}>
+            <FortyFiveElbow position={[-length / 2 + 2, 0, bracketZ + 3.2]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
         </group>
+
+        {/* Right Side Component Group: Right-Explode */}
+        <group position={[e, 0, 0]}>
+          <group position={[0, 0, -e]}>
+            <Flange position={[length / 2, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[0, 0, -e * 0.5]}>
+            <HexNipple position={[length / 2, 0, bracketZ + 1.2]} quaternion={new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI / 2, 0, 0))} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[0, 0, 0]}>
+            <FortyFiveElbow position={[length / 2 - 2, 0, bracketZ + 3.2]} rotation={[0, 0, Math.PI]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+        </group>
+
+        {/* Center Connecting Diagonal Pipe: Static Center Explode */}
         <group position={[0, 0, 0]}>
-          <FortyFiveElbow position={[-length / 2 + 2, 0, bracketZ + 2]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          <Pipe start={[-length / 2 + 2.8, 0, bracketZ + 2.8]} end={[length / 2 - 2.8, 0, bracketZ + 2.8]} showLabel={showLabel} colorOption={colorOption} />
-          <FortyFiveElbow position={[length / 2 - 2, 0, bracketZ + 2]} rotation={[0, 0, Math.PI]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[-length / 2 + 2.8, 0, bracketZ + 4.0]} end={[length / 2 - 2.8, 0, bracketZ + 4.0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );
