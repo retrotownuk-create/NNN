@@ -4719,23 +4719,31 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           const ex = mx + 5.4 * perpDirX;
           const ey = my + 5.4 * perpDirY;
 
+          // Explode along actual connection paths to prevent sideways disjointing
+          const pushXY = e * 0.5;
+          const expNx = pushXY * 0.5 * perpDirX;
+          const expNy = pushXY * 0.5 * perpDirY;
+
+          const expEx = pushXY * perpDirX;
+          const expEy = pushXY * perpDirY;
+
           return (
             <group key={`mount-${i}`} position={[0, 0, 0]}>
-              <group position={[0, 0, -e]}>
+              <group position={[expEx, expEy, -e * 0.5]}>
                 <Flange position={[ex, ey, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
-              <group position={[0, 0, -e * 0.75]}>
+              <group position={[expEx, expEy, -e * 0.25]}>
                 <HexNipple position={[ex, ey, wallZ + 2.35]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
-              <group position={[0, 0, -e * 0.5]}>
+              <group position={[expEx, expEy, 0]}>
                 <group position={[ex, ey, railZ]} rotation={[0, 0, θ]}>
                   <Elbow rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
                 </group>
               </group>
 
-              <group position={[0, 0, -e * 0.25]}>
+              <group position={[expNx, expNy, 0]}>
                 <group position={[nx, ny, railZ]} rotation={[0, 0, θ]}>
                   <HexNipple rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
                 </group>
