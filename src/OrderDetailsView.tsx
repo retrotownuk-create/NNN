@@ -328,13 +328,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     }
     if (length > 120) addPipes((length - 4.4) / 2, 2, 'p-horiz-bar');
     else addPipes(length - 4.4, 1, 'p-horiz-bar');
-  } else if (skuType === 'sku177') {
-    const numPipes = Math.ceil(length / 120);
-    const numMounts = numPipes + 1;
-    addPipes(Math.max(0, wallDistance - 3.0), (numMounts * 1), 'p-wall-conn');
-    addPipes(height - 3, 2, 'p-vert-drop');
-    const pipes = getPipesForLength(length);
-    pipes.forEach((p, i) => addPipes(p, 1, `p-horiz-${i}`));
+
   } else if (skuType !== 'sku108' && skuType !== 'sku109' && skuType !== 'sku110' && skuType !== 'sku111' && skuType !== 'sku112' && skuType !== 'sku113' && skuType !== 'sku114' && skuType !== 'sku115' && skuType !== 'sku116' && skuType !== 'sku117' && skuType !== 'sku118' && skuType !== 'sku119' && skuType !== 'sku120' && skuType !== 'sku121' && skuType !== 'sku122' && skuType !== 'sku123' && skuType !== 'sku124' && skuType !== 'sku125' && skuType !== 'sku126' && skuType !== 'sku127' && skuType !== 'sku128' && skuType !== 'sku129' && skuType !== 'sku130' && skuType !== 'sku131' && skuType !== 'sku132' && skuType !== 'sku133' && skuType !== 'sku134' && skuType !== 'sku135' && skuType !== 'sku136' && skuType !== 'sku137' && skuType !== 'sku138' && skuType !== 'sku140' && skuType !== 'sku141' && skuType !== 'sku142' && skuType !== 'sku143' && skuType !== 'sku144' && skuType !== 'sku145' && skuType !== 'sku146' && skuType !== 'sku147' && skuType !== 'sku148' && skuType !== 'sku149' && skuType !== 'sku150' && skuType !== 'sku151' && skuType !== 'sku152' && skuType !== 'sku153' && skuType !== 'sku154' && skuType !== 'sku155' && skuType !== 'sku156' && skuType !== 'sku157' && skuType !== 'sku158' && skuType !== 'sku159' && skuType !== 'sku160' && skuType !== 'sku161' && skuType !== 'sku162' && skuType !== 'sku163' && skuType !== 'sku164' && skuType !== 'sku165' && skuType !== 'sku166' && skuType !== 'sku167' && skuType !== 'sku168' && skuType !== 'sku169' && skuType !== 'sku170' && skuType !== 'sku171' && skuType !== 'sku172' && skuType !== 'sku173' && skuType !== 'sku174' && skuType !== 'sku175' && skuType !== 'sku176' && skuType !== 'sku177' && skuType !== 'sku178' && skuType !== 'sku177' && skuType !== 'sku178') {
     addPipes(height - (isFreestanding ? 7 : 1.5), 2, 'p-vert');
     addPipes(wallDistance - 6.6, 2, 'p-wall-conn');

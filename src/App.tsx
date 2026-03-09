@@ -4269,7 +4269,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
       // Fitting at bottomY - CORNER ELBOW AS PER REQUEST
       parts.push(
         <group key={`c-bot-${isLeft}`} position={[xExp, bottomY + getEY(0), e]}>
-          <CornerFitting position={[x, 0, zRail]} rotation={[Math.PI / 2, isLeft ? 0 : -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} side={isLeft ? 'left' : 'right'} />
+          <CornerFitting position={[x, 0, zRail]} rotation={[0, 0, isLeft ? Math.PI / 2 : -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} side={isLeft ? 'left' : 'right'} />
         </group>
       );
 
@@ -7610,7 +7610,7 @@ export default function App() {
                   </div>
                 </div>
 
-                {(skuType === 'standard' || skuType === 'sku107' || skuType === 'sku108' || skuType === 'sku109' || skuType === 'sku110' || skuType === 'sku115' || skuType === 'sku127' || skuType === 'sku128' || skuType === 'sku131' || skuType === 'sku133' || skuType === 'sku137') && (
+                {(skuType === 'standard' || skuType === 'sku107' || skuType === 'sku108' || skuType === 'sku109' || skuType === 'sku110' || skuType === 'sku115' || skuType === 'sku127' || skuType === 'sku128' || skuType === 'sku131' || skuType === 'sku133' || skuType === 'sku137' || skuType === 'sku177') && (
                   <>
                     <div className="flex items-center justify-between p-3 bg-gray-50 rounded-2xl border border-gray-100">
                       <div className="flex items-center gap-2">
