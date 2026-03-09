@@ -4754,10 +4754,10 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         {/* Horizontal Bars */}
         <group position={[0, 0, 0]}>
           <group position={[-e * 0.5, 0, e * 1.0]}>
-            <Pipe start={[leftTx + 1.8, yTee, zElbow]} end={[-1.8, yTee, zElbow]} showLabel={showLabel} colorOption={colorOption} />
+            <Pipe start={[leftTx + 1.8, yTee, zElbow]} end={[leftTx + 1.8 + leftPipe, yTee, zElbow]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           <group position={[e * 0.5, 0, e * 1.0]}>
-            <Pipe start={[1.8, yTee, zElbow]} end={[rightTx - 1.8, yTee, zElbow]} showLabel={showLabel} colorOption={colorOption} />
+            <Pipe start={[rightTx - 1.8 - rightPipe, yTee, zElbow]} end={[rightTx - 1.8, yTee, zElbow]} showLabel={showLabel} colorOption={colorOption} />
           </group>
         </group>
       </group>
