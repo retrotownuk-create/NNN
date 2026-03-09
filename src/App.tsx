@@ -4511,7 +4511,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   }
 
   if (skuType === 'sku169') {
-    const numMounts = Math.max(2, Math.ceil(length / 120) + 1);
+    const numMounts = Math.max(2, Math.ceil(length / 80) + 1);
     const e = explode * 1.5;
     const baseZ = -wallDistance;
     const handrailZ = baseZ + 5; // Fixed 5cm depth based on HexNipple + Elbow
@@ -4748,7 +4748,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   }
 
   if (skuType === 'sku143') {
-    const numMounts = Math.max(2, Math.ceil(length / 120) + 1);
+    const numMounts = Math.max(2, Math.ceil(length / 80) + 1);
     const e = explode * 1.5;
     const baseZ = -wallDistance;
     const bracketLen = Math.max(0, wallDistance - 2);
@@ -5232,7 +5232,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   );
 };
 
-const Scene = React.memo(({ length, height, wallDistance, explode, hasShelves, isFreestanding, colorOption, skuType, woodColor, cameraState, tiers = 4 }: { length: number, height: number, wallDistance: number, explode: number, hasShelves: boolean, isFreestanding: boolean, colorOption: ColorOption, skuType: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku888', woodColor: string, cameraState?: any, tiers?: number }) => {
+const Scene = React.memo(({ length, height, wallDistance, explode, hasShelves, isFreestanding, colorOption, skuType, woodColor, cameraState, tiers = 4, tubeType = 'round' }: { length: number, height: number, wallDistance: number, explode: number, hasShelves: boolean, isFreestanding: boolean, colorOption: ColorOption, skuType: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku888', woodColor: string, cameraState?: any, tiers?: number, tubeType?: 'round' | 'square' }) => {
   return (
     <>
       <PerspectiveCamera makeDefault position={cameraState?.position || [0, 100, 250]} fov={50} />
@@ -5261,7 +5261,19 @@ const Scene = React.memo(({ length, height, wallDistance, explode, hasShelves, i
       <pointLight position={[-50, 100, 50]} intensity={0.5} />
       <pointLight position={[0, 50, 200]} intensity={0.8} />
 
-      <Rack length={length} height={height} wallDistance={wallDistance} explode={explode} hasShelves={hasShelves} isFreestanding={isFreestanding} colorOption={colorOption} skuType={skuType} woodColor={woodColor} tiers={tiers} />
+      <Rack
+        length={length}
+        height={height}
+        wallDistance={wallDistance}
+        explode={explode}
+        hasShelves={hasShelves}
+        isFreestanding={isFreestanding}
+        colorOption={colorOption}
+        skuType={skuType}
+        woodColor={woodColor}
+        tiers={tiers}
+        tubeType={tubeType}
+      />
     </>
   );
 });
@@ -5586,7 +5598,7 @@ export default function App() {
     const default140: SavedSKU = { name: 'SKU 140', length: 200, height: 0, wallDistance: 26.4, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku140' };
     const default141: SavedSKU = { name: 'SKU 141', length: 120, height: 80, wallDistance: 40, hasShelves: false, isFreestanding: true, colorName: 'Black', skuType: 'sku141' };
     const default142: SavedSKU = { name: 'SKU 142', length: 100, height: 0, wallDistance: 20, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku142' };
-    const default143: SavedSKU = { name: 'SKU 143', length: 200, height: 100, wallDistance: 0, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku143' };
+    const default143: SavedSKU = { name: 'SKU 143', length: 200, height: 100, wallDistance: 8, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku143' };
     const default144: SavedSKU = { name: 'SKU 144', length: 120, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku144' };
     const default145: SavedSKU = { name: 'SKU 145', length: 120, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku145' };
     const default146: SavedSKU = { name: 'SKU 146', length: 120, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku146' };
@@ -5612,7 +5624,7 @@ export default function App() {
     const default166: SavedSKU = { name: 'SKU 166', length: 15, height: 0, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku166' };
     const default167: SavedSKU = { name: 'SKU 167', length: 30, height: 0, wallDistance: 0, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku167' };
     const default168: SavedSKU = { name: 'SKU 168', length: 120, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: true, colorName: 'Black', skuType: 'sku168' };
-    const default169: SavedSKU = { name: 'SKU 169', length: 200, height: 100, wallDistance: 0, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku169' };
+    const default169: SavedSKU = { name: 'SKU 169', length: 200, height: 100, wallDistance: 8, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku169' };
     const default170: SavedSKU = { name: 'SKU 170', length: 120, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku170' };
     const default171: SavedSKU = { name: 'SKU 171', length: 100, height: 0, wallDistance: 25, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku171' };
     const default172: SavedSKU = { name: 'SKU 172', length: 20, height: 0, wallDistance: 0, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku172' };
@@ -6329,7 +6341,7 @@ export default function App() {
       <Canvas gl={{ preserveDrawingBuffer: true, alpha: true }}>
         <LabelContext.Provider value={{ size: labelSize, distance: labelDistance }}>
           <Suspense fallback={null}>
-            <Scene length={length} height={height} wallDistance={wallDistance} explode={0.7} hasShelves={hasShelves} isFreestanding={isFreestanding} colorOption={COLORS[colorName]} skuType={skuType} woodColor={woodColor} cameraState={(window as any).__ACTIVE_ASSEMBLY_CAMERA} tiers={tiers} />
+            <Scene length={length} height={height} wallDistance={wallDistance} explode={0.7} hasShelves={hasShelves} isFreestanding={isFreestanding} colorOption={COLORS[colorName]} skuType={skuType} woodColor={woodColor} cameraState={(window as any).__ACTIVE_ASSEMBLY_CAMERA} tiers={tiers} tubeType={tubeType} />
           </Suspense>
         </LabelContext.Provider>
       </Canvas>
@@ -7485,7 +7497,7 @@ export default function App() {
                   </div>
                 </div>
 
-                {getCutlistItems({ length, height, wallDistance, hasShelves, isFreestanding, colorName, woodColor, skuType, quantity, tiers }).some(i => i.type === 'wood') && (
+                {getCutlistItems({ length, height, wallDistance, hasShelves, isFreestanding, colorName, woodColor, skuType, quantity, tiers, tubeType }).some(i => i.type === 'wood') && (
                   <div>
                     <label className="text-xs font-bold text-gray-700 block mb-3">Wood Color</label>
                     <div className="flex flex-wrap gap-3">
@@ -7701,17 +7713,17 @@ export default function App() {
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold text-gray-800 tracking-tight">Cutlist</h2>
               <span className="text-sm font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">
-                ${calculatePrice(getCutlistItems({ length: deferredLength, height: deferredHeight, wallDistance: deferredWallDistance, hasShelves, isFreestanding, colorName, woodColor, skuType, quantity, tiers: deferredTiers })).toFixed(2)}
+                ${calculatePrice(getCutlistItems({ length: deferredLength, height: deferredHeight, wallDistance: deferredWallDistance, hasShelves, isFreestanding, colorName, woodColor, skuType, quantity, tiers: deferredTiers, tubeType })).toFixed(2)}
               </span>
             </div>
-            <CutlistDisplay config={{ length: deferredLength, height: deferredHeight, wallDistance: deferredWallDistance, hasShelves, isFreestanding, colorName, woodColor, skuType, quantity, tiers: deferredTiers }} />
+            <CutlistDisplay config={{ length: deferredLength, height: deferredHeight, wallDistance: deferredWallDistance, hasShelves, isFreestanding, colorName, woodColor, skuType, quantity, tiers: deferredTiers, tubeType }} />
           </div>
 
           <div id="assembly-canvas-container" className="h-[60vh] min-h-[400px] lg:h-full lg:min-h-0 w-full relative order-1 lg:order-none shrink-0 bg-transparent">
             <Canvas gl={{ preserveDrawingBuffer: true, alpha: true }}>
               <LabelContext.Provider value={{ size: labelSize, distance: labelDistance }}>
                 <Suspense fallback={null}>
-                  <Scene length={deferredLength} height={deferredHeight} wallDistance={deferredWallDistance} explode={explode} hasShelves={hasShelves} isFreestanding={isFreestanding} colorOption={COLORS[colorName]} skuType={skuType} woodColor={woodColor} tiers={deferredTiers} />
+                  <Scene length={deferredLength} height={deferredHeight} wallDistance={deferredWallDistance} explode={explode} hasShelves={hasShelves} isFreestanding={isFreestanding} colorOption={COLORS[colorName]} skuType={skuType} woodColor={woodColor} tiers={deferredTiers} tubeType={tubeType} />
                 </Suspense>
               </LabelContext.Provider>
             </Canvas>
