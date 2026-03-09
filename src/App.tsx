@@ -4947,42 +4947,58 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           const x = mtX[i];
           const isEnd = i === 0 || i === numMounts - 1;
           const xExp = i === 0 ? -e : (i === numMounts - 1 ? e : 0);
-          return (
-            <group key={i} position={[xExp, 0, 0]}>
-              {/* Wall flange at bottom */}
-              <group position={[0, 0, -e]}>
-                <Flange position={[x, 0, zWall]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+
+          if (isEnd) {
+            return (
+              <group key={i} position={[xExp, 0, 0]}>
+                {/* Top Wall flange */}
+                <group position={[0, e, -e]}>
+                  <Flange position={[x, dropHeight, zWall]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                </group>
+                {/* Horizontal stem pipe from wall */}
+                <group position={[0, e, -e * 0.5]}>
+                  <Pipe start={[x, dropHeight, zWall + 1.2]} end={[x, dropHeight, -2.2]} showLabel={showLabel} colorOption={colorOption} />
+                </group>
+                {/* Top elbow turning DOWN */}
+                <group position={[0, e, 0]}>
+                  <Elbow position={[x, dropHeight, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                </group>
+                {/* Vertical drop pipe going DOWN */}
+                <group position={[0, e * 0.5, 0]}>
+                  <Pipe start={[x, 2.2, 0]} end={[x, dropHeight - 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
+                </group>
+                {/* Bottom elbow at ends turning INTO RAIL */}
+                <group position={[0, 0, 0]}>
+                  <Elbow position={[x, 0, 0]} rotation={[0, i === 0 ? Math.PI / 2 : -Math.PI / 2, Math.PI]} showLabel={showLabel} colorOption={colorOption} />
+                </group>
               </group>
-              {/* Horizontal stem pipe from wall */}
-              <group position={[0, 0, -e * 0.5]}>
-                <Pipe start={[x, 0, zWall + 1.2]} end={[x, 0, -2.2]} showLabel={showLabel} colorOption={colorOption} />
+            );
+          } else {
+            return (
+              <group key={i} position={[xExp, 0, 0]}>
+                {/* Bottom Wall flange */}
+                <group position={[0, 0, -e]}>
+                  <Flange position={[x, 0, zWall]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                </group>
+                {/* Horizontal stem pipe from wall straight to rail */}
+                <group position={[0, 0, -e * 0.5]}>
+                  <Pipe start={[x, 0, zWall + 1.2]} end={[x, 0, -2.2]} showLabel={showLabel} colorOption={colorOption} />
+                </group>
+                {/* Bottom T-fitting joining rail and stem */}
+                <group position={[0, 0, 0]}>
+                  <TFitting position={[x, 0, 0]} rotation={[Math.PI, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                </group>
               </group>
-              {/* Bottom elbow turning UP */}
-              <group position={[0, 0, 0]}>
-                <Elbow position={[x, 0, 0]} rotation={[0, 0, Math.PI]} showLabel={showLabel} colorOption={colorOption} />
-              </group>
-              {/* Vertical rise pipe going UP */}
-              <group position={[0, e * 0.5, 0]}>
-                <Pipe start={[x, 2.2, 0]} end={[x, dropHeight - 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
-              </group>
-              {/* Top fitting: elbow at ends, T-fitting in middle */}
-              <group position={[0, e, 0]}>
-                {isEnd ? (
-                  <Elbow position={[x, dropHeight, 0]} rotation={[0, i === 0 ? Math.PI / 2 : -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
-                ) : (
-                  <TFitting position={[x, dropHeight, 0]} rotation={[-Math.PI / 2, Math.PI, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
-                )}
-              </group>
-            </group>
-          );
+            );
+          }
         })}
-        {/* Horizontal rail pipes at top */}
+        {/* Horizontal rail pipes at bottom */}
         {railPipes.map((pipeLen, i) => {
           const startX = mtX[i];
           const endX = mtX[i + 1];
           return (
-            <group key={'rail' + i} position={[0, e, 0]}>
-              <Pipe start={[startX + 2.5, dropHeight, 0]} end={[endX - 2.5, dropHeight, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <group key={'rail' + i} position={[0, 0, 0]}>
+              <Pipe start={[startX + 2.5, 0, 0]} end={[endX - 2.5, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
             </group>
           );
         })}

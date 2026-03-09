@@ -849,7 +849,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-90-elbows', '90° Elbows', quantity * (numMounts + 2));
     addFitting('f-t-fittings', 'T-Fittings', quantity * (numMounts - 2));
   } else if (skuType === 'sku178') {
-    // Same parts as SKU 170 (flipped orientation doesn't change the bill of materials)
+    // 2 top end mounted flanges with drop pipes, and bottom middle mounted flanges straight to rail
     const dropHeight = 10;
     const numMounts = Math.max(3, Math.ceil(length / 120) + 1);
     const railLength = Math.max(0, length - (numMounts * 5));
@@ -864,7 +864,8 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     wallStemPipes.forEach(p => addToConsolidated178(p, numMounts * quantity));
 
     const dropPipes = getPipesForLength(Math.max(0, dropHeight - 5));
-    dropPipes.forEach(p => addToConsolidated178(p, numMounts * quantity));
+    // Only 2 drop pipes (on the left and right end brackets)
+    dropPipes.forEach(p => addToConsolidated178(p, 2 * quantity));
 
     railPipes.forEach(rp => addToConsolidated178(rp, quantity));
 
@@ -879,7 +880,9 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     });
 
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * numMounts);
-    addFitting('f-90-elbows', '90° Elbows', quantity * (numMounts + 2));
+    // Ends have 2 elbows each = 4 total elbows always
+    addFitting('f-90-elbows', '90° Elbows', quantity * 4);
+    // Middle brackets each use a T-fitting instead of an elbow
     addFitting('f-t-fittings', 'T-Fittings', quantity * (numMounts - 2));
   } else if (skuType === 'sku144') {
     // Wall-mounted toilet paper holder (Flange -> Pipe -> T-Fitting -> Cap + Pipe/Cap)
