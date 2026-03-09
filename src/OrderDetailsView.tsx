@@ -741,7 +741,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
     addFitting('f-90-elbows', '90° Elbows', quantity * 1);
     addFitting('f-hex-nipples', 'Hex Nipples', quantity * 1);
-    addFitting('f-in-caps', 'In caps', quantity * 1);
+    addFitting('f-end-caps', 'End Caps', quantity * 1);
   } else if (skuType === 'sku172') {
     addPipes(Math.max(0, length), 1, 'p-peg');
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
