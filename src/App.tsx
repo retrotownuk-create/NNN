@@ -4657,86 +4657,86 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
       <group position={[0, -height / 2 + 10, 0]}>
         {/* Left Side */}
         <group position={[-e, 0, 0]}>
-          <group position={[0, 0, -e]}>
+          <group position={[0, 0, -e * 1.5]}>
             <Flange position={[leftX, yTee, zWallSurface + 0.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           <group position={[0, 0, -e * 0.5]}>
             <Pipe start={[leftX, yTee, zWallSurface + 1.5]} end={[leftX, yTee, zElbow - 1.5]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[0, 0, 0]}>
+          <group position={[0, 0, e * 0.5]}>
             <Elbow position={[leftX, yTee, zElbow]} rotation={[0, Math.PI, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
           </group>
 
-          <group position={[0, 0, 0]}>
+          <group position={[e * 0.25, 0, e * 0.5]}>
             <HexNipple position={[leftX + 3.2, yTee, zElbow]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[0, 0, 0]}>
+          <group position={[e * 0.5, 0, e * 0.5]}>
             <TFitting position={[leftTx, yTee, zElbow]} rotation={[-Math.PI / 4, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
           </group>
 
-          <group position={[0, -e * 0.5, -e * 0.5]}>
+          <group position={[e * 0.5, -e * 0.5, e * 0.5 - e * 0.5]}>
             <Pipe start={[leftTx, diagTopY, diagTopZ]} end={[leftTx, diagBotY, diagBotZ]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[0, -e * 1.0, -e * 1.0]}>
+          <group position={[e * 0.5, -e * 1.0, e * 0.5 - e * 1.0]}>
             <FortyFiveElbow position={[leftTx, eY, eZ]} rotation={[Math.PI / 2, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[0, -e * 1.2, -e * 1.5]}>
+          <group position={[e * 0.5, -e * 1.0, e * 0.5 - e * 1.5]}>
             <HexNipple position={[leftTx, eY, zWallSurface + 1.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[0, -e * 1.5, -e * 2.0]}>
+          <group position={[e * 0.5, -e * 1.0, e * 0.5 - e * 2.0]}>
             <Flange position={[leftTx, eY, zWallSurface + 0.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
         </group>
 
         {/* Middle Support */}
         <group position={[0, 0, 0]}>
-          <group position={[0, 0, 0]}>
+          <group position={[0, 0, e * 0.5]}>
             <TFitting position={[midTx, yTee, zElbow]} rotation={[-Math.PI / 4, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
           </group>
 
-          <group position={[0, -e * 0.5, -e * 0.5]}>
+          <group position={[0, -e * 0.5, e * 0.5 - e * 0.5]}>
             <Pipe start={[midTx, diagTopY, diagTopZ]} end={[midTx, diagBotY, diagBotZ]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[0, -e * 1.0, -e * 1.0]}>
+          <group position={[0, -e * 1.0, e * 0.5 - e * 1.0]}>
             <FortyFiveElbow position={[midTx, eY, eZ]} rotation={[Math.PI / 2, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[0, -e * 1.2, -e * 1.5]}>
+          <group position={[0, -e * 1.0, e * 0.5 - e * 1.5]}>
             <HexNipple position={[midTx, eY, zWallSurface + 1.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[0, -e * 1.5, -e * 2.0]}>
+          <group position={[0, -e * 1.0, e * 0.5 - e * 2.0]}>
             <Flange position={[midTx, eY, zWallSurface + 0.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
         </group>
 
         {/* Right Side */}
         <group position={[e, 0, 0]}>
-          <group position={[0, 0, -e]}>
+          <group position={[0, 0, -e * 1.5]}>
             <Flange position={[rightX, yTee, zWallSurface + 0.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           <group position={[0, 0, -e * 0.5]}>
             <Pipe start={[rightX, yTee, zWallSurface + 1.5]} end={[rightX, yTee, zElbow - 1.5]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[0, 0, 0]}>
+          <group position={[0, 0, e * 0.5]}>
             <Elbow position={[rightX, yTee, zElbow]} rotation={[0, Math.PI, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
           </group>
 
-          <group position={[0, 0, 0]}>
+          <group position={[-e * 0.25, 0, e * 0.5]}>
             <HexNipple position={[rightX - 3.2, yTee, zElbow]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[0, 0, 0]}>
+          <group position={[-e * 0.5, 0, e * 0.5]}>
             <TFitting position={[rightTx, yTee, zElbow]} rotation={[-Math.PI / 4, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
           </group>
 
-          <group position={[0, -e * 0.5, -e * 0.5]}>
+          <group position={[-e * 0.5, -e * 0.5, e * 0.5 - e * 0.5]}>
             <Pipe start={[rightTx, diagTopY, diagTopZ]} end={[rightTx, diagBotY, diagBotZ]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[0, -e * 1.0, -e * 1.0]}>
+          <group position={[-e * 0.5, -e * 1.0, e * 0.5 - e * 1.0]}>
             <FortyFiveElbow position={[rightTx, eY, eZ]} rotation={[Math.PI / 2, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[0, -e * 1.2, -e * 1.5]}>
+          <group position={[-e * 0.5, -e * 1.0, e * 0.5 - e * 1.5]}>
             <HexNipple position={[rightTx, eY, zWallSurface + 1.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[0, -e * 1.5, -e * 2.0]}>
+          <group position={[-e * 0.5, -e * 1.0, e * 0.5 - e * 2.0]}>
             <Flange position={[rightTx, eY, zWallSurface + 0.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
         </group>
