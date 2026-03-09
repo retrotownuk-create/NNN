@@ -4587,8 +4587,21 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const zWallSurface = -wallDistance;
     const yTee = 0;
 
-    const lX = -length / 2 + 2.2;
-    const rX = length / 2 - 2.2;
+    let numSegments = 1;
+    while ((length - 15) / numSegments > 120) {
+      numSegments++;
+    }
+    const split = getEqualSplitPipes(Math.max(0, length - 15), numSegments);
+
+    const bracketX: number[] = [0];
+    for (let i = 0; i < split.length; i++) {
+      bracketX.push(bracketX[i] + split[i] + 3.6);
+    }
+    const totalWidth = bracketX[bracketX.length - 1];
+    const offsetX = -totalWidth / 2;
+    for (let i = 0; i < bracketX.length; i++) {
+      bracketX[i] += offsetX;
+    }
 
     const eZ = zWallSurface + 4.4; // 1.2 flange + 3.2 nipple = 4.4
     const eY = Math.abs(eZ);
@@ -4599,62 +4612,94 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const diagBotY = eY - 1.414;
     const diagBotZ = eZ + 1.414;
 
+    const getBracketExplode = (i: number) => bracketX.length === 1 ? 0 : (-e * 0.5) + (i / (bracketX.length - 1)) * e;
+
     return (
       <group position={[0, -height / 2 + 10, 0]}>
-        {/* Left Side */}
-        <group position={[-e, 0, 0]}>
-          <group position={[0, 0, -e * 1.5]}>
-            <Flange position={[lX, yTee, zWallSurface + 0.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
-          <group position={[0, 0, -e * 0.5]}>
-            <Pipe start={[lX, yTee, zWallSurface + 1.5]} end={[lX, yTee, zElbow - 1.5]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
-          <group position={[0, 0, e * 0.5]}>
-            <Elbow position={[lX, yTee, zElbow]} rotation={[0, Math.PI, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
-        </group>
+        {bracketX.map((bx, idx) => {
+          const isLeft = idx === 0;
+          const isRight = idx === bracketX.length - 1;
+          const isMiddle = !isLeft && !isRight;
+          const groupX = getBracketExplode(idx);
+          const lX = isLeft ? bx - 5.0 : bx;
+          const rX = isRight ? bx + 5.0 : bx;
 
-        {/* Middle Support */}
-        <group position={[0, 0, 0]}>
-          <group position={[0, 0, e * 0.5]}>
-            <TFitting position={[0, yTee, zElbow]} rotation={[0, Math.PI / 4, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
+          return (
+            <group key={`bracket-${idx}`}>
+              {/* Straight Mount (Left Only) - 90 deg elbow */}
+              {isLeft && (
+                <group position={[groupX - e * 0.5, 0, 0]}>
+                  <group position={[0, 0, -e * 1.5]}>
+                    <Flange position={[lX, yTee, zWallSurface + 0.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                  </group>
+                  <group position={[0, 0, -e * 0.5]}>
+                    <Pipe start={[lX, yTee, zWallSurface + 1.5]} end={[lX, yTee, zElbow - 1.5]} showLabel={showLabel} colorOption={colorOption} />
+                  </group>
+                  <group position={[0, 0, e * 0.5]}>
+                    <Elbow position={[lX, yTee, zElbow]} rotation={[0, Math.PI, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                  </group>
+                </group>
+              )}
 
-          <group position={[0, e * 0.5, e * 0.5 - e * 0.5]}>
-            <Pipe start={[0, diagTopY, diagTopZ]} end={[0, diagBotY, diagBotZ]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
-          <group position={[0, e * 1.0, e * 0.5 - e * 1.0]}>
-            <FortyFiveElbow position={[0, eY, eZ]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
-          <group position={[0, e * 1.0, e * 0.5 - e * 1.5]}>
-            <HexNipple position={[0, eY, zWallSurface + 1.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
-          <group position={[0, e * 1.0, e * 0.5 - e * 2.0]}>
-            <Flange position={[0, eY, zWallSurface + 0.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
-        </group>
+              {/* Straight Mount (Right Only) - 90 deg elbow */}
+              {isRight && (
+                <group position={[groupX + e * 0.5, 0, 0]}>
+                  <group position={[0, 0, -e * 1.5]}>
+                    <Flange position={[rX, yTee, zWallSurface + 0.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                  </group>
+                  <group position={[0, 0, -e * 0.5]}>
+                    <Pipe start={[rX, yTee, zWallSurface + 1.5]} end={[rX, yTee, zElbow - 1.5]} showLabel={showLabel} colorOption={colorOption} />
+                  </group>
+                  <group position={[0, 0, e * 0.5]}>
+                    <Elbow position={[rX, yTee, zElbow]} rotation={[0, Math.PI, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                  </group>
+                </group>
+              )}
 
-        {/* Right Side */}
-        <group position={[e, 0, 0]}>
-          <group position={[0, 0, -e * 1.5]}>
-            <Flange position={[rX, yTee, zWallSurface + 0.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
-          <group position={[0, 0, -e * 0.5]}>
-            <Pipe start={[rX, yTee, zWallSurface + 1.5]} end={[rX, yTee, zElbow - 1.5]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
-          <group position={[0, 0, e * 0.5]}>
-            <Elbow position={[rX, yTee, zElbow]} rotation={[0, Math.PI, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
-        </group>
+              {/* Middle Diagonal Mounts (Middle Only) */}
+              {isMiddle && (
+                <group position={[groupX, 0, 0]}>
+                  <group position={[0, 0, e * 0.5]}>
+                    <TFitting position={[bx, yTee, zElbow]} rotation={[0, Math.PI / 4, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                  </group>
+                  <group position={[0, e * 0.5, e * 0.5 - e * 0.5]}>
+                    <Pipe start={[bx, diagTopY, diagTopZ]} end={[bx, diagBotY, diagBotZ]} showLabel={showLabel} colorOption={colorOption} />
+                  </group>
+                  <group position={[0, e * 1.0, e * 0.5 - e * 1.0]}>
+                    <FortyFiveElbow position={[bx, eY, eZ]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                  </group>
+                  <group position={[0, e * 1.0, e * 0.5 - e * 1.5]}>
+                    <HexNipple position={[bx, eY, zWallSurface + 1.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                  </group>
+                  <group position={[0, e * 1.0, e * 0.5 - e * 2.0]}>
+                    <Flange position={[bx, eY, zWallSurface + 0.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                  </group>
+                </group>
+              )}
+            </group>
+          );
+        })}
 
         {/* Horizontal Bars */}
         <group position={[0, 0, 0]}>
-          <group position={[-e * 0.5, 0, e * 1.0]}>
-            <Pipe start={[lX + 1.5, yTee, zElbow]} end={[-1.8, yTee, zElbow]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
-          <group position={[e * 0.5, 0, e * 1.0]}>
-            <Pipe start={[1.8, yTee, zElbow]} end={[rX - 1.5, yTee, zElbow]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
+          {split.map((pLen, idx) => {
+            const isFirst = idx === 0;
+            const isLast = idx === split.length - 1;
+
+            const lX = bracketX[idx];
+            const rX = bracketX[idx + 1];
+
+            // Outer brackets have a 90 deg elbow (-1.5 clearance + -5.0 offset earlier) -> length adjusts based on inner/outer
+            const startX = isFirst ? lX - 5.0 + 1.5 : lX + 1.8;
+            const endX = isLast ? rX + 5.0 - 1.5 : rX - 1.8;
+            const explX = (getBracketExplode(idx) + getBracketExplode(idx + 1)) / 2;
+
+            return (
+              <group key={`h-${idx}`} position={[explX, 0, e * 1.0]}>
+                <Pipe start={[startX, yTee, zElbow]} end={[endX, yTee, zElbow]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+            );
+          })}
         </group>
       </group>
     );

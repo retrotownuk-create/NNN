@@ -211,11 +211,15 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       addPipes(Math.max(0, length - 25), 1, 'p-horiz-bar');
     }
   } else if (skuType === 'sku160') {
+    let numSegments = 1;
+    while ((length - 15) / numSegments > 120) {
+      numSegments++;
+    }
+    const split = getEqualSplitPipes(Math.max(0, length - 15), numSegments);
     addPipes(wallDistance - 6.6, 2, 'p-wall-conn');
     const diagonalWallDist = Math.max(0, wallDistance - 4.4);
-    addPipes(Math.sqrt(Math.pow(diagonalWallDist, 2) * 2), 1, 'p-angled');
-    const hLen = length / 2 - 2.2;
-    addPipes(hLen, 2, 'p-horiz-bar');
+    addPipes(Math.sqrt(Math.pow(diagonalWallDist, 2) * 2), numSegments - 1, 'p-angled');
+    split.forEach((p, idx) => addPipes(p, 1, `p-horiz-${idx}`));
   } else if (skuType === 'sku161') {
     let numSegments = 1;
     while ((length - (20 + numSegments * 5)) / numSegments > 120) {
@@ -446,12 +450,18 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-90-elbows', '90° Elbows', quantity * 2);
     addFitting('f-close-nipples', 'Close Nipples', quantity * 4);
   } else if (skuType === 'sku160') {
-    addFitting('f-wall-flanges', 'Flanges', quantity * 3);
-    addFitting('f-t-fittings', 'T-Fittings', quantity * 1);
-    addFitting('f-45-elbows', '45° Elbows', quantity * 1);
+    let numSegments = 1;
+    while ((length - 15) / numSegments > 120) {
+      numSegments++;
+    }
+    const numMiddles = numSegments - 1;
+    addFitting('f-wall-flanges', 'Flanges', quantity * (2 + numMiddles));
+    if (numMiddles > 0) {
+      addFitting('f-t-fittings', 'T-Fittings', quantity * numMiddles);
+      addFitting('f-45-elbows', '45° Elbows', quantity * numMiddles);
+      addFitting('f-close-nipples', 'Close Nipples', quantity * numMiddles);
+    }
     addFitting('f-90-elbows', '90° Elbows', quantity * 2);
-    addFitting('f-close-nipples', 'Close Nipples', quantity * 1);
-    addFitting('f-couplings', 'Couplings', quantity * (getExtraCouplings(length / 2 - 2.2, 1) * 2));
   } else if (skuType === 'sku161') {
     let numSegments = 1;
     while ((length - (20 + numSegments * 5)) / numSegments > 120) {
