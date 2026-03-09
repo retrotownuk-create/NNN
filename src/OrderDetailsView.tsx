@@ -677,7 +677,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-t-fittings', 'T-Fittings', quantity * 4);
     addFitting('f-hex-nipples', 'Hex Nipples', quantity * 4);
   } else if (skuType === 'sku142') {
-    addPipes(Math.max(0, wallDistance - 2), 2, 'p-wall-arms');
+    addPipes(23, 2, 'p-wall-arms'); // 23cm pole requested
     addPipes(Math.max(0, length - 4.4), 1, 'p-horizontal-rail');
 
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);

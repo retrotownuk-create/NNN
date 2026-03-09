@@ -4121,30 +4121,40 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   }
 
   if (skuType === 'sku142' || skuType === 'sku171') {
+    const is142 = skuType === 'sku142';
     const e = explode * 1.5;
-    const bracketZ = -wallDistance;
+    // user requested 23cm pole for SKU 142 (so wallDistance is ~25.7)
+    const bracketZ = is142 ? -25.7 : -wallDistance;
     const railZ = 0;
     const leftX = -(length / 2);
     const rightX = (length / 2);
 
     return (
-      <group position={[0, height / 2, -wallDistance / 2]}>
+      <group position={[0, height / 2, bracketZ / 2]}>
         {/* Left Arm */}
-        <group position={[-e, 0, 0]}>
+        <group position={[-e, 0, -e]}>
           <Flange position={[leftX + 2.2, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <group position={[-e, 0, -e * 0.5]}>
           <Pipe start={[leftX + 2.2, 0, bracketZ + 1.2]} end={[leftX + 2.2, 0, railZ - 1.5]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <group position={[-e, 0, 0]}>
           <Elbow position={[leftX + 2.2, 0, railZ]} rotation={[0, Math.PI, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Right Arm */}
-        <group position={[e, 0, 0]}>
+        <group position={[e, 0, -e]}>
           <Flange position={[rightX - 2.2, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <group position={[e, 0, -e * 0.5]}>
           <Pipe start={[rightX - 2.2, 0, bracketZ + 1.2]} end={[rightX - 2.2, 0, railZ - 1.5]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <group position={[e, 0, 0]}>
           <Elbow position={[rightX - 2.2, 0, railZ]} rotation={[0, Math.PI, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Horizontal Rail */}
-        <group position={[0, 0, e]}>
+        <group position={[0, 0, 0]}>
           <Pipe start={[leftX + 3.7, 0, railZ]} end={[rightX - 3.7, 0, railZ]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
