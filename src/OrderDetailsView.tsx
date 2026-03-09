@@ -733,10 +733,10 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
     addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
     addFitting('f-hex-nipples', 'Hex Nipples', quantity * 1);
-    addFitting('f-in-caps', 'In caps', quantity * 2);
+    addFitting('f-end-caps', 'End Caps', quantity * 2);
     addFitting('f-end-caps', 'Metal End Caps (rod)', quantity * 1);
   } else if (skuType === 'sku174') {
-    addPipes(Math.max(0, length), 1, 'p-peg');
+    addPipes(Math.max(0, length - 10), 1, 'p-peg');
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
     addFitting('f-90-elbows', '90° Elbows', quantity * 1);
     addFitting('f-hex-nipples', 'Hex Nipples', quantity * 1);
@@ -898,7 +898,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
 
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
     addFitting('f-t-fittings', 'T-Fittings', quantity * 1);
-    addFitting('f-in-caps', 'In caps', quantity * 2);
+    addFitting('f-end-caps', 'End Caps', quantity * 2);
   } else if (skuType === 'sku145') {
     // Floor-to-wall clothing rack with 4 wall ties
     addPipes(Math.max(0, length - 4.4), 1, 'p-horiz');
@@ -924,7 +924,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
 
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 4); // 2 wall, 2 shelf
     addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
-    addFitting('f-in-caps', 'In caps', quantity * 2);
+    addFitting('f-end-caps', 'End Caps', quantity * 2);
 
     if (hasShelves) {
       items.push({ id: `wood-shelf-${length}x${wallDistance}`, partName: `${length}x${wallDistance}x3cm Wooden Shelf`, qty: 1 * quantity, type: 'wood', color: woodColor });
@@ -1055,7 +1055,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
     addFitting('f-t-fittings', 'T-Fittings', quantity * 1);
     addFitting('f-hex-nipples', 'Hex Nipples', quantity * 3);
-    addFitting('f-in-caps', 'In caps', quantity * 2);
+    addFitting('f-end-caps', 'End Caps', quantity * 2);
   } else if (skuType === 'sku127') {
     // Freestanding open base with a wooden shelf and short legs underneath
     const legPipeLength = 20; // 20cm base pipes exactly

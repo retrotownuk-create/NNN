@@ -4748,7 +4748,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
   if (skuType === 'sku174') {
     const e = explode * 1.5;
-    const pipeLength = length || 15;
+    const pipeLength = Math.max(0.1, length - 10);
     const zWall = -pipeLength;
 
     return (
@@ -4763,10 +4763,10 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           <Elbow position={[0, 0, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
         <group position={[0, e * 0.5, e]}>
-          <HexNipple position={[0, 1.8, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <HexNipple position={[0, 2.7, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
         <group position={[0, e * 1.5, e]}>
-          <EndCap position={[0, 3.0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <EndCap position={[0, 4.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );
