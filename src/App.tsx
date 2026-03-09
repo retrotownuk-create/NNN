@@ -362,16 +362,16 @@ const TFitting = ({ position, rotation = [0, 0, 0], showLabel, colorOption = COL
       </mesh>
       {/* Vertical Pipe Body */}
       <mesh castShadow receiveShadow>
-        <cylinderGeometry args={[1.65, 1.65, 4, 16]} />
+        <cylinderGeometry args={[1.65, 1.65, 4.8, 16]} />
         <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
       </mesh>
       {/* Top Collar */}
-      <mesh castShadow receiveShadow position={[0, 1.8, 0]}>
+      <mesh castShadow receiveShadow position={[0, 2.2, 0]}>
         <cylinderGeometry args={[1.95, 1.95, 0.7, 16]} />
         <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
       </mesh>
       {/* Bottom Collar */}
-      <mesh castShadow receiveShadow position={[0, -1.8, 0]}>
+      <mesh castShadow receiveShadow position={[0, -2.2, 0]}>
         <cylinderGeometry args={[1.95, 1.95, 0.7, 16]} />
         <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
       </mesh>
@@ -398,27 +398,27 @@ const CrossFitting = ({ position, rotation = [0, 0, 0], showLabel, colorOption =
         <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
       </mesh>
       <mesh castShadow receiveShadow>
-        <cylinderGeometry args={[1.65, 1.65, 4, 16]} />
+        <cylinderGeometry args={[1.65, 1.65, 4.8, 16]} />
         <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
       </mesh>
       <mesh castShadow receiveShadow position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[1.65, 1.65, 4, 16]} />
+        <cylinderGeometry args={[1.65, 1.65, 4.8, 16]} />
         <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
       </mesh>
       {/* 4 Collars for the 4 sockets */}
-      <mesh castShadow receiveShadow position={[0, 1.8, 0]}>
+      <mesh castShadow receiveShadow position={[0, 2.2, 0]}>
         <cylinderGeometry args={[1.95, 1.95, 0.7, 16]} />
         <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
       </mesh>
-      <mesh castShadow receiveShadow position={[0, -1.8, 0]}>
+      <mesh castShadow receiveShadow position={[0, -2.2, 0]}>
         <cylinderGeometry args={[1.95, 1.95, 0.7, 16]} />
         <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
       </mesh>
-      <mesh castShadow receiveShadow position={[1.8, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+      <mesh castShadow receiveShadow position={[2.2, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
         <cylinderGeometry args={[1.95, 1.95, 0.7, 16]} />
         <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
       </mesh>
-      <mesh castShadow receiveShadow position={[-1.8, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+      <mesh castShadow receiveShadow position={[-2.2, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
         <cylinderGeometry args={[1.95, 1.95, 0.7, 16]} />
         <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
       </mesh>
@@ -438,7 +438,7 @@ const SideOutletTee = ({ position, rotation = [0, 0, 0], showLabel, colorOption 
 
       {/* Horizontal Through Pipe (X Axis) */}
       <mesh castShadow receiveShadow position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[1.65, 1.65, 4, 16]} />
+        <cylinderGeometry args={[1.65, 1.65, 4.8, 16]} />
         <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
       </mesh>
 
@@ -456,11 +456,11 @@ const SideOutletTee = ({ position, rotation = [0, 0, 0], showLabel, colorOption 
 
       {/* Collars */}
       {/* Right/Left Collars (+/- X) */}
-      <mesh castShadow receiveShadow position={[1.8, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+      <mesh castShadow receiveShadow position={[2.2, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
         <cylinderGeometry args={[1.95, 1.95, 0.7, 16]} />
         <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
       </mesh>
-      <mesh castShadow receiveShadow position={[-1.8, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+      <mesh castShadow receiveShadow position={[-2.2, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
         <cylinderGeometry args={[1.95, 1.95, 0.7, 16]} />
         <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
       </mesh>
@@ -4903,7 +4903,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
                 {isEnd ? (
                   <Elbow position={[x, -dropHeight, 0]} rotation={[0, i === 0 ? Math.PI / 2 : -Math.PI / 2, Math.PI]} showLabel={showLabel} colorOption={colorOption} />
                 ) : (
-                  <TFitting position={[x, -dropHeight, 0]} rotation={[Math.PI / 2, Math.PI, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                  <TFitting position={[x, -dropHeight, 0]} rotation={[Math.PI / 2, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
                 )}
               </group>
             </group>
@@ -4986,7 +4986,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
                 </group>
                 {/* Bottom T-fitting joining rail and stem */}
                 <group position={[0, 0, 0]}>
-                  <TFitting position={[x, 0, 0]} rotation={[Math.PI, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                  <TFitting position={[x, 0, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
                 </group>
               </group>
             );
