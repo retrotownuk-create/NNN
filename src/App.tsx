@@ -5077,9 +5077,15 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         {/* Horns */}
         <group position={[-e, e, 0]}>
           <Pipe start={[-1.5, 1.5, 0]} end={[-10.6, 10.6, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <group position={[-e * 0.707, e * 0.707, 0]}>
+            <EndCap position={[-10.6, 10.6, 0]} rotation={[0, 0, Math.PI / 4]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
         </group>
         <group position={[e, e, 0]}>
           <Pipe start={[1.5, 1.5, 0]} end={[10.6, 10.6, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <group position={[e * 0.707, e * 0.707, 0]}>
+            <EndCap position={[10.6, 10.6, 0]} rotation={[0, 0, -Math.PI / 4]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
         </group>
       </group>
     );
