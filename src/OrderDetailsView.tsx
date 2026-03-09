@@ -212,8 +212,8 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     }
   } else if (skuType === 'sku160') {
     addPipes(wallDistance - 6.6, 2, 'p-wall-conn');
-    const angledLength = Math.sqrt(Math.pow(wallDistance, 2) + Math.pow(wallDistance, 2));
-    addPipes(angledLength, 1, 'p-angled');
+    const diagonalWallDist = Math.max(0, wallDistance - 4.4);
+    addPipes(Math.sqrt(Math.pow(diagonalWallDist, 2) * 2), 1, 'p-angled');
     const hLen = length / 2 - 2.2;
     addPipes(hLen, 2, 'p-horiz-bar');
   } else if (skuType === 'sku161') {

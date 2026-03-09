@@ -4582,55 +4582,79 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
   if (skuType === 'sku160') {
     const e = explode * 1.5;
-    const bracketZ = -wallDistance;
-    const angledLength = Math.sqrt(Math.pow(wallDistance, 2) + Math.pow(wallDistance, 2));
+
+    const zElbow = 0;
+    const zWallSurface = -wallDistance;
+    const yTee = 0;
+
+    const lX = -length / 2 + 2.2;
+    const rX = length / 2 - 2.2;
+
+    const eZ = zWallSurface + 4.4; // 1.2 flange + 3.2 nipple = 4.4
+    const eY = Math.abs(eZ);
+
+    const diagTopY = yTee + 1.556;
+    const diagTopZ = zElbow - 1.556;
+
+    const diagBotY = eY - 1.414;
+    const diagBotZ = eZ + 1.414;
 
     return (
-      <group position={[0, height / 2, 0]}>
-        {/* Top Wall Connection */}
-        <group position={[0, 0, -e]}>
-          <Flange position={[0, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-        <group position={[0, 0, -e * 0.5]}>
-          <Pipe start={[0, 0, bracketZ + 1.2]} end={[0, 0, -1.5]} showLabel={showLabel} colorOption={colorOption} />
+      <group position={[0, -height / 2 + 10, 0]}>
+        {/* Left Side */}
+        <group position={[-e, 0, 0]}>
+          <group position={[0, 0, -e * 1.5]}>
+            <Flange position={[lX, yTee, zWallSurface + 0.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[0, 0, -e * 0.5]}>
+            <Pipe start={[lX, yTee, zWallSurface + 1.5]} end={[lX, yTee, zElbow - 1.5]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[0, 0, e * 0.5]}>
+            <Elbow position={[lX, yTee, zElbow]} rotation={[0, Math.PI, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
         </group>
 
-        {/* Center T-Fitting */}
+        {/* Middle Support */}
         <group position={[0, 0, 0]}>
-          <TFitting position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <group position={[0, 0, e * 0.5]}>
+            <TFitting position={[0, yTee, zElbow]} rotation={[0, Math.PI / 4, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+
+          <group position={[0, e * 0.5, e * 0.5 - e * 0.5]}>
+            <Pipe start={[0, diagTopY, diagTopZ]} end={[0, diagBotY, diagBotZ]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[0, e * 1.0, e * 0.5 - e * 1.0]}>
+            <FortyFiveElbow position={[0, eY, eZ]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[0, e * 1.0, e * 0.5 - e * 1.5]}>
+            <HexNipple position={[0, eY, zWallSurface + 1.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[0, e * 1.0, e * 0.5 - e * 2.0]}>
+            <Flange position={[0, eY, zWallSurface + 0.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
         </group>
 
-        {/* Bottom Wall Connection (Angled) */}
-        <group position={[0, -wallDistance, -e]}>
-          <Flange position={[0, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-        <group position={[0, -wallDistance, -e * 0.5]}>
-          <Pipe start={[0, 0, bracketZ + 1.2]} end={[0, 0, bracketZ + 1.2 + 3]} showLabel={showLabel} colorOption={colorOption} />
-          {/* Using close nipple space ~3cm */}
-        </group>
-        <group position={[0, -wallDistance, 0]}>
-          <Elbow position={[0, 0, bracketZ + 4.2]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-
-        {/* Angled Pipe */}
-        <group position={[0, -wallDistance / 2, bracketZ / 2]}>
-          <Pipe start={[0, -wallDistance, bracketZ + 4.2]} end={[0, -2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-
-        {/* Angled to T-Fitting joint */}
-        <group position={[0, 0, 0]}>
-          <FortyFiveElbow position={[0, -2.2, 0]} rotation={[-Math.PI / 4, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        {/* Right Side */}
+        <group position={[e, 0, 0]}>
+          <group position={[0, 0, -e * 1.5]}>
+            <Flange position={[rX, yTee, zWallSurface + 0.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[0, 0, -e * 0.5]}>
+            <Pipe start={[rX, yTee, zWallSurface + 1.5]} end={[rX, yTee, zElbow - 1.5]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[0, 0, e * 0.5]}>
+            <Elbow position={[rX, yTee, zElbow]} rotation={[0, Math.PI, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
         </group>
 
         {/* Horizontal Bars */}
-        <group position={[-e, 0, e]}>
-          <Elbow position={[-(length / 2 - 2.2), 0, 0]} rotation={[0, Math.PI, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
-          <Pipe start={[-(length / 2 - 2.2), 0, 0]} end={[-2.2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-
-        <group position={[e, 0, e]}>
-          <Pipe start={[2.2, 0, 0]} end={[(length / 2 - 2.2), 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          <Elbow position={[(length / 2 - 2.2), 0, 0]} rotation={[0, Math.PI, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        <group position={[0, 0, 0]}>
+          <group position={[-e * 0.5, 0, e * 1.0]}>
+            <Pipe start={[lX + 1.5, yTee, zElbow]} end={[-1.8, yTee, zElbow]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[e * 0.5, 0, e * 1.0]}>
+            <Pipe start={[1.8, yTee, zElbow]} end={[rX - 1.5, yTee, zElbow]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
         </group>
       </group>
     );
