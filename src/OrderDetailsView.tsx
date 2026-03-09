@@ -149,13 +149,11 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       } else {
         extra += getExtraCouplings(length - 8, 1);
       }
-    } else if (skuType === 'sku159' || skuType === 'sku160' || skuType === 'sku161') {
-      if (length > 120) {
-        extra += getExtraCouplings((length - 8) / 2, 2);
-      } else {
-        extra += getExtraCouplings(length - 8, 1);
-      }
-    } else if (skuType === 'sku162' || skuType === 'sku163' || skuType === 'sku164' || skuType === 'sku165' || skuType === 'sku166' || skuType === 'sku167' || skuType === 'sku168') {
+    } else if (skuType === 'sku159') {
+      extra += getExtraCouplings(Math.max(0, length - 25), 1);
+    } else if (skuType === 'sku160') {
+      extra += getExtraCouplings(Math.max(0, (length / 2) - 2.2), 2);
+    } else if (skuType === 'sku161' || skuType === 'sku162' || skuType === 'sku163' || skuType === 'sku164' || skuType === 'sku165' || skuType === 'sku166' || skuType === 'sku167' || skuType === 'sku168') {
       extra = 0;
     } else {
       if (hasShelves) {
@@ -207,10 +205,10 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addPipes(30, 2, 'p-wall-conn');
     addPipes(35, 2, 'p-angled');
     if (length > 120) {
-      const split = getEqualSplitPipes(length - 25, 2);
-      split.forEach(p => addPipes(p, 1, 'p-horiz-bar'));
+      const split = getPipesForLength(Math.max(0, length - 25));
+      split.forEach((p, idx) => addPipes(p, 1, `p-horiz-${idx}`));
     } else {
-      addPipes(length - 25, 1, 'p-horiz-bar');
+      addPipes(Math.max(0, length - 25), 1, 'p-horiz-bar');
     }
   } else if (skuType === 'sku160') {
     addPipes(wallDistance - 6.6, 2, 'p-wall-conn');
@@ -219,10 +217,14 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     const hLen = length / 2 - 2.2;
     addPipes(hLen, 2, 'p-horiz-bar');
   } else if (skuType === 'sku161') {
+    let numSegments = 1;
+    while ((length - (20 + numSegments * 5)) / numSegments > 120) {
+      numSegments++;
+    }
+    const split = getEqualSplitPipes(Math.max(0, length - (20 + numSegments * 5)), numSegments);
     addPipes(30, 2, 'p-wall-conn');
-    addPipes(35, 3, 'p-angled');
-    const split = getEqualSplitPipes(Math.max(0, length - 30), 2);
-    split.forEach(p => addPipes(p, 1, 'p-horiz-bar'));
+    addPipes(35, numSegments + 1, 'p-angled');
+    split.forEach((p, idx) => addPipes(p, 1, `p-horiz-${idx}`));
   } else if (skuType === 'sku162') {
     // Only shelf
   } else if (skuType === 'sku107') {
@@ -451,14 +453,15 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-close-nipples', 'Close Nipples', quantity * 1);
     addFitting('f-couplings', 'Couplings', quantity * (getExtraCouplings(length / 2 - 2.2, 1) * 2));
   } else if (skuType === 'sku161') {
-    addFitting('f-wall-flanges', 'Flanges', quantity * 5);
-    addFitting('f-t-fittings', 'T-Fittings', quantity * 3);
-    addFitting('f-45-elbows', '45° Elbows', quantity * 3);
+    let numSegments = 1;
+    while ((length - (20 + numSegments * 5)) / numSegments > 120) {
+      numSegments++;
+    }
+    addFitting('f-wall-flanges', 'Flanges', quantity * (numSegments + 3));
+    addFitting('f-t-fittings', 'T-Fittings', quantity * (numSegments + 1));
+    addFitting('f-45-elbows', '45° Elbows', quantity * (numSegments + 1));
     addFitting('f-90-elbows', '90° Elbows', quantity * 2);
-    addFitting('f-close-nipples', 'Close Nipples', quantity * 5);
-    const pLen = Math.max(0, (length / 2) - 10.1);
-    const cQty = getExtraCouplings(pLen, 1);
-    if (cQty > 0) addFitting('f-couplings', 'Couplings', quantity * cQty * 2);
+    addFitting('f-close-nipples', 'Close Nipples', quantity * (numSegments + 3));
   } else if (skuType === 'sku162') {
     // Nothing, this SKU only has a shelf
   } else if (skuType === 'sku163' || skuType === 'sku164') {
