@@ -811,6 +811,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       items.push({ id: `f-t-fittings-${hd}`, partName: `T-Fittings (${hd})`, qty: (numMounts - 2) * quantity, type: 'fitting', color: colorName });
     }
   } else if (skuType === 'sku170') {
+    const dropHeight = 10;
     const numMounts = Math.max(3, Math.ceil(length / 120) + 1);
     const mountSpacing = length / (numMounts - 1);
 
@@ -819,7 +820,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
 
 
     // Drop pipes: 2.5cm offset each end = 5cm total deduction
-    addPipes(Math.max(0, height - 5), 2, 'p-drop');
+    addPipes(Math.max(0, dropHeight - 5), 2, 'p-drop');
 
     // Rail pipes: 2.5cm offset each end = 5cm total deduction
     addPipes(Math.max(0, mountSpacing - 5), numMounts - 1, 'p-rail');
@@ -831,7 +832,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
 
     // Couplings
     const stemCouplings = numMounts * getExtraCouplings(wallDistance - 2, 1);
-    const dropCouplings = 2 * getExtraCouplings(Math.max(0, height - 5), 1);
+    const dropCouplings = 2 * getExtraCouplings(Math.max(0, dropHeight - 5), 1);
     const railCouplings = (numMounts - 1) * getExtraCouplings(Math.max(0, mountSpacing - 5), 1);
     const totalCouplings = stemCouplings + dropCouplings + railCouplings;
     if (totalCouplings > 0) {
