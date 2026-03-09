@@ -4690,6 +4690,60 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     );
   }
 
+  if (skuType === 'sku143') {
+    const numMounts = Math.max(2, Math.ceil(length / 120) + 1);
+    const mountSpacing = length / (numMounts - 1);
+    const e = explode * 1.5;
+    const baseZ = -wallDistance;
+    const bracketLen = Math.max(0, wallDistance - 2);
+    const handrailZ = baseZ + bracketLen;
+
+    return (
+      <group position={[0, height / 2, -baseZ / 2]}>
+        {/* Mounts */}
+        {Array.from({ length: numMounts }).map((_, i) => {
+          const x = -length / 2 + i * mountSpacing;
+          const isFirst = i === 0;
+          const isLast = i === numMounts - 1;
+          const xExp = isFirst ? -e : (isLast ? e : 0);
+          return (
+            <group key={`mount-${i}`} position={[xExp, 0, 0]}>
+              {/* Flange */}
+              <group position={[0, 0, -e]}>
+                <Flange position={[x, 0, baseZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+              {/* Stem */}
+              <group position={[0, 0, -e * 0.5]}>
+                <Pipe start={[x, 0, baseZ + 1.2]} end={[x, 0, handrailZ - 1.5]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+              {/* Handrail Connection */}
+              <group position={[0, 0, 0]}>
+                {isFirst ? (
+                  <Elbow position={[x, 0, handrailZ]} rotation={[0, Math.PI, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                ) : isLast ? (
+                  <Elbow position={[x, 0, handrailZ]} rotation={[0, Math.PI, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                ) : (
+                  <TFitting position={[x, 0, handrailZ]} rotation={[-Math.PI / 2, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                )}
+              </group>
+            </group>
+          );
+        })}
+
+        {/* Handrail main pipes */}
+        {Array.from({ length: numMounts - 1 }).map((_, i) => {
+          const startX = -length / 2 + i * mountSpacing;
+          const endX = startX + mountSpacing;
+          return (
+            <group key={`rail-${i}`} position={[0, 0, e]}>
+              <Pipe start={[startX + 2.5, 0, handrailZ]} end={[endX - 2.5, 0, handrailZ]} showLabel={showLabel} colorOption={colorOption} />
+            </group>
+          );
+        })}
+      </group>
+    );
+  }
+
   if (skuType === 'sku170') {
     const numMounts = Math.max(3, Math.ceil(length / 80) + 1);
     const mountSpacing = length / (numMounts - 1);
@@ -7257,8 +7311,10 @@ export default function App() {
 
                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded-2xl border border-gray-100">
                   <div className="flex items-center gap-2">
-                    <label className="text-xs font-bold text-gray-700">Tube Type</label>
-                    <Tooltip text="Select round or square tubes">
+                    <label className="text-xs font-bold text-gray-700">
+                      {(skuType === 'sku143' || skuType === 'sku169') ? 'Handrail Diameter' : 'Tube Type'}
+                    </label>
+                    <Tooltip text={(skuType === 'sku143' || skuType === 'sku169') ? "Select 33mm or 27mm handrail diameter" : "Select round or square tubes"}>
                       <InfoIcon />
                     </Tooltip>
                   </div>
@@ -7267,13 +7323,13 @@ export default function App() {
                       onClick={() => setTubeType('round')}
                       className={`px-3 py-1 text-xs font-bold rounded-md transition-colors ${tubeType === 'round' ? 'bg-black text-white' : 'text-gray-500 hover:bg-gray-100'}`}
                     >
-                      Round
+                      {(skuType === 'sku143' || skuType === 'sku169') ? '33mm' : 'Round'}
                     </button>
                     <button
                       onClick={() => setTubeType('square')}
                       className={`px-3 py-1 text-xs font-bold rounded-md transition-colors ${tubeType === 'square' ? 'bg-black text-white' : 'text-gray-500 hover:bg-gray-100'}`}
                     >
-                      Square
+                      {(skuType === 'sku143' || skuType === 'sku169') ? '27mm' : 'Square'}
                     </button>
                   </div>
                 </div>

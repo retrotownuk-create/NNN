@@ -748,7 +748,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-end-caps', 'End Caps', quantity * 1);
   } else if (skuType === 'sku143') {
     const numMounts = Math.max(2, Math.ceil(length / 120) + 1);
-    const hd = config.handrailDiameter || '33mm';
+    const hd = config.handrailDiameter || (config.tubeType === 'square' ? '27mm' : '33mm');
 
     // Main handrail pipes (segments separated by T-fittings)
     const mountSpacing = length / (numMounts - 1);
@@ -784,7 +784,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     }
   } else if (skuType === 'sku169') {
     const numMounts = Math.max(2, Math.ceil(length / 120) + 1);
-    const hd = config.handrailDiameter || '33mm';
+    const hd = config.handrailDiameter || (config.tubeType === 'square' ? '27mm' : '33mm');
 
     // Main diagonal handrail pipes (segments separated by T-fittings)
     const mountSpacing = length / (numMounts - 1);
