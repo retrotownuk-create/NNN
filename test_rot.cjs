@@ -1,29 +1,31 @@
 const THREE = require('three');
-const angles = [0, Math.PI/2, Math.PI, -Math.PI/2];
+const th = Math.atan2(-100, 200);
 
-for (let x of angles) {
-  for (let y of angles) {
-    for (let z of angles) {
-      const eul = new THREE.Euler(x, y, z, 'XYZ');
-      
-      // TFitting:
-      // In T-fitting code, Body is aligned along Y axis (+Y and -Y)
-      // Branch is aligned along Z axis (typically -Z or +Z, let's check standard).
-      // Assuming Branch is +Z.
-      const body1 = new THREE.Vector3(0, 1, 0).applyEuler(eul);
-      const branchPos = new THREE.Vector3(0, 0, 1).applyEuler(eul);
-      const branchNeg = new THREE.Vector3(0, 0, -1).applyEuler(eul);
-      
-      // We want the drop pipe to come from above. So the branch (or the middle of the body?) 
-      // Wait, T-Fitting has 3 ports. Normally, Body goes left-right, Branch goes up or down.
-      // We want Branch to go UP (+Y).
-      // We want Body to go LEFT/RIGHT (+X / -X).
-      if (Math.abs(body1.x) > 0.99 && Math.abs(branchPos.y - 1) < 0.01) {
-        console.log(`Branch=+Z UP, Body=X: [${x/(Math.PI/2)} * Math.PI/2, ${y/(Math.PI/2)} * Math.PI/2, ${z/(Math.PI/2)} * Math.PI/2]`);
-      }
-      if (Math.abs(body1.x) > 0.99 && Math.abs(branchNeg.y - 1) < 0.01) {
-        console.log(`Branch=-Z UP, Body=X: [${x/(Math.PI/2)} * Math.PI/2, ${y/(Math.PI/2)} * Math.PI/2, ${z/(Math.PI/2)} * Math.PI/2]`);
-      }
-    }
-  }
-}
+const baseElbowRot = new THREE.Euler(0, Math.PI, th - Math.PI);
+const baseQuat = new THREE.Quaternion().setFromEuler(baseElbowRot);
+const port1 = new THREE.Vector3(0, -1, 0).applyQuaternion(baseQuat);
+const port2 = new THREE.Vector3(0, 0, 1).applyQuaternion(baseQuat);
+console.log("BaseElbow port1 (-Y):", port1);
+console.log("BaseElbow port2 (+Z):", port2);
+
+const startElbowRot = new THREE.Euler(0, Math.PI / 2, th);
+const startQuat = new THREE.Quaternion().setFromEuler(startElbowRot);
+const sp1 = new THREE.Vector3(0, -1, 0).applyQuaternion(startQuat);
+const sp2 = new THREE.Vector3(0, 0, 1).applyQuaternion(startQuat);
+console.log("StartElbow port1 (-Y):", sp1);
+console.log("StartElbow port2 (+Z):", sp2);
+
+const endElbowRot = new THREE.Euler(0, -Math.PI / 2, th);
+const endQuat = new THREE.Quaternion().setFromEuler(endElbowRot);
+const ep1 = new THREE.Vector3(0, -1, 0).applyQuaternion(endQuat);
+const ep2 = new THREE.Vector3(0, 0, 1).applyQuaternion(endQuat);
+console.log("EndElbow port1 (-Y):", ep1);
+console.log("EndElbow port2 (+Z):", ep2);
+
+const perpNippleRot = new THREE.Euler(0, 0, th - Math.PI);
+const pnQuat = new THREE.Quaternion().setFromEuler(perpNippleRot);
+const pnp1 = new THREE.Vector3(0, 1, 0).applyQuaternion(pnQuat);
+const pnp2 = new THREE.Vector3(0, -1, 0).applyQuaternion(pnQuat);
+console.log("HexNipple2 port1 (+Y):", pnp1);
+console.log("HexNipple2 port2 (-Y):", pnp2);
+

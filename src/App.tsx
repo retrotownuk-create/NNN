@@ -4730,21 +4730,30 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
               </group>
 
               <group position={[0, 0, -e * 0.5]}>
-                <Elbow position={[ex, ey, railZ]} rotation={baseElbowRot} showLabel={showLabel} colorOption={colorOption} />
+                <group position={[ex, ey, railZ]} rotation={[0, 0, θ]}>
+                  <Elbow rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                </group>
               </group>
 
               <group position={[0, 0, -e * 0.25]}>
-                <HexNipple position={[nx, ny, railZ]} rotation={perpNippleRot} showLabel={showLabel} colorOption={colorOption} />
+                <group position={[nx, ny, railZ]} rotation={[0, 0, θ]}>
+                  <HexNipple rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                </group>
               </group>
 
-              {/* Fitting at rail connects perpendicular downward nipple to diagonal rail */}
               <group position={[mx, my, railZ]}>
                 {isFirst ? (
-                  <Elbow position={[0, 0, 0]} rotation={startElbowRot} showLabel={showLabel} colorOption={colorOption} />
+                  <group rotation={[0, 0, θ]}>
+                    <Elbow rotation={[0, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+                  </group>
                 ) : isLast ? (
-                  <Elbow position={[0, 0, 0]} rotation={endElbowRot} showLabel={showLabel} colorOption={colorOption} />
+                  <group rotation={[0, 0, θ]}>
+                    <Elbow rotation={[0, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+                  </group>
                 ) : (
-                  <TFitting position={[0, 0, 0]} rotation={tFitRot} showLabel={showLabel} colorOption={colorOption} />
+                  <group rotation={[0, 0, θ - Math.PI / 2]}>
+                    <TFitting rotation={[0, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+                  </group>
                 )}
               </group>
             </group>
