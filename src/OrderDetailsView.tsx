@@ -747,7 +747,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
     addFitting('f-end-caps', 'End Caps', quantity * 1);
   } else if (skuType === 'sku143') {
-    const numMounts = Math.max(2, Math.ceil(length / 80) + 1);
+    const numMounts = Math.max(2, Math.ceil(length / 120) + 1);
     const hd = config.handrailDiameter || (config.tubeType === 'square' ? '27mm' : '33mm');
 
     // Main handrail pipes (segments separated by T-fittings)
@@ -783,7 +783,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       items.push({ id: `f-t-fittings-${hd}`, partName: `T-Fittings (${hd})`, qty: (numMounts - 2) * quantity, type: 'fitting', color: colorName });
     }
   } else if (skuType === 'sku169') {
-    const numMounts = Math.max(2, Math.ceil(length / 80) + 1);
+    const numMounts = Math.max(2, Math.ceil(length / 120) + 1);
     const hd = config.handrailDiameter || (config.tubeType === 'square' ? '27mm' : '33mm');
 
     // Main diagonal handrail pipes (segments separated by T-fittings)
@@ -811,7 +811,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       items.push({ id: `f-t-fittings-${hd}`, partName: `T-Fittings (${hd})`, qty: (numMounts - 2) * quantity, type: 'fitting', color: colorName });
     }
   } else if (skuType === 'sku170') {
-    const numMounts = Math.max(3, Math.ceil(length / 80) + 1);
+    const numMounts = Math.max(3, Math.ceil(length / 120) + 1);
     const mountSpacing = length / (numMounts - 1);
 
     // Wall stem: wallDistance - 2 = pipe cut length (23cm pipe + 2cm fittings = 25cm total)

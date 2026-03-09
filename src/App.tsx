@@ -4862,7 +4862,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     );
   }
   if (skuType === 'sku170') {
-    const numMounts = Math.max(3, Math.ceil(length / 80) + 1);
+    const numMounts = Math.max(3, Math.ceil(length / 120) + 1);
     const mountSpacing = length / (numMounts - 1);
     const e = explode * 1.5;
     const zWall = -wallDistance;
