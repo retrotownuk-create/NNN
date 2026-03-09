@@ -11,7 +11,7 @@ import * as THREE from 'three';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import html2canvas from 'html2canvas';
-import { COLORS, WOOD_COLORS, ColorOption, getPipesForLength, getGreedyPipes, getExtraCouplings } from './utils';
+import { COLORS, WOOD_COLORS, ColorOption, getPipesForLength, getExtraCouplings } from './utils';
 import { fetchOrders, saveOrders } from './api';
 
 // --- Components ---
@@ -4512,6 +4512,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
   if (skuType === 'sku169') {
     // Brackets every 120cm max
+    const numMounts = Math.max(2, Math.ceil(length / 120) + 1);
     const e = explode * 1.5;
     const wallZ = -8;          // fixed wall depth
     const stemLen = 5;         // 5cm horizontal stem projection (achieved via Nipple + Elbow + Nipple structure)
@@ -4533,28 +4534,20 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const endElbowRot: [number, number, number] = [0, 0, θ - Math.PI / 2];
     const tFitRot: [number, number, number] = [0, 0, θ - Math.PI / 2];
 
-    const hcPipes = getGreedyPipes(length);
-    const numMounts = hcPipes.length + 1;
-    const mountTValues = [0];
-    let currentLen = 0;
-    for (const p of hcPipes) {
-      currentLen += p;
-      mountTValues.push(currentLen / length);
-    }
-
     return (
       <group position={[0, height / 2, -wallZ / 2]}>
         {/* Mount brackets */}
         {Array.from({ length: numMounts }).map((_, i) => {
-          const t = mountTValues[i];
+          const t = i / (numMounts - 1);
           const mx = startX + t * (endX - startX);
           const my = startY + t * (endY - startY);
 
           const isFirst = i === 0;
           const isLast = i === numMounts - 1;
+          const xExp = isFirst ? -e : (isLast ? e : 0);
 
           return (
-            <group key={`mount-${i}`} position={[0, 0, 0]}>
+            <group key={`mount-${i}`} position={[xExp, 0, 0]}>
               {/* Flange */}
               <group position={[0, 0, -e]}>
                 <Flange position={[mx, my, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
@@ -4589,8 +4582,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
         {/* Diagonal Rail Pipes */}
         {Array.from({ length: numMounts - 1 }).map((_, i) => {
-          const t1 = mountTValues[i];
-          const t2 = mountTValues[i + 1];
+          const t1 = i / (numMounts - 1);
+          const t2 = (i + 1) / (numMounts - 1);
 
           const sx = startX + t1 * (endX - startX);
           // Shift rail down 5cm because sku169 bracket drops down by 5cm
@@ -4762,6 +4755,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   }
 
   if (skuType === 'sku143') {
+    // Brackets every 120cm max (matching max pipe length)
+    const numMounts = Math.max(2, Math.ceil(length / 120) + 1);
     const e = explode * 1.5;
     const wallZ = -8;          // wall face position in Z
     const railZ = wallZ + 5;   // rail at 5cm out from wall (Z = -3)
@@ -4774,35 +4769,45 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const isThin = tubeType === 'square';
     const railRad = isThin ? 1.35 : 1.65;
 
-    // Slope angle θ of the rail in the XY plane
+    // Slope angle θ of the rail in the XY plane (e.g. ~-30° going down-right)
     const θ = Math.atan2(endY - startY, endX - startX);
 
+    // === Rotation derivations ===
+    // Elbow ports:    Port1 → -Y,  Port2 → +Z
+    // TFitting ports: Body  → ±Y,  Branch → -Z
+    //
+    // Stem enters the fitting from -Z direction (wall behind, stem goes +Z toward viewer).
+    // Elbow +Z port naturally receives the stem. ✓
+    // TFitting branch (-Z) naturally receives the stem. ✓
+    //
+    // Only Z-axis rotation is used (all parts lie in XY plane + Z stem).
+    // RotateZ(α) maps: -Y → (sinα, -cosα)
+    //
+    // Start elbow: Port1 (-Y) must point DOWN the slope → (cosθ, sinθ)
+    //   sinα = cosθ, -cosα = sinθ  →  α = π/2 + θ
+    // End elbow: Port1 (-Y) must point UP the slope → (-cosθ, -sinθ)
+    //   sinα = -cosθ, -cosα = -sinθ  →  α = θ - π/2
+    // T-Fitting: Body Y must align with slope → rotate Y to (cosθ, sinθ)
+    //   RotateZ(α) maps Y → (-sinα, cosα). Want (-sinα, cosα) = (cosθ, sinθ)
+    //   -sinα = cosθ → sinα = -cosθ = sin(θ-π/2)  →  α = θ - π/2
     const startElbowRot: [number, number, number] = [0, 0, Math.PI / 2 + θ];
     const endElbowRot: [number, number, number] = [0, 0, θ - Math.PI / 2];
     const tFitRot: [number, number, number] = [0, 0, θ - Math.PI / 2];
-
-    const hcPipes = getGreedyPipes(length);
-    const numMounts = hcPipes.length + 1;
-    const mountTValues = [0];
-    let currentLen = 0;
-    for (const p of hcPipes) {
-      currentLen += p;
-      mountTValues.push(currentLen / length);
-    }
 
     return (
       <group position={[0, height / 2, -wallZ / 2]}>
         {/* --- Wall Brackets --- */}
         {Array.from({ length: numMounts }).map((_, i) => {
-          const t = mountTValues[i];
+          const t = i / (numMounts - 1);
           const mx = startX + t * (endX - startX);
           const my = startY + t * (endY - startY);
 
           const isFirst = i === 0;
           const isLast = i === numMounts - 1;
+          const xExp = isFirst ? -e : (isLast ? e : 0);
 
           return (
-            <group key={`mount-${i}`} position={[0, 0, 0]}>
+            <group key={`mount-${i}`} position={[xExp, 0, 0]}>
               {/* Wall Flange — flat plate against wall, socket points +Z toward viewer */}
               <group position={[0, 0, -e]}>
                 <Flange position={[mx, my, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
@@ -4829,8 +4834,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
         {/* --- Diagonal Rail Pipes --- */}
         {Array.from({ length: numMounts - 1 }).map((_, i) => {
-          const t1 = mountTValues[i];
-          const t2 = mountTValues[i + 1];
+          const t1 = i / (numMounts - 1);
+          const t2 = (i + 1) / (numMounts - 1);
 
           const sx = startX + t1 * (endX - startX);
           const sy = startY + t1 * (endY - startY);
