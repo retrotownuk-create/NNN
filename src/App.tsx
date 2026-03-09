@@ -4758,33 +4758,28 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   if (skuType === 'sku143') {
     const numMounts = Math.max(2, Math.ceil(length / 80) + 1);
     const e = explode * 1.5;
-    const baseZ = -8; // Fixed 8cm wall distance
-    const bracketLen = 6; // 6cm total depth to center (5cm pipe + 1cm fitting offset)
-    const handrailZ = baseZ + bracketLen;
+    const wallZ = -8;      // wall face at Z = -8
+    const stemLen = 5;     // 5cm horizontal stem out from wall
+    const railZ = wallZ + stemLen;  // diagonal rail sits at Z = wallZ + stemLen = -3
 
     const startX = -length / 2;
     const endX = length / 2;
-    const startY = height / 2;
-    const endY = -height / 2;
-    const dx = endX - startX;
-    const dy = endY - startY;
-
-    // Mathematically rotate fittings to connect perfectly
-    const startElbowZ = Math.atan2(dx, -dy);
-    const endElbowZ = Math.atan2(-dx, dy);
-    const tBodyZ = Math.atan2(dy, dx);
+    const startY = height / 2;   // high end
+    const endY = -height / 2;    // low end
 
     const isThin = tubeType === 'square';
     const railRad = isThin ? 1.35 : 1.65;
-    const hScale = isThin ? 0.82 : 1;
+
+    // The diagonal slope angle in XY plane
+    const slopeAngle = Math.atan2(endY - startY, endX - startX);
 
     return (
-      <group position={[0, height / 2, -baseZ / 2]}>
-        {/* Mounts */}
+      <group position={[0, height / 2, -wallZ / 2]}>
+        {/* --- Brackets (one per mount position) --- */}
         {Array.from({ length: numMounts }).map((_, i) => {
           const t = i / (numMounts - 1);
-          const x = startX + t * dx;
-          const y = startY + t * dy;
+          const mountX = startX + t * (endX - startX);
+          const mountY = startY + t * (endY - startY);
 
           const isFirst = i === 0;
           const isLast = i === numMounts - 1;
@@ -4792,54 +4787,50 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
           return (
             <group key={`mount-${i}`} position={[xExp, 0, 0]}>
-              {/* Flange */}
+              {/* Wall Flange — plate against wall, socket pointing +Z toward viewer */}
               <group position={[0, 0, -e]}>
-                <Flange position={[x, y, baseZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                <Flange position={[mountX, mountY, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
-              {/* Stem */}
+
+              {/* Stem pipe — horizontal out of wall */}
               <group position={[0, 0, -e * 0.5]}>
-                <Pipe start={[x, y, baseZ + 0.6]} end={[x, y, baseZ + 5.6]} showLabel={showLabel} colorOption={colorOption} />
+                <Pipe start={[mountX, mountY, wallZ + 1.2]} end={[mountX, mountY, railZ - 1.6]} showLabel={showLabel} colorOption={colorOption} />
               </group>
-              {/* Handrail Connection */}
-              <group position={[x, y, handrailZ]}>
-                <group scale={[hScale, hScale, hScale]}>
-                  {isFirst ? (
-                    <group rotation={[0, 0, Math.atan2(dx, -dy)]}>
-                      <Elbow position={[0, 0, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
-                    </group>
-                  ) : isLast ? (
-                    <group rotation={[0, 0, Math.atan2(-dx, dy)]}>
-                      <Elbow position={[0, 0, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
-                    </group>
-                  ) : (
-                    <group rotation={[0, 0, Math.atan2(-dx, dy)]}>
-                      <TFitting position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-                    </group>
-                  )}
-                </group>
+
+              {/* Fitting at rail — Elbow at ends, T-Fitting in middle */}
+              <group position={[mountX, mountY, railZ]}>
+                {isFirst ? (
+                  <Elbow position={[0, 0, 0]} rotation={[slopeAngle, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                ) : isLast ? (
+                  <Elbow position={[0, 0, 0]} rotation={[slopeAngle + Math.PI, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                ) : (
+                  <TFitting position={[0, 0, 0]} rotation={[slopeAngle, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                )}
               </group>
             </group>
           );
         })}
 
-        {/* Handrail main pipes */}
+        {/* --- Diagonal Rail Pipes --- */}
         {Array.from({ length: numMounts - 1 }).map((_, i) => {
           const t1 = i / (numMounts - 1);
           const t2 = (i + 1) / (numMounts - 1);
 
-          const sx = startX + t1 * dx;
-          const sy = startY + t1 * dy;
-          const ex = startX + t2 * dx;
-          const ey = startY + t2 * dy;
+          const sx = startX + t1 * (endX - startX);
+          const sy = startY + t1 * (endY - startY);
+          const ex = startX + t2 * (endX - startX);
+          const ey = startY + t2 * (endY - startY);
 
-          const pipeLen = Math.hypot(ex - sx, ey - sy);
-          const push = (1.5 * hScale) / pipeLen;
-          const pushX = (ex - sx) * push;
-          const pushY = (ey - sy) * push;
+          const segLen = Math.hypot(ex - sx, ey - sy);
+          const pushFrac = 1.6 / segLen;
+          const psx = sx + (ex - sx) * pushFrac;
+          const psy = sy + (ey - sy) * pushFrac;
+          const pex = ex - (ex - sx) * pushFrac;
+          const pey = ey - (ey - sy) * pushFrac;
 
           return (
             <group key={`rail-${i}`} position={[0, 0, e]}>
-              <Pipe radius={railRad} start={[sx + pushX, sy + pushY, handrailZ]} end={[ex - pushX, ey - pushY, handrailZ]} showLabel={showLabel} colorOption={colorOption} />
+              <Pipe radius={railRad} start={[psx, psy, railZ]} end={[pex, pey, railZ]} showLabel={showLabel} colorOption={colorOption} />
             </group>
           );
         })}
