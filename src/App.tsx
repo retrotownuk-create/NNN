@@ -427,6 +427,55 @@ const CrossFitting = ({ position, rotation = [0, 0, 0], showLabel, colorOption =
   );
 };
 
+const FiveWayFitting = ({ position, rotation = [0, 0, 0], showLabel, colorOption = COLORS['Raw grey'] }: { position: [number, number, number], rotation?: [number, number, number], showLabel?: boolean, colorOption?: ColorOption }) => {
+  return (
+    <group position={position} rotation={rotation}>
+      <mesh castShadow receiveShadow>
+        <sphereGeometry args={[1.75, 16, 16]} />
+        <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
+      </mesh>
+      {/* Top/Bottom (Y axis) */}
+      <mesh castShadow receiveShadow>
+        <cylinderGeometry args={[1.65, 1.65, 4.8, 16]} />
+        <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
+      </mesh>
+      {/* Front/Back (Z axis) */}
+      <mesh castShadow receiveShadow position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[1.65, 1.65, 4.8, 16]} />
+        <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
+      </mesh>
+      {/* Side Branch (X axis) */}
+      <mesh castShadow receiveShadow position={[1.2, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[1.65, 1.65, 2.4, 16]} />
+        <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
+      </mesh>
+
+      {/* 5 Collars */}
+      <mesh castShadow receiveShadow position={[0, 2.2, 0]}>
+        <cylinderGeometry args={[1.95, 1.95, 0.7, 16]} />
+        <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
+      </mesh>
+      <mesh castShadow receiveShadow position={[0, -2.2, 0]}>
+        <cylinderGeometry args={[1.95, 1.95, 0.7, 16]} />
+        <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
+      </mesh>
+      <mesh castShadow receiveShadow position={[0, 0, 2.2]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[1.95, 1.95, 0.7, 16]} />
+        <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
+      </mesh>
+      <mesh castShadow receiveShadow position={[0, 0, -2.2]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[1.95, 1.95, 0.7, 16]} />
+        <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
+      </mesh>
+      <mesh castShadow receiveShadow position={[2.2, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[1.95, 1.95, 0.7, 16]} />
+        <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
+      </mesh>
+      {showLabel && <Label text="5-Way Fitting" type="fitting" lineClass="h-20" />}
+    </group>
+  );
+};
+
 const SideOutletTee = ({ position, rotation = [0, 0, 0], showLabel, colorOption = COLORS['Raw grey'] }: { position: [number, number, number], rotation?: [number, number, number], showLabel?: boolean, colorOption?: ColorOption }) => {
   return (
     <group position={position} rotation={rotation}>
@@ -5038,37 +5087,86 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
   if (skuType === 'sku168') {
     const e = explode * 1.5;
-    const baseArmHeight = 5.75;
+    const baseArmHeight = 4.4; // Flange(1.2) + HexNipple(1.0 + 2.2 collar spacing)
     const unionHeight = (height + baseArmHeight) / 2;
     const spreadArm = wallDistance / 2;
-    const legLength = (height - baseArmHeight) / 2 - 3.6;
 
     const buildLeg = (x: number, isLeft: boolean) => {
       const xExp = isLeft ? -e : e;
+      // Inward direction for the 5-way side branch
+      const innerRot: [number, number, number] = isLeft ? [0, 0, 0] : [0, Math.PI, 0];
+
       return (
         <group key={'leg' + x} position={[xExp, 0, 0]}>
+          {/* Top Half of Leg */}
           <group position={[0, e, 0]}>
-            <Pipe start={[x, baseArmHeight + 3.0, 0]} end={[x, unionHeight - 2.0, 0]} showLabel={showLabel} colorOption={colorOption} />
-            <TFitting position={[x, unionHeight, 0]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-            <Pipe start={[x, unionHeight + 2.0, 0]} end={[x, height - 1.5, 0]} showLabel={showLabel} colorOption={colorOption} />
-            <Elbow position={[x, height, 0]} rotation={[0, isLeft ? Math.PI : 0, isLeft ? -Math.PI / 2 : Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+            <Elbow position={[x, height, 0]} rotation={[0, 0, isLeft ? -Math.PI / 2 : Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+            <Pipe start={[x, height - 1.2, 0]} end={[x, unionHeight + 1.2, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Coupling position={[x, unionHeight, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
 
-          {/* Base */}
+          {/* Bottom Half of Leg */}
+          <group position={[0, 0, 0]}>
+            <Pipe start={[x, unionHeight - 1.2, 0]} end={[x, baseArmHeight + 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+
+          {/* 5-Way Central Hub Base */}
           <group position={[0, -e, 0]}>
-            <TFitting position={[x, baseArmHeight, 0]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-            <Pipe start={[x, baseArmHeight - 2.2, -spreadArm]} end={[x, baseArmHeight - 2.2, spreadArm]} showLabel={showLabel} colorOption={colorOption} />
+            <FiveWayFitting position={[x, baseArmHeight, 0]} rotation={innerRot} showLabel={showLabel} colorOption={colorOption} />
+
+            {/* Center Foot */}
+            <group position={[0, -e * 0.5, 0]}>
+              <HexNipple position={[x, baseArmHeight - 2.3, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+            </group>
+            <group position={[0, -e * 1.0, 0]}>
+              <Flange position={[x, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            </group>
+
+            {/* Front Foot */}
+            <group position={[0, 0, e]}>
+              <Pipe start={[x, baseArmHeight, 2.2]} end={[x, baseArmHeight, spreadArm - 1.2]} showLabel={showLabel} colorOption={colorOption} />
+              <Elbow position={[x, baseArmHeight, spreadArm]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+
+              <group position={[0, -e * 0.5, 0]}>
+                <HexNipple position={[x, baseArmHeight - 2.3, spreadArm]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+              <group position={[0, -e * 1.0, 0]}>
+                <Flange position={[x, 0, spreadArm]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+            </group>
+
+            {/* Back Foot */}
+            <group position={[0, 0, -e]}>
+              <Pipe start={[x, baseArmHeight, -2.2]} end={[x, baseArmHeight, -spreadArm + 1.2]} showLabel={showLabel} colorOption={colorOption} />
+              <Elbow position={[x, baseArmHeight, -spreadArm]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+
+              <group position={[0, -e * 0.5, 0]}>
+                <HexNipple position={[x, baseArmHeight - 2.3, -spreadArm]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+              <group position={[0, -e * 1.0, 0]}>
+                <Flange position={[x, 0, -spreadArm]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+            </group>
           </group>
         </group>
       );
     }
 
+    const hPipeLength = length - 3.0; // matches cutlist and collar spacing
+
     return (
       <group position={[0, -height / 2, 0]}>
         {buildLeg(-(length / 2 - 1.5), true)}
         {buildLeg((length / 2 - 1.5), false)}
+
+        {/* Top Rail */}
         <group position={[0, e, 0]}>
-          <Pipe start={[-(length / 2 - 3.0), height, 0]} end={[(length / 2 - 3.0), height, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[-(hPipeLength / 2), height, 0]} end={[(hPipeLength / 2), height, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Bottom Rail connecting 5-Way Hubs */}
+        <group position={[0, -e, 0]}>
+          <Pipe start={[-(hPipeLength / 2), baseArmHeight, 0]} end={[(hPipeLength / 2), baseArmHeight, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );
