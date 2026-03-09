@@ -1,23 +1,34 @@
 const THREE = require('three');
 
-function test(rx, ry, rz, name) {
-    const euler = new THREE.Euler(rx, ry, rz);
-    let v1 = new THREE.Vector3(0, -1.5, 0);
-    v1.applyEuler(euler);
-    let v2 = new THREE.Vector3(0, 0, 1.5);
-    v2.applyEuler(euler);
-    console.log(name, "-> Port A:", v1.x.toFixed(2), v1.y.toFixed(2), v1.z.toFixed(2), "| Port B:", v2.x.toFixed(2), v2.y.toFixed(2), v2.z.toFixed(2));
+function testRot() {
+  const angles = [0, Math.PI / 2, Math.PI, -Math.PI / 2];
+
+  for (let x of angles) {
+    for (let y of angles) {
+      for (let z of angles) {
+        const eul = new THREE.Euler(x, y, z, 'XYZ');
+        const p1 = new THREE.Vector3(0, -1, 0).applyEuler(eul);
+        const p2 = new THREE.Vector3(0, 0, 1).applyEuler(eul);
+
+        // We want left elbow: P1=+X(1,0,0), P2=+Y(0,1,0)
+        if (Math.abs(p1.x - 1) < 0.01 && Math.abs(p2.y - 1) < 0.01) {
+          console.log(`Left Elbow match: x=${x / (Math.PI / 2)} pi/2, y=${y / (Math.PI / 2)} pi/2, z=${z / (Math.PI / 2)} pi/2`);
+        }
+
+        // We want right elbow: P1=-X(-1,0,0), P2=+Y(0,1,0)
+        if (Math.abs(p1.x + 1) < 0.01 && Math.abs(p2.y - 1) < 0.01) {
+          console.log(`Right Elbow match: x=${x / (Math.PI / 2)} pi/2, y=${y / (Math.PI / 2)} pi/2, z=${z / (Math.PI / 2)} pi/2`);
+        }
+
+        // TFitting: Body is +Y to -Y. So applying Euler to Y should give X or -X.
+        // Branch is +Z. Branch (+Z) should give +Y.
+        const body1 = new THREE.Vector3(0, 1, 0).applyEuler(eul);
+        const branch = new THREE.Vector3(0, 0, 1).applyEuler(eul);
+        if (Math.abs(body1.x) > 0.99 && Math.abs(branch.y - 1) < 0.01) {
+          console.log(`T-Fitting match: x=${x / (Math.PI / 2)} pi/2, y=${y / (Math.PI / 2)} pi/2, z=${z / (Math.PI / 2)} pi/2 (Body to ${body1.x > 0 ? '+X' : '-X'})`);
+        }
+      }
+    }
+  }
 }
-
-// We want (1.5, 0, 0) and (0, 0, -1.5) for LEFT
-test(-Math.PI / 2, Math.PI / 2, 0, "Test L1 (-90, 90, 0)");
-test(Math.PI / 2, -Math.PI / 2, 0, "Test L2 (90, -90, 0)");
-test(0, Math.PI / 2, Math.PI / 2, "Test L3 (0, 90, 90)");
-test(0, Math.PI / 2, -Math.PI / 2, "Test L4 (0, 90, -90)");
-
-// We want (-1.5, 0, 0) and (0, 0, -1.5) for RIGHT
-test(-Math.PI / 2, -Math.PI / 2, 0, "Test R1 (-90, -90, 0)");
-test(Math.PI / 2, Math.PI / 2, 0, "Test R2 (90, 90, 0)");
-test(0, -Math.PI / 2, Math.PI / 2, "Test R3 (0, -90, 90)");
-test(0, -Math.PI / 2, -Math.PI / 2, "Test R4 (0, -90, -90)");
-
+testRot();
