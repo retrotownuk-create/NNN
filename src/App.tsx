@@ -5040,21 +5040,26 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         {/* Rails */}
         <group position={[-e, 0, e]}>
           <Pipe start={[-2.2, barY, 0]} end={[-railLength - 2.2, barY, 0]} showLabel={showLabel} colorOption={colorOption} />
-          <Elbow position={[-railLength - 2.2, barY, 0]} rotation={[Math.PI, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
+        <group position={[-e * 2.0, 0, e]}>
+          <Elbow position={[-railLength - 4.4, barY, 0]} rotation={[Math.PI, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
         <group position={[e, 0, e]}>
           <Pipe start={[2.2, barY, 0]} end={[railLength + 2.2, barY, 0]} showLabel={showLabel} colorOption={colorOption} />
-          <Elbow position={[railLength + 2.2, barY, 0]} rotation={[Math.PI, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <group position={[e * 2.0, 0, e]}>
+          <Elbow position={[railLength + 4.4, barY, 0]} rotation={[Math.PI, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Wall connectors */}
-        <group position={[-e, 0, -e]}>
-          <Pipe start={[-railLength - 2.2, barY, -2.2]} end={[-railLength - 2.2, barY, bracketZ + 1.2]} showLabel={showLabel} colorOption={colorOption} />
-          <Flange position={[-railLength - 2.2, barY, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        <group position={[-e * 2.0, 0, -e]}>
+          <Pipe start={[-railLength - 4.4, barY, -2.2]} end={[-railLength - 4.4, barY, bracketZ + 1.2]} showLabel={showLabel} colorOption={colorOption} />
+          <Flange position={[-railLength - 4.4, barY, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
-        <group position={[e, 0, -e]}>
-          <Pipe start={[railLength + 2.2, barY, -2.2]} end={[railLength + 2.2, barY, bracketZ + 1.2]} showLabel={showLabel} colorOption={colorOption} />
-          <Flange position={[railLength + 2.2, barY, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        <group position={[e * 2.0, 0, -e]}>
+          <Pipe start={[railLength + 4.4, barY, -2.2]} end={[railLength + 4.4, barY, bracketZ + 1.2]} showLabel={showLabel} colorOption={colorOption} />
+          <Flange position={[railLength + 4.4, barY, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );
