@@ -4678,13 +4678,13 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           <Pipe start={[0, 0, zWall + 1.2]} end={[0, 0, -1.5]} showLabel={showLabel} colorOption={colorOption} />
         </group>
         <group position={[0, 0, e]}>
-          <Elbow position={[0, 0, 0]} rotation={[-Math.PI / 2, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Elbow position={[0, 0, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
         <group position={[0, e * 0.5, e]}>
-          <HexNipple position={[0, 3.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <HexNipple position={[0, 1.8, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
         <group position={[0, e * 1.5, e]}>
-          <EndCap position={[0, 4.4, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <EndCap position={[0, 3.0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );
