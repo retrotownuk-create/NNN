@@ -765,18 +765,10 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       items.push({ id: `f-couplings-rail-${hd}`, partName: `Couplings (${hd} Handrail)`, qty: numRailCouplings * quantity, type: 'fitting', color: colorName });
     }
 
-    // Wall stem pipes (Fixed 5cm stems for handrails)
-    const stemPipes = getPipesForLength(5);
-    const stemCounts: Record<number, number> = {};
-    stemPipes.forEach(p => stemCounts[p] = (stemCounts[p] || 0) + (numMounts * quantity));
-
-    Object.entries(stemCounts).forEach(([size, c]) => {
-      items.push({ id: `pipe-stem-${size}`, partName: `${size} cm pipe (${hd} Wall-Mount)`, qty: c, type: 'pipe', color: colorName });
-    });
-
-    // Fittings
+    // Fittings Bracket specifically uses explicit Hex Nipples + Base elbows instead of stem pipes
     items.push({ id: `f-wall-flanges-${hd}`, partName: `Wall Flanges (${hd})`, qty: numMounts * quantity, type: 'fitting', color: colorName });
-    items.push({ id: `f-90-elbows-${hd}`, partName: `90° Elbows (${hd})`, qty: 2 * quantity, type: 'fitting', color: colorName });
+    items.push({ id: `f-hex-nipples-${hd}`, partName: `Hex Nipples (${hd})`, qty: (numMounts * 2) * quantity, type: 'fitting', color: colorName }); // Out + vertical nipples
+    items.push({ id: `f-90-elbows-${hd}`, partName: `90° Elbows (${hd})`, qty: (numMounts + 2) * quantity, type: 'fitting', color: colorName }); // Bracket bases + 2 rail ends
 
     if (numMounts > 2) {
       items.push({ id: `f-t-fittings-${hd}`, partName: `T-Fittings (${hd})`, qty: (numMounts - 2) * quantity, type: 'fitting', color: colorName });

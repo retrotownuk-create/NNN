@@ -4828,17 +4828,23 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
           return (
             <group key={`mount-${i}`} position={[xExp, 0, 0]}>
-              {/* Wall Flange — flat plate against wall, socket points +Z toward viewer */}
               <group position={[0, 0, -e]}>
-                <Flange position={[mx, my, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                <Flange position={[mx, my - 5.0, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
-              {/* Stem pipe — horizontal +Z out of wall (5cm) */}
-              <group position={[0, 0, -e * 0.5]}>
-                <Pipe start={[mx, my, wallZ + 1.2]} end={[mx, my, railZ - 1.6]} showLabel={showLabel} colorOption={colorOption} />
+              <group position={[0, 0, -e * 0.75]}>
+                <HexNipple position={[mx, my - 5.0, wallZ + 2.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
-              {/* Fitting at rail — connects horizontal stem to diagonal rail */}
+              <group position={[0, -e * 0.5, -e * 0.5]}>
+                <Elbow position={[mx, my - 5.0, railZ]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              <group position={[0, -e * 0.25, -e * 0.25]}>
+                <HexNipple position={[mx, my - 2.5, railZ]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* Fitting at rail — connects vertical nipple to diagonal rail */}
               <group position={[mx, my, railZ]}>
                 {isFirst ? (
                   <Elbow position={[0, 0, 0]} rotation={startElbowRot} showLabel={showLabel} colorOption={colorOption} />
