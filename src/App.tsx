@@ -4696,8 +4696,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const perpDirX = Math.sin(θ);
     const perpDirY = -Math.cos(θ);
 
-    const startElbowRot: [number, number, number] = [0, -Math.PI / 2, θ];
-    const endElbowRot: [number, number, number] = [0, Math.PI / 2, θ];
+    const startElbowRot: [number, number, number] = [0, Math.PI / 2, θ];
+    const endElbowRot: [number, number, number] = [0, -Math.PI / 2, θ];
     const tFitRot: [number, number, number] = [0, -Math.PI / 2, θ - Math.PI / 2];
     const perpNippleRot: [number, number, number] = [0, 0, θ - Math.PI];
     const baseElbowRot: [number, number, number] = [0, Math.PI, θ - Math.PI];
@@ -4712,7 +4712,6 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
           const isFirst = i === 0;
           const isLast = i === numMounts - 1;
-          const xExp = isFirst ? -e : (isLast ? e : 0);
 
           const nx = mx + 2.7 * perpDirX;
           const ny = my + 2.7 * perpDirY;
@@ -4721,7 +4720,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           const ey = my + 5.4 * perpDirY;
 
           return (
-            <group key={`mount-${i}`} position={[xExp, 0, 0]}>
+            <group key={`mount-${i}`} position={[0, 0, 0]}>
               <group position={[0, 0, -e]}>
                 <Flange position={[ex, ey, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
@@ -4767,7 +4766,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           const f = 1.7 / segLen;
 
           return (
-            <group key={`rail-${i}`} position={[0, 0, e]}>
+            <group key={`rail-${i}`} position={[0, 0, 0]}>
               <Pipe
                 radius={railRad}
                 start={[sx + (ex - sx) * f, sy + (ey - sy) * f, railZ]}
