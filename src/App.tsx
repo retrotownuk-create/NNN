@@ -4903,7 +4903,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
                 {isEnd ? (
                   <Elbow position={[x, -dropHeight, 0]} rotation={[0, i === 0 ? Math.PI / 2 : -Math.PI / 2, Math.PI]} showLabel={showLabel} colorOption={colorOption} />
                 ) : (
-                  <TFitting position={[x, -dropHeight, 0]} rotation={[Math.PI / 2, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                  <TFitting position={[x, -dropHeight, 0]} rotation={[Math.PI / 2, Math.PI, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
                 )}
               </group>
             </group>
@@ -4970,7 +4970,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
                 {isEnd ? (
                   <Elbow position={[x, dropHeight, 0]} rotation={[0, i === 0 ? Math.PI / 2 : -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
                 ) : (
-                  <TFitting position={[x, dropHeight, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                  <TFitting position={[x, dropHeight, 0]} rotation={[-Math.PI / 2, Math.PI, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
                 )}
               </group>
             </group>
