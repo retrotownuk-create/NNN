@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { COLORS, WOOD_COLORS, getPipesForLength, getGreedyPipes, getExtraCouplings } from './utils';
+import { COLORS, WOOD_COLORS, getPipesForLength, getExtraCouplings } from './utils';
 
 export type CutlistItem = {
   id: string;
@@ -747,7 +747,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
     addFitting('f-end-caps', 'End Caps', quantity * 1);
   } else if (skuType === 'sku143') {
-    const hcPipes = getGreedyPipes(length);
+    const hcPipes = getPipesForLength(length);
     const numMounts = hcPipes.length + 1;
     const hd = config.handrailDiameter || (config.tubeType === 'square' ? '27mm' : '33mm');
 
@@ -787,7 +787,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       items.push({ id: `f-t-fittings-${hd}`, partName: `T-Fittings (${hd})`, qty: (numMounts - 2) * quantity, type: 'fitting', color: colorName });
     }
   } else if (skuType === 'sku169') {
-    const hcPipes = getGreedyPipes(length);
+    const hcPipes = getPipesForLength(length);
     const numMounts = hcPipes.length + 1;
     const hd = config.handrailDiameter || (config.tubeType === 'square' ? '27mm' : '33mm');
 
