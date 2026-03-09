@@ -711,7 +711,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addPipes(Math.max(0, wallDistance - 3.3), numRails * 2, 'p-wall-conn');
 
     // Bottom rail
-    addPipes(Math.max(0, length - 10), 1, 'p-bottom-rail');
+    addPipes(Math.max(0, length), 1, 'p-bottom-rail');
 
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * numRails * 2);
     addFitting('f-corner-elbows', 'Corner Elbows', quantity * 2);
@@ -736,7 +736,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-end-caps', 'End Caps', quantity * 2);
     addFitting('f-end-caps', 'Metal End Caps (rod)', quantity * 1);
   } else if (skuType === 'sku174') {
-    addPipes(Math.max(0, length - 10), 1, 'p-peg');
+    addPipes(Math.max(0, length), 1, 'p-peg');
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
     addFitting('f-90-elbows', '90° Elbows', quantity * 1);
     addFitting('f-hex-nipples', 'Hex Nipples', quantity * 1);

@@ -4228,8 +4228,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   if (skuType === 'sku177') {
     const e = explode * 1.5;
     const numRails = Math.max(2, tiers || 3);
-    const leftX = -(length / 2) + 3.5;
-    const rightX = (length / 2) - 3.5;
+    const leftX = -(length / 2) - 1.5;
+    const rightX = (length / 2) + 1.5;
     const zBase = -wallDistance;
     const zRail = zBase + wallDistance; // Usually 0
 
@@ -4748,7 +4748,9 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
   if (skuType === 'sku174') {
     const e = explode * 1.5;
-    const pipeLength = Math.max(0.1, length - 10);
+    // We add 2.7 because the flange clips 1.2 and the elbow clips 1.5. 
+    // This allows the visual pipe distance to span exactly `length` mathematically.
+    const pipeLength = Math.max(0.1, length + 2.7);
     const zWall = -pipeLength;
 
     return (
