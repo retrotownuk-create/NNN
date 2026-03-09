@@ -4634,7 +4634,11 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   }
 
   if (skuType === 'sku162') {
-    return <group></group>;
+    return (
+      <group position={[0, height / 2, 0]}>
+        <Shelf position={[0, -1.5, 0]} length={length} depth={wallDistance} woodColor={woodColor} highlightFront={true} />
+      </group>
+    );
   }
 
   if (skuType === 'sku163' || skuType === 'sku164') {
