@@ -561,7 +561,7 @@ const EndCap = ({ position, rotation = [0, 0, 0], showLabel, colorOption = COLOR
         <cylinderGeometry args={[1.75, 1.75, 0.4, 16]} />
         <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
       </mesh>
-      {showLabel && <Label text="In cap" type="fitting" lineClass="h-8" />}
+      {showLabel && <Label text="End Cap" type="fitting" lineClass="h-8" />}
     </group>
   );
 };
@@ -4228,8 +4228,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   if (skuType === 'sku177') {
     const e = explode * 1.5;
     const numRails = Math.max(2, tiers || 3);
-    const leftX = -(length / 2) + 2.5;
-    const rightX = (length / 2) - 2.5;
+    const leftX = -(length / 2) + 3.5;
+    const rightX = (length / 2) - 3.5;
     const zBase = -wallDistance;
     const zRail = zBase + wallDistance; // Usually 0
 

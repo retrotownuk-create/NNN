@@ -711,7 +711,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addPipes(Math.max(0, wallDistance - 3.3), numRails * 2, 'p-wall-conn');
 
     // Bottom rail
-    addPipes(Math.max(0, length - 3.6), 1, 'p-bottom-rail');
+    addPipes(Math.max(0, length - 10), 1, 'p-bottom-rail');
 
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * numRails * 2);
     addFitting('f-corner-elbows', 'Corner Elbows', quantity * 2);
@@ -721,7 +721,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     }
     // Top uses T-fitting as well
     addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
-    addFitting('f-end-caps', 'In caps', quantity * 2);
+    addFitting('f-end-caps', 'End Caps', quantity * 2);
 
     if (hasShelves) {
       // Add wood shelves for all tiers except the bottom rail
