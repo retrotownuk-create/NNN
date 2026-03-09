@@ -722,6 +722,11 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     // Top uses T-fitting as well
     addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
     addFitting('f-end-caps', 'In caps', quantity * 2);
+
+    if (hasShelves) {
+      // Add wood shelves for all tiers except the bottom rail
+      addWood('w-shelf', 'Wood Shelf', quantity * (numRails - 1), `${length} × ${wallDistance} cm`);
+    }
   } else if (skuType === 'sku175') {
     addPipes(15, 1, 'p-peg');
     addPipes(5, 1, 'p-wall-conn');

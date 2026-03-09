@@ -4291,7 +4291,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         if (i < numRails - 2) {
           parts.push(
             <group key={`t-${i + 1}-${isLeft}`} position={[xExp, yEnd + getEY(i + 1), e]}>
-              <TFitting position={[x, 0, zRail]} rotation={[-Math.PI / 2, isLeft ? Math.PI : 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              <TFitting position={[x, 0, zRail]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
             </group>
           );
         }
@@ -4300,7 +4300,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
       // Fitting at topY
       parts.push(
         <group key={`t-top-${isLeft}`} position={[xExp, topY + getEY(numRails - 1), e]}>
-          <TFitting position={[x, 0, zRail]} rotation={[-Math.PI / 2, isLeft ? Math.PI : 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <TFitting position={[x, 0, zRail]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           {/* Top stub */}
           <Pipe start={[x, 1.5 + e * 0.2, zRail]} end={[x, 5 - 1.0 + e * 0.2, zRail]} showLabel={showLabel} colorOption={colorOption} />
           <EndCap position={[x, 5 + e * 0.4, zRail]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
