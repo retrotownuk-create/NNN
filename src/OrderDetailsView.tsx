@@ -816,27 +816,38 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     const railLength = Math.max(0, length - (numMounts * 5));
     const railPipes = getEqualSplitPipes(railLength, numMounts - 1);
 
-    // Wall stem: wallDistance - 2 = pipe cut length (23cm pipe + 2cm fittings = 25cm total)
-    addPipes(wallDistance - 2, numMounts, 'p-wall');
+    // Consolidate all pipes by size
+    const allPipeCounts: Record<number, number> = {};
+    const addToConsolidated = (size: number, count: number) => {
+      allPipeCounts[size] = (allPipeCounts[size] || 0) + count;
+    };
 
-    // Drop pipes: 2.5cm offset each end = 5cm total deduction
-    addPipes(Math.max(0, dropHeight - 5), numMounts, 'p-drop');
+    // Wall stem pipes
+    const wallStemPipes = getPipesForLength(wallDistance - 2);
+    wallStemPipes.forEach(p => addToConsolidated(p, numMounts * quantity));
 
-    // Rail pipes
-    railPipes.forEach(rp => addPipes(rp, 1, 'p-rail'));
+    // Drop pipes
+    const dropPipes = getPipesForLength(Math.max(0, dropHeight - 5));
+    dropPipes.forEach(p => addToConsolidated(p, numMounts * quantity));
+
+    // Rail pipes (already split by getEqualSplitPipes)
+    railPipes.forEach(rp => addToConsolidated(rp, quantity));
+
+    // Push all consolidated pipes
+    Object.entries(allPipeCounts).forEach(([size, c]) => {
+      items.push({
+        id: `pipe-${size}`,
+        partName: `${size} cm ${tubeType === 'square' ? 'square ' : ''}pipe`,
+        qty: c,
+        type: 'pipe',
+        color: colorName
+      });
+    });
 
     // Fittings
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * numMounts);
-    addFitting('f-90-elbows', '90° Elbows', quantity * (numMounts + 2)); // Top elbows + 2 bottom corners
+    addFitting('f-90-elbows', '90° Elbows', quantity * (numMounts + 2));
     addFitting('f-t-fittings', 'T-Fittings', quantity * (numMounts - 2));
-
-    // Couplings
-    const stemCouplings = numMounts * getExtraCouplings(wallDistance - 2, 1);
-    const dropCouplings = numMounts * getExtraCouplings(Math.max(0, dropHeight - 5), 1);
-    const totalCouplings = stemCouplings + dropCouplings;
-    if (totalCouplings > 0) {
-      addFitting('f-couplings', 'Couplings', quantity * totalCouplings);
-    }
   } else if (skuType === 'sku144') {
     // Wall-mounted toilet paper holder (Flange -> Pipe -> T-Fitting -> Cap + Pipe/Cap)
     addPipes(Math.max(0, wallDistance - 2), 1, 'p-wall');
