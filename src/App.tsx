@@ -4464,8 +4464,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const zWallSurface = -33.4;
     const yTee = 0;
 
-    const leftTx = leftX + 12.5;
-    const rightTx = rightX - 12.5;
+    const leftTx = leftX + 5.0;
+    const rightTx = rightX - 5.0;
 
     const eZ = zWallSurface + 4.4; // 1.2 flange + 3.2 nipple = 4.4
     const eY = eZ;
@@ -4640,8 +4640,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const zWallSurface = -33.4;
     const yTee = 0;
 
-    const leftTx = leftX + 12.5;
-    const rightTx = rightX - 12.5;
+    const leftTx = leftX + 5.0;
+    const rightTx = rightX - 5.0;
     const midTx = 0;
 
     const eZ = zWallSurface + 4.4; // 1.2 flange + 3.2 nipple = 4.4
