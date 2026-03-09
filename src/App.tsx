@@ -4740,7 +4740,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           <Pipe start={[0, 0, zWall + 1.2]} end={[0, 0, zWall + 1.2 + length]} showLabel={showLabel} colorOption={colorOption} />
         </group>
         <group position={[0, 0, e]}>
-          <EndCap position={[0, 0, zWall + 1.2 + length]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <EndCap position={[0, 0, zWall + 1.2 + length]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );
