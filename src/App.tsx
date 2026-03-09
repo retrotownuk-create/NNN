@@ -4884,7 +4884,9 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         {Array.from({ length: numMounts }).map((_, i) => {
           const x = mtX[i];
           const isEnd = i === 0 || i === numMounts - 1;
-          const xExp = i === 0 ? -e : (i === numMounts - 1 ? e : 0);
+          const spanScale = numMounts > 1 ? (i / (numMounts - 1)) : 0;
+          const xExp = -e + (spanScale * (2 * e));
+
           return (
             <group key={i} position={[xExp, 0, 0]}>
               <group position={[0, 0, -e]}>
@@ -4912,8 +4914,11 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         {railPipes.map((pipeLen, i) => {
           const startX = mtX[i];
           const endX = mtX[i + 1];
+          const spanScale = numMounts > 1 ? ((i + 0.5) / (numMounts - 1)) : 0;
+          const railXExp = -e + (spanScale * (2 * e));
+
           return (
-            <group key={'rail' + i} position={[0, -e, 0]}>
+            <group key={'rail' + i} position={[railXExp, -e, 0]}>
               <Pipe start={[startX + 2.5, -dropHeight, 0]} end={[endX - 2.5, -dropHeight, 0]} showLabel={showLabel} colorOption={colorOption} />
             </group>
           );
@@ -4946,7 +4951,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         {Array.from({ length: numMounts }).map((_, i) => {
           const x = mtX[i];
           const isEnd = i === 0 || i === numMounts - 1;
-          const xExp = i === 0 ? -e : (i === numMounts - 1 ? e : 0);
+          const spanScale = numMounts > 1 ? (i / (numMounts - 1)) : 0;
+          const xExp = -e + (spanScale * (2 * e));
 
           if (isEnd) {
             return (
@@ -4996,8 +5002,11 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         {railPipes.map((pipeLen, i) => {
           const startX = mtX[i];
           const endX = mtX[i + 1];
+          const spanScale = numMounts > 1 ? ((i + 0.5) / (numMounts - 1)) : 0;
+          const railXExp = -e + (spanScale * (2 * e));
+
           return (
-            <group key={'rail' + i} position={[0, 0, 0]}>
+            <group key={'rail' + i} position={[railXExp, 0, 0]}>
               <Pipe start={[startX + 2.5, 0, 0]} end={[endX - 2.5, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
             </group>
           );
