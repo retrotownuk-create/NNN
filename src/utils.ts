@@ -61,3 +61,24 @@ export const getExtraCouplings = (target: number, count: number) => {
   const pipes = getPipesForLength(target);
   return (pipes.length - 1) * count;
 };
+
+export const getGreedyPipes = (target: number): number[] => {
+  if (target <= 0) return [];
+  const pipes: number[] = [];
+  let remaining = target;
+  while (remaining > 0) {
+    if (remaining >= 120) {
+      pipes.push(120);
+      remaining -= 120;
+    } else {
+      const closest = AVAILABLE_PIPE_SIZES.reduce((prev, curr) =>
+        Math.abs(curr - remaining) < Math.abs(prev - remaining) ? curr : prev
+      );
+      if (closest > 0) {
+        pipes.push(closest);
+      }
+      break;
+    }
+  }
+  return pipes;
+};

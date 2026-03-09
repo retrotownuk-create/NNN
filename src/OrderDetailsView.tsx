@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { COLORS, WOOD_COLORS, getPipesForLength, getExtraCouplings } from './utils';
+import { COLORS, WOOD_COLORS, getPipesForLength, getGreedyPipes, getExtraCouplings } from './utils';
 
 export type CutlistItem = {
   id: string;
@@ -747,21 +747,25 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
     addFitting('f-end-caps', 'End Caps', quantity * 1);
   } else if (skuType === 'sku143') {
-    const numMounts = Math.max(2, Math.ceil(length / 80) + 1);
+    const hcPipes = getGreedyPipes(length);
+    const numMounts = hcPipes.length + 1;
     const hd = config.handrailDiameter || (config.tubeType === 'square' ? '27mm' : '33mm');
 
     // Main handrail pipes (segments separated by T-fittings)
-    const mountSpacing = length / (numMounts - 1);
-    const railLength = Math.max(0, mountSpacing - 3.0);
-    const railPipes = getPipesForLength(railLength);
     const railCounts: Record<number, number> = {};
-    railPipes.forEach(p => railCounts[p] = (railCounts[p] || 0) + ((numMounts - 1) * quantity));
+    let numRailCouplings = 0;
+
+    for (const seg of hcPipes) {
+      const railLength = Math.max(0, seg - 3.0);
+      const railPipes = getPipesForLength(railLength);
+      numRailCouplings += Math.max(0, railPipes.length - 1);
+      railPipes.forEach(p => railCounts[p] = (railCounts[p] || 0) + quantity);
+    }
 
     Object.entries(railCounts).forEach(([size, c]) => {
       items.push({ id: `pipe-rail-${size}`, partName: `${size} cm pipe (${hd} Handrail)`, qty: c, type: 'pipe', color: colorName });
     });
 
-    const numRailCouplings = Math.max(0, railPipes.length - 1) * (numMounts - 1);
     if (numRailCouplings > 0) {
       items.push({ id: `f-couplings-rail-${hd}`, partName: `Couplings (${hd} Handrail)`, qty: numRailCouplings * quantity, type: 'fitting', color: colorName });
     }
@@ -783,21 +787,25 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       items.push({ id: `f-t-fittings-${hd}`, partName: `T-Fittings (${hd})`, qty: (numMounts - 2) * quantity, type: 'fitting', color: colorName });
     }
   } else if (skuType === 'sku169') {
-    const numMounts = Math.max(2, Math.ceil(length / 80) + 1);
+    const hcPipes = getGreedyPipes(length);
+    const numMounts = hcPipes.length + 1;
     const hd = config.handrailDiameter || (config.tubeType === 'square' ? '27mm' : '33mm');
 
     // Main diagonal handrail pipes (segments separated by T-fittings)
-    const mountSpacing = length / (numMounts - 1);
-    const railLength = Math.max(0, mountSpacing - 3.0);
-    const railPipes = getPipesForLength(railLength);
     const railCounts: Record<number, number> = {};
-    railPipes.forEach(p => railCounts[p] = (railCounts[p] || 0) + ((numMounts - 1) * quantity));
+    let numRailCouplings = 0;
+
+    for (const seg of hcPipes) {
+      const railLength = Math.max(0, seg - 3.0);
+      const railPipes = getPipesForLength(railLength);
+      numRailCouplings += Math.max(0, railPipes.length - 1);
+      railPipes.forEach(p => railCounts[p] = (railCounts[p] || 0) + quantity);
+    }
 
     Object.entries(railCounts).forEach(([size, c]) => {
       items.push({ id: `pipe-rail-${size}`, partName: `${size} cm pipe (${hd} Handrail)`, qty: c, type: 'pipe', color: colorName });
     });
 
-    const numRailCouplings = Math.max(0, railPipes.length - 1) * (numMounts - 1);
     if (numRailCouplings > 0) {
       items.push({ id: `f-couplings-rail-${hd}`, partName: `Couplings (${hd} Handrail)`, qty: numRailCouplings * quantity, type: 'fitting', color: colorName });
     }
