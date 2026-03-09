@@ -5699,8 +5699,20 @@ const PreviewScene = ({ sku }: { sku: any }) => {
 const CutlistDisplay = ({ config, pickedItems, onToggleItem, packedBy, onPackedByChange, order, onOrderChange }: any) => {
   const { length, height, wallDistance, hasShelves, isFreestanding, colorName, woodColor, skuType, quantity, tiers } = config;
 
-  const cutlistItems = getCutlistItems(config);
-  const pipes = cutlistItems.filter((i: any) => i.type === 'pipe');
+  const rawCutlistItems = getCutlistItems(config);
+  const aggregatedParts: Record<string, CutlistItem> = {};
+
+  rawCutlistItems.forEach(item => {
+    const key = `${item.partName}-${item.color}`;
+    if (!aggregatedParts[key]) {
+      aggregatedParts[key] = { ...item, qty: 0 };
+    }
+    aggregatedParts[key].qty += item.qty;
+  });
+
+  const cutlistItems = Object.values(aggregatedParts);
+
+  const pipes = cutlistItems.filter((i: any) => i.type === 'pipe').sort((a: any, b: any) => parseFloat(a.partName) - parseFloat(b.partName) || 0);
   const fittings = cutlistItems.filter((i: any) => i.type === 'fitting');
   const woods = cutlistItems.filter((i: any) => i.type === 'wood');
 
