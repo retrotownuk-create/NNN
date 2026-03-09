@@ -903,7 +903,7 @@ const Shelf = ({ position, length, depth, woodColor = 'Natural Oak', highlightFr
   );
 };
 
-const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFreestanding = false, colorOption = COLORS['Raw grey'], skuType = 'standard', woodColor = 'Natural Oak', tiers = 4 }: { length: number, height: number, wallDistance: number, explode: number, hasShelves?: boolean, isFreestanding?: boolean, colorOption?: ColorOption, skuType?: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku888', woodColor?: string, tiers?: number }) => {
+const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFreestanding = false, colorOption = COLORS['Raw grey'], skuType = 'standard', woodColor = 'Natural Oak', tiers = 4, tubeType = 'round' }: { length: number, height: number, wallDistance: number, explode: number, hasShelves?: boolean, isFreestanding?: boolean, colorOption?: ColorOption, skuType?: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku888', woodColor?: string, tiers?: number, tubeType?: 'round' | 'square' }) => {
   const leftX = -length / 2;
   const rightX = length / 2;
   const wallZ = -wallDistance;
@@ -4512,34 +4512,91 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
   if (skuType === 'sku169') {
     const numMounts = Math.max(2, Math.ceil(length / 120) + 1);
-    const mountSpacing = length / (numMounts - 1);
-    // Diagonal handrail logic based on OrderDetailsView
-    // This is a placeholder structural logic to restore 3D rendering
+    const e = explode * 1.5;
+    const baseZ = -wallDistance;
+    const handrailZ = baseZ + 5; // Fixed 5cm depth based on HexNipple + Elbow
+
+    const startX = -length / 2;
+    const endX = length / 2;
+    const startY = height / 2;
+    const endY = -height / 2;
+    const dx = endX - startX;
+    const dy = endY - startY;
+
+    // Mathematically rotate fittings to connect perfectly
+    const startElbowZ = Math.atan2(dx, -dy);
+    const endElbowZ = Math.atan2(-dx, dy);
+    const tBodyZ = Math.atan2(dy, dx);
+    const tBranchZ = Math.atan2(-dx, dy); // Upward slope for stem entry
+
+    const isThin = tubeType === 'square';
+    const railRad = isThin ? 1.35 : 1.65;
+    const hScale = isThin ? 0.82 : 1;
+
     return (
-      <group position={[0, -height / 2 + 10, 0]}>
+      <group position={[0, height / 2, -baseZ / 2]}>
+        {/* Mounts */}
         {Array.from({ length: numMounts }).map((_, i) => {
-          const x = -length / 2 + i * mountSpacing;
-          const isEnd = i === 0 || i === numMounts - 1;
+          const t = i / (numMounts - 1);
+          const x = startX + t * dx;
+          const y = startY + t * dy;
+
+          const isFirst = i === 0;
+          const isLast = i === numMounts - 1;
+          const xExp = isFirst ? -e : (isLast ? e : 0);
+
           return (
-            <group key={i} position={[x, 0, 0]}>
-              <Flange position={[0, 0, -wallDistance]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-              <HexNipple position={[0, 0, -wallDistance + 2.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-              <Elbow position={[0, 0, -wallDistance + 5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-              <HexNipple position={[0, -2.5, -wallDistance + 5]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-              {isEnd ? (
-                <Elbow position={[0, -5, -wallDistance + 5]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-              ) : (
-                <TFitting position={[0, -5, -wallDistance + 5]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-              )}
+            <group key={`mount-${i}`} position={[xExp, 0, 0]}>
+              {/* Flange */}
+              <group position={[0, 0, -e]}>
+                <Flange position={[x, y, baseZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              <group position={[0, 0, -e * 0.75]}>
+                <HexNipple position={[x, y, baseZ + 2.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              <group position={[0, -e * 0.5, -e * 0.5]}>
+                <Elbow position={[x, y, handrailZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              <group position={[0, -e * 0.25, -e * 0.25]}>
+                <HexNipple position={[x, y - 2.5, handrailZ]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* Handrail Connection */}
+              <group position={[0, 0, 0]} scale={[hScale, hScale, hScale]}>
+                {isFirst ? (
+                  <Elbow position={[x / hScale, (y - 5) / hScale, handrailZ / hScale]} rotation={[0, 0, startElbowZ]} showLabel={showLabel} colorOption={colorOption} />
+                ) : isLast ? (
+                  <Elbow position={[x / hScale, (y - 5) / hScale, handrailZ / hScale]} rotation={[0, 0, endElbowZ]} showLabel={showLabel} colorOption={colorOption} />
+                ) : (
+                  <TFitting position={[x / hScale, (y - 5) / hScale, handrailZ / hScale]} rotation={[0, 0, tBodyZ]} showLabel={showLabel} colorOption={colorOption} />
+                )}
+              </group>
             </group>
           );
         })}
-        {/* Handrail pipes */}
+
+        {/* Handrail main pipes */}
         {Array.from({ length: numMounts - 1 }).map((_, i) => {
-          const startX = -length / 2 + i * mountSpacing;
-          const endX = startX + mountSpacing;
+          const t1 = i / (numMounts - 1);
+          const t2 = (i + 1) / (numMounts - 1);
+
+          const sx = startX + t1 * dx;
+          const sy = startY + t1 * dy;
+          const ex = startX + t2 * dx;
+          const ey = startY + t2 * dy;
+
+          const pipeLen = Math.hypot(ex - sx, ey - sy);
+          const push = (1.5 * hScale) / pipeLen;
+          const pushX = (ex - sx) * push;
+          const pushY = (ey - sy) * push;
+
           return (
-            <Pipe key={'rail' + i} start={[startX, -5, -wallDistance + 5]} end={[endX, -5, -wallDistance + 5]} colorOption={colorOption} showLabel={showLabel} />
+            <group key={`rail-${i}`} position={[0, 0, e]}>
+              <Pipe radius={railRad} start={[sx + pushX, sy - 5 + pushY, handrailZ]} end={[ex - pushX, ey - 5 - pushY, handrailZ]} showLabel={showLabel} colorOption={colorOption} />
+            </group>
           );
         })}
       </group>
@@ -4709,6 +4766,10 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const endElbowZ = Math.atan2(-dx, dy);
     const tBodyZ = Math.atan2(dy, dx);
 
+    const isThin = tubeType === 'square';
+    const railRad = isThin ? 1.35 : 1.65;
+    const hScale = isThin ? 0.82 : 1;
+
     return (
       <group position={[0, height / 2, -baseZ / 2]}>
         {/* Mounts */}
@@ -4732,13 +4793,13 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
                 <Pipe start={[x, y, baseZ + 1.2]} end={[x, y, handrailZ - 1.5]} showLabel={showLabel} colorOption={colorOption} />
               </group>
               {/* Handrail Connection */}
-              <group position={[0, 0, 0]}>
+              <group position={[0, 0, 0]} scale={[hScale, hScale, hScale]}>
                 {isFirst ? (
-                  <Elbow position={[x, y, handrailZ]} rotation={[0, 0, startElbowZ]} showLabel={showLabel} colorOption={colorOption} />
+                  <Elbow position={[x / hScale, y / hScale, handrailZ / hScale]} rotation={[0, 0, startElbowZ]} showLabel={showLabel} colorOption={colorOption} />
                 ) : isLast ? (
-                  <Elbow position={[x, y, handrailZ]} rotation={[0, 0, endElbowZ]} showLabel={showLabel} colorOption={colorOption} />
+                  <Elbow position={[x / hScale, y / hScale, handrailZ / hScale]} rotation={[0, 0, endElbowZ]} showLabel={showLabel} colorOption={colorOption} />
                 ) : (
-                  <TFitting position={[x, y, handrailZ]} rotation={[0, 0, tBodyZ]} showLabel={showLabel} colorOption={colorOption} />
+                  <TFitting position={[x / hScale, y / hScale, handrailZ / hScale]} rotation={[0, 0, tBodyZ]} showLabel={showLabel} colorOption={colorOption} />
                 )}
               </group>
             </group>
@@ -4756,13 +4817,13 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           const ey = startY + t2 * dy;
 
           const pipeLen = Math.hypot(ex - sx, ey - sy);
-          const push = 2.5 / pipeLen;
+          const push = (1.5 * hScale) / pipeLen;
           const pushX = (ex - sx) * push;
           const pushY = (ey - sy) * push;
 
           return (
             <group key={`rail-${i}`} position={[0, 0, e]}>
-              <Pipe start={[sx + pushX, sy + pushY, handrailZ]} end={[ex - pushX, ey - pushY, handrailZ]} showLabel={showLabel} colorOption={colorOption} />
+              <Pipe radius={railRad} start={[sx + pushX, sy + pushY, handrailZ]} end={[ex - pushX, ey - pushY, handrailZ]} showLabel={showLabel} colorOption={colorOption} />
             </group>
           );
         })}
