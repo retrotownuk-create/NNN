@@ -2346,6 +2346,36 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     );
   }
 
+  if (skuType === 'sku152') {
+    const isWallHex = wallDistance <= 5;
+    const e = explode * 1.5;
+    // Hardcode 15cm length for the visual model
+    const poleLength = 15;
+
+    return (
+      <group position={[0, 0, 0]}>
+        <group position={[0, 0, -e]}>
+          <Flange position={[0, 0, -wallDistance]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          {!isWallHex && (
+            <Pipe start={[0, 0, -wallDistance + 1.2]} end={[0, 0, -2.4]} showLabel={showLabel} colorOption={colorOption} />
+          )}
+        </group>
+        <group position={[-e * 0.5, 0, 0]}>
+          <Elbow position={[0, 0, -1.2]} rotation={[0, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <group position={[0, -e * 0.5, 0]}>
+          <Elbow position={[0, -4.8, -1.2]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <group position={[e * 0.5, 0, 0]}>
+          <Pipe start={[1.2, -4.8, -1.2]} end={[1.2 + poleLength, -4.8, -1.2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <group position={[e, 0, 0]}>
+          <EndCap position={[1.2 + poleLength, -4.8, -1.2]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+      </group>
+    );
+  }
+
   if (skuType === 'sku153' || skuType === 'sku154') {
     const e = explode * 1.5;
     const isPackOf4 = skuType === 'sku153';
@@ -6245,6 +6275,7 @@ export default function App() {
     const default141: SavedSKU = { name: 'SKU 141', length: 120, height: 80, wallDistance: 40, hasShelves: false, isFreestanding: true, colorName: 'Black', skuType: 'sku141' };
     const default142: SavedSKU = { name: 'SKU 142', length: 100, height: 0, wallDistance: 20, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku142' };
     const default143: SavedSKU = { name: 'SKU 143', length: 200, height: 100, wallDistance: 8, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku143' };
+    const default152: SavedSKU = { name: 'SKU 152', length: 15, height: 0, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku152' };
     const default161: SavedSKU = { name: 'SKU 161', length: 120, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: true, colorName: 'Black', skuType: 'sku161' };
     const default162: SavedSKU = { name: 'SKU 162', length: 100, height: 0, wallDistance: 23, hasShelves: true, isFreestanding: false, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku162' };
     const default163: SavedSKU = { name: 'SKU 163', length: 120, height: 90, wallDistance: 23, hasShelves: false, isFreestanding: true, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku163', tiers: 2 };
@@ -6266,7 +6297,7 @@ export default function App() {
 
     const allDefaults = [
       default4210, default300, default103, default105, default106, default107, default108, default109, default110, default111, default112, default113, default114, default115, default116, default117, default118, default119, default120, default121, default122, default123, default124, default125, default126, default127, default128, default129, default130, default131, default132, default133, default134, default135, default136, default137, default138,
-      default140, default141, default142, default143, default161, default162, default163, default164, default165, default166, default167, default168, default169, default170, default171, default172, default173, default174, default175, default176, default177, default178
+      default140, default141, default142, default143, default152, default155, default156, default157, default161, default162, default163, default164, default165, default166, default167, default168, default169, default170, default171, default172, default173, default174, default175, default176, default177, default178
     ];
 
     const saved = localStorage.getItem('savedSKUs');
@@ -7901,7 +7932,7 @@ export default function App() {
                 </div>
 
                 <div className="space-y-6">
-                  {skuType !== 'sku114' && skuType !== 'sku120' && skuType !== 'sku122' && (
+                  {skuType !== 'sku114' && skuType !== 'sku120' && skuType !== 'sku122' && skuType !== 'sku152' && (
                     <div>
                       <div className="flex justify-between mb-2">
                         <label className="text-xs font-bold text-gray-700">Length</label>

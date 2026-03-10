@@ -1027,7 +1027,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     }
 
     // Exact requested pole size
-    addPipes(length, 1, 'p-horiz');
+    addPipes(15, 1, 'p-horiz');
 
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
     addFitting('f-90-elbows', '90° Elbows', quantity * 2);
