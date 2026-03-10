@@ -2352,21 +2352,36 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
     return (
       <group position={[0, 1.4, 0]}>
+        {/* Wall branch */}
         <group position={[0, 0, -e]}>
           <Flange position={[0, 0, -5.0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           <Pipe start={[0, 0, -3.8]} end={[0, 0, -1.2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
+
+        {/* Elbow 1 connects directly into the wall pipe */}
         <group position={[-e * 0.5, 0, 0]}>
-          <Elbow position={[0, 0, 1.2]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Elbow position={[0, 0, 0]} rotation={[-Math.PI / 2, Math.PI / 2, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
+
+        {/* Hex Nipple connects Elbow 1 to Elbow 2 vertically */}
         <group position={[0, -e * 0.5, 0]}>
-          <Elbow position={[1.2, -4.8, 1.2]} rotation={[0, Math.PI / 2, Math.PI]} showLabel={showLabel} colorOption={colorOption} />
+          <HexNipple position={[0, -1.9, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
+
+        {/* Elbow 2 */}
+        <group position={[0, -e * 0.5, 0]}>
+          {/* Hex nipple separates the centers of the two elbows by 3.8cm */}
+          <Elbow position={[0, -3.8, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Horizontal output pole */}
         <group position={[e * 0.5, 0, 0]}>
-          <Pipe start={[3.6, -4.8, 1.2]} end={[3.6 + poleLength, -4.8, 1.2]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[1.2, -3.8, 0]} end={[1.2 + poleLength, -3.8, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
+
+        {/* End cap */}
         <group position={[e, 0, 0]}>
-          <EndCap position={[3.6 + poleLength, -4.8, 1.2]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+          <EndCap position={[1.2 + poleLength, -3.8, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );
