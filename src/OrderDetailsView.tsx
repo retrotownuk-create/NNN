@@ -200,7 +200,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addPipes(8, 2, 'p-wall-conn');
     addPipes(Math.max(0, wallDistance - 14.5), 2, 'p-fwd-conn'); // from Tee to Elbow
     addPipes(5, 2, 'p-up-conn'); // from Tee to top Flange
-    addPipes(length - 8, 1, 'p-horiz-bar');
+    addPipes(length - 10, 1, 'p-horiz-bar');
   } else if (skuType === 'sku159') {
     addPipes(30, 2, 'p-wall-conn');
     addPipes(35, 2, 'p-angled');

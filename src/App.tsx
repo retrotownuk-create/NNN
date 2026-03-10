@@ -4402,7 +4402,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     return (
       <group position={[0, -height / 2 + 10, 0]}>
         {/* Left Side */}
-        <group position={[leftX + 2.5, 0, 0]}>
+        <group position={[leftX + 3.5, 0, 0]}>
           <group position={[0, 0, -e]}>
             <Flange position={[0, yTee, zWallSurface + 0.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
@@ -4427,7 +4427,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         </group>
 
         {/* Right Side */}
-        <group position={[rightX - 2.5, 0, 0]}>
+        <group position={[rightX - 3.5, 0, 0]}>
           <group position={[0, 0, -e]}>
             <Flange position={[0, yTee, zWallSurface + 0.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
@@ -4453,7 +4453,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
         {/* Horizontal Bar */}
         <group position={[0, 0, e * 1.0]}>
-          <Pipe start={[leftX + 2.5 + 1.5, yTee, zElbow]} end={[rightX - 2.5 - 1.5, yTee, zElbow]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[leftX + 3.5 + 1.5, yTee, zElbow]} end={[rightX - 3.5 - 1.5, yTee, zElbow]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Shelf */}
@@ -7866,7 +7866,7 @@ export default function App() {
                   </div>
                 </div>
 
-                {(skuType === 'standard' || skuType === 'sku107' || skuType === 'sku108' || skuType === 'sku109' || skuType === 'sku110' || skuType === 'sku115' || skuType === 'sku127' || skuType === 'sku128' || skuType === 'sku131' || skuType === 'sku133' || skuType === 'sku137' || skuType === 'sku177') && (
+                {(skuType === 'standard' || skuType === 'sku107' || skuType === 'sku108' || skuType === 'sku109' || skuType === 'sku110' || skuType === 'sku115' || skuType === 'sku127' || skuType === 'sku128' || skuType === 'sku131' || skuType === 'sku133' || skuType === 'sku137' || skuType === 'sku158' || skuType === 'sku177') && (
                   <>
                     <div className="flex items-center justify-between p-3 bg-gray-50 rounded-2xl border border-gray-100">
                       <div className="flex items-center gap-2">
