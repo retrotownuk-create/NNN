@@ -266,7 +266,7 @@ const Label = ({ text, type = 'pipe', lineClass = 'h-8' }: { text: string, type?
   );
 };
 
-const Pipe = ({ start, end, radius = 1.6, showLabel, colorOption = COLORS['Raw grey'] }: { start: [number, number, number], end: [number, number, number], radius?: number, showLabel?: boolean, colorOption?: ColorOption }) => {
+const Pipe = ({ start, end, radius = 1.6, showLabel, colorOption = COLORS['Raw grey'], overrideLabel }: { start: [number, number, number], end: [number, number, number], radius?: number, showLabel?: boolean, colorOption?: ColorOption, overrideLabel?: string }) => {
   const vstart = new THREE.Vector3(...start);
   const vend = new THREE.Vector3(...end);
   const distance = vstart.distanceTo(vend);
@@ -292,7 +292,7 @@ const Pipe = ({ start, end, radius = 1.6, showLabel, colorOption = COLORS['Raw g
           <mesh key={`pipe-${i}`} position={center} quaternion={quaternion} castShadow receiveShadow>
             <cylinderGeometry args={[radius, radius, pipeLen, 32]} />
             <meshStandardMaterial color={colorOption.pipeColor} metalness={colorOption.metalness} roughness={colorOption.roughness} />
-            {showLabel && <Label text={`${pipeLen.toFixed(1)} cm`} type="pipe" lineClass="h-8" />}
+            {showLabel && <Label text={overrideLabel ? overrideLabel : `${pipeLen.toFixed(1)} cm`} type="pipe" lineClass="h-8" />}
           </mesh>
         );
 
@@ -3740,16 +3740,16 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
       return (
         <group position={[eX, 0, 0]}>
           <group position={[0, -e * 0.6, 0]}>
-            <Flange position={[x, bottomY, frontZ]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Flange position={[x, bottomY, frontZ]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           <group position={[0, -e * 0.3, 0]}>
-            <Pipe start={[x, bottomY + 1.2, frontZ]} end={[x, couplingY - 1.2, frontZ]} showLabel={showLabel} colorOption={colorOption} />
+            <Pipe start={[x, bottomY + 1.2, frontZ]} end={[x, couplingY - 1.2, frontZ]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${(adjHeight / 2).toFixed(1)} cm`} />
           </group>
           <group position={[0, 0, 0]}>
             <Coupling position={[x, couplingY, frontZ]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           <group position={[0, e * 0.3, 0]}>
-            <Pipe start={[x, couplingY + 1.2, frontZ]} end={[x, topY - 2.2, frontZ]} showLabel={showLabel} colorOption={colorOption} />
+            <Pipe start={[x, couplingY + 1.2, frontZ]} end={[x, topY - 2.2, frontZ]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${(adjHeight / 2).toFixed(1)} cm`} />
           </group>
         </group>
       );
@@ -3767,7 +3767,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
         {/* Left wall arm */}
         <group position={[-e, e * 0.8, -e * 0.4]}>
-          <Pipe start={[lX, topY, frontZ - 2.2]} end={[lX, topY, wallZ + 1.2]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[lX, topY, frontZ - 2.2]} end={[lX, topY, wallZ + 1.2]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${adjWallDistance.toFixed(1)} cm`} />
         </group>
         <group position={[-e, e * 0.8, -e * 0.8]}>
           <Flange position={[lX, topY, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
@@ -3780,7 +3780,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
         {/* Right wall arm */}
         <group position={[e, e * 0.8, -e * 0.4]}>
-          <Pipe start={[rX, topY, frontZ - 2.2]} end={[rX, topY, wallZ + 1.2]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[rX, topY, frontZ - 2.2]} end={[rX, topY, wallZ + 1.2]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${adjWallDistance.toFixed(1)} cm`} />
         </group>
         <group position={[e, e * 0.8, -e * 0.8]}>
           <Flange position={[rX, topY, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
@@ -3788,7 +3788,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
         {/* Horizontal rail */}
         <group position={[0, e * 0.8, 0]}>
-          <Pipe start={[lX + 2.2, topY, frontZ]} end={[rX - 2.2, topY, frontZ]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[lX + 2.2, topY, frontZ]} end={[rX - 2.2, topY, frontZ]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${adjLength.toFixed(1)} cm`} />
         </group>
       </group>
     );
