@@ -141,7 +141,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       } else {
         extra += getExtraCouplings(length - 4.4, 1);
       }
-    } else if (skuType === 'sku154' || skuType === 'sku155') {
+    } else if (skuType === 'sku153' || skuType === 'sku154' || skuType === 'sku155') {
       // Couplings calculation handled directly inside the SKU block
     } else if (skuType === 'sku158') {
       if (length > 120) {
@@ -1035,10 +1035,10 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-end-caps', 'End Caps', quantity * 1);
   } else if (skuType === 'sku153') {
     // 4 Independent Table Legs
-    addPipes(height, 4, 'p-vert');
+    addPipes(length, 4, 'p-vert');
     addFitting('f-floor-flanges', 'Floor Flanges', quantity * 8);
 
-    const legCouplings = getExtraCouplings(height, 4);
+    const legCouplings = getExtraCouplings(length, 4);
     if (legCouplings > 0) {
       addFitting('f-couplings', 'Couplings', quantity * legCouplings);
     }
