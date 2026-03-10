@@ -4963,8 +4963,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
   if (skuType === 'sku140') {
     const e = explode * 1.5;
-    const poleLength = 23;
-    // Exactly 23cm arm requested. Flange takes ~1.2, Front connection takes ~1.5.
+    const poleLength = Math.max(0, wallDistance - 5);
+    // Exactly 5cm taken off depth. Flange takes ~1.2, Front connection takes ~1.5.
     const bracketZ = -poleLength - 2.7;
     const railZ = 0;
 

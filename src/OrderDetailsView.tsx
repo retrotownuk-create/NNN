@@ -680,16 +680,17 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-couplings', 'Couplings', quantity * 3);
   } else if (skuType === 'sku140') {
     // Wall-mounted triple support rack with Elbows at ends
-    const poleLength = 23;
+    const poleLength = Math.max(0, wallDistance - 5);
     addPipes(poleLength, 3, 'p-support-arm');
     
-    // Exact pipe length from Elbow (1.5 inner offset) to Tee (2.2 offset)
-    addPipes(length / 2 - 3.7, 2, 'p-horizontal-rail');
+    // We take out 15cm from length (total), 2 horizontal pipes: (length - 15) / 2
+    const railLength = Math.max(0, (length - 15) / 2);
+    addPipes(railLength, 2, 'p-horizontal-rail');
     
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 3);
     addFitting('f-t-fittings', 'T-Fittings', quantity * 1);
     addFitting('f-90-elbows', '90° Elbows', quantity * 2);
-    addFitting('f-couplings', 'Couplings', quantity * getExtraCouplings(length / 2 - 3.7, 2));
+    addFitting('f-couplings', 'Couplings', quantity * getExtraCouplings(railLength, 2));
   } else if (skuType === 'sku141') {
     const yTFitting = height - 3.4;
     const yBottomPipeStart = yTFitting - 2.2;
