@@ -2403,7 +2403,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
               {/* Bottom 90-degree Elbow */}
               <group position={[x + dx, bottomY - e, zFront + e]}>
-                <Elbow position={[0, 0, 0]} rotation={[-Math.PI / 2, isLeft ? Math.PI / 2 : -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+                <Elbow position={[0, 0, 0]} rotation={[0, isLeft ? Math.PI / 2 : -Math.PI / 2, Math.PI]} showLabel={showLabel} colorOption={colorOption} />
               </group>
             </group>
           );
