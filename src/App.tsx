@@ -2348,31 +2348,48 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
   if (skuType === 'sku150') {
     const e = explode * 1.5;
-    const floorY = -height / 2;
-    const topY = height / 2;
-    const zWall = -wallDistance;
-    const zFront = 0;
 
-    // length > 120 ? 3 legs : 2 legs
-    const legsCount = length > 120 ? 3 : 2;
-    const xPositions = legsCount === 3 ? [-length / 2, 0, length / 2] : [-length / 2, length / 2];
+    // Explicit subtractive dimensions requested by user
+    const cutLength = length - 15;
+    const cutHeight = height - 5;
+    const cutDepth = wallDistance - 5;
+
+    // Fixed physical layout based cleanly on strict fitting distances
+    // Total vertical span = cutHeight + bottom flange (2.15) + top fitting (2.2)
+    const spanY = cutHeight + 4.35;
+    const topY = spanY / 2;
+    const floorY = -spanY / 2;
+
+    // Total depth span = cutDepth + wall flange (2.15) + top fitting (2.2)
+    const spanZ = cutDepth + 4.35;
+    const zFront = spanZ / 2;
+    const zWall = -spanZ / 2;
+
+    // 3 Legs = 2 horizontal segments
+    // Distance between left fitting center and middle fitting center = cutLength / 2 + 4.4
+    const segSpanX = (cutLength / 2) + 4.4;
+    const xPositions = [-segSpanX, 0, segSpanX];
 
     return (
       <group position={[0, 0, 0]}>
         {xPositions.map((x, i) => {
           const isLeft = i === 0;
-          const isRight = i === legsCount - 1;
-          const isMiddle = !isLeft && !isRight;
+          const isRight = i === 2;
+          const isMiddle = i === 1;
 
           return (
             <group key={`leg-${i}`}>
-              {/* Vertical drops to floor */}
-              <group position={[x, 0, zFront]}>
-                <Flange position={[0, floorY - e * 2, 0]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel && isLeft} colorOption={colorOption} />
-                <Pipe start={[0, floorY + 2.8 - e * 1, 0]} end={[0, topY - 2.8 - e * 1, 0]} showLabel={showLabel && isLeft} colorOption={colorOption} />
+              {/* Floor Flange (Base is Y=floorY, points UP +Y. Collar ends at Y=floorY+2.15) */}
+              <group position={[x, floorY - e * 2, zFront]}>
+                <Flange position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel && isLeft} colorOption={colorOption} />
               </group>
 
-              {/* Top Fitting */}
+              {/* Vertical pipe (from Flange collar UP to Top Fitting collar) */}
+              <group position={[x, 0, zFront]}>
+                <Pipe start={[0, floorY + 2.15 - e, 0]} end={[0, topY - 2.2 - e, 0]} showLabel={showLabel && isLeft} colorOption={colorOption} overrideLabel={isLeft ? `${cutHeight} cm` : undefined} />
+              </group>
+
+              {/* Top Fitting (Center is at [x, topY, zFront]) */}
               <group position={[x, topY, zFront]}>
                 {isLeft && (
                   <CornerFitting position={[0, 0, 0]} side="left" showLabel={showLabel} colorOption={colorOption} />
@@ -2385,31 +2402,26 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
                 )}
               </group>
 
-              {/* Horizontal wall standoffs */}
+              {/* Wall Standoff Pipe (from Top Fitting collar BACK to Wall Flange collar) */}
               <group position={[x, topY, 0]}>
-                <Pipe start={[0, 0, -2.8 - e * 1]} end={[0, 0, zWall + 2.8 - e * 1]} showLabel={showLabel && isLeft} colorOption={colorOption} />
-                <Flange position={[0, 0, zWall - e * 2]} rotation={[0, Math.PI, 0]} showLabel={showLabel && isLeft} colorOption={colorOption} />
+                <Pipe start={[0, 0, zFront - 2.2 - e]} end={[0, 0, zWall + 2.15 - e]} showLabel={showLabel && isLeft} colorOption={colorOption} overrideLabel={isLeft ? `${cutDepth} cm` : undefined} />
+              </group>
+
+              {/* Wall Flange (Base is Z=zWall, rotates to point +Z. Collar ends at Z=zWall+2.15) */}
+              <group position={[x, topY, zWall - e * 2]}>
+                <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel && isLeft} colorOption={colorOption} />
               </group>
             </group>
           );
         })}
 
         {/* Horizontal main rails */}
-        {legsCount === 2 && (
-          <group position={[0, topY, zFront]}>
-            <Pipe start={[xPositions[0] + 2.8 + e, 0, 0]} end={[xPositions[1] - 2.8 - e, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
-        )}
-        {legsCount === 3 && (
-          <>
-            <group position={[0, topY, zFront]}>
-              <Pipe start={[xPositions[0] + 2.8 + e, 0, 0]} end={[xPositions[1] - 2.8 - e, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-            </group>
-            <group position={[0, topY, zFront]}>
-              <Pipe start={[xPositions[1] + 2.8 + e, 0, 0]} end={[xPositions[2] - 2.8 - e, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-            </group>
-          </>
-        )}
+        <group position={[0, topY, zFront]}>
+          <Pipe start={[xPositions[0] + 2.2 + e, 0, 0]} end={[xPositions[1] - 2.2 - e, 0, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${cutLength / 2} cm`} />
+        </group>
+        <group position={[0, topY, zFront]}>
+          <Pipe start={[xPositions[1] + 2.2 + e, 0, 0]} end={[xPositions[2] - 2.2 - e, 0, 0]} showLabel={false} colorOption={colorOption} overrideLabel={`${cutLength / 2} cm`} />
+        </group>
       </group>
     );
   }
@@ -8123,7 +8135,7 @@ export default function App() {
                       </div>
                       <input
                         type="range"
-                        min={skuType === 'sku153' || skuType === 'sku154' ? 5 : skuType === 'sku116' || skuType === 'sku160' ? 50 : 30} max={(skuType === 'sku136' || skuType === 'sku137') ? "600" : "400"} step="5"
+                        min={skuType === 'sku150' ? 80 : skuType === 'sku153' || skuType === 'sku154' ? 5 : skuType === 'sku116' || skuType === 'sku160' ? 50 : 30} max={(skuType === 'sku136' || skuType === 'sku137') ? "600" : "400"} step="5"
                         value={length}
                         onChange={(e) => setLength(Number(e.target.value))}
                         className="w-full accent-black h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"

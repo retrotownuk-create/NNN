@@ -993,25 +993,28 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     }
   } else if (skuType === 'sku150') {
     // Multi-leg floor-to-wall rack
-    const legs = length > 120 ? 3 : 2; // For standard sizing
-    const segments = legs - 1;
+    const legs = 3; // Hardcoded to 3 as requested
+    const segments = 2;
 
-    addPipes(Math.max(0, height - 2.5), legs, 'p-vert');       // Vertical drops
-    addPipes(Math.max(0, wallDistance - 2.5), legs, 'p-wall'); // Wall standoffs
-    addPipes(Math.max(0, (length - 4.4) / segments), segments, 'p-horiz');
+    // Exact user specifications
+    const cutLength = length - 15;
+    const cutHeight = height - 5;
+    const cutDepth = wallDistance - 5;
+
+    addPipes(Math.max(0, cutHeight), legs, 'p-vert');       // Vertical drops
+    addPipes(Math.max(0, cutDepth), legs, 'p-wall'); // Wall standoffs
+    addPipes(Math.max(0, cutLength / segments), segments, 'p-horiz');
 
     addFitting('f-floor-flanges', 'Floor Flanges', quantity * legs);
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * legs);
     addFitting('f-3way-corner-elbows', '3-Way Corner Elbows', quantity * 2);
-
-    if (legs > 2) {
-      addFitting('f-4way-fittings', '4-Way Fittings', quantity * (legs - 2));
-    }
+    addFitting('f-4way-fittings', '4-Way Fittings', quantity * 1);
 
     // Couplings
-    const horizCouplings = getExtraCouplings((length - 4.4) / segments, segments);
-    const vertCouplings = getExtraCouplings(Math.max(0, height - 2.5), legs);
-    const totalCouplings = horizCouplings + vertCouplings;
+    const horizCouplings = getExtraCouplings(cutLength / segments, segments);
+    const vertCouplings = getExtraCouplings(Math.max(0, cutHeight), legs);
+    const depthCouplings = getExtraCouplings(Math.max(0, cutDepth), legs);
+    const totalCouplings = horizCouplings + vertCouplings + depthCouplings;
     if (totalCouplings > 0) {
       addFitting('f-couplings', 'Couplings', quantity * totalCouplings);
     }
