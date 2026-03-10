@@ -5901,10 +5901,20 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
                   <group position={[mx, my, -e * 0.5]}>
                     <Pipe start={[0, 0, wallZ + 2.15]} end={[0, 0, railZ - 2.2]} showLabel={showLabel} colorOption={colorOption} />
                   </group>
-                  <group position={[mx, my, 0]}>
-                    <group position={[0, 0, railZ]} rotation={[0, 0, θ - Math.PI / 2]}>
-                      <TFitting position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-                    </group>
+                  <group position={[mx, my, railZ]}>
+                    {isFirst ? (
+                      <group rotation={[0, 0, θ]}>
+                        <Elbow position={[0, 0, 0]} rotation={[Math.PI, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                      </group>
+                    ) : isLast ? (
+                      <group rotation={[0, 0, θ]}>
+                        <Elbow position={[0, 0, 0]} rotation={[Math.PI, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                      </group>
+                    ) : (
+                      <group rotation={[0, 0, θ - Math.PI / 2]}>
+                        <TFitting position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                      </group>
+                    )}
                   </group>
                 </>
               )}
