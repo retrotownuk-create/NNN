@@ -2366,8 +2366,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         : [-Math.PI / 2, Math.PI / 2, 0];
 
       const rotElbow: [number, number, number] = isLeft
-        ? [-Math.PI / 2, -Math.PI / 2, 0]
-        : [-Math.PI / 2, Math.PI / 2, 0];
+        ? [Math.PI / 2, Math.PI / 2, 0]
+        : [Math.PI / 2, -Math.PI / 2, 0];
 
       return (
         <group key={`support-${x}`}>
