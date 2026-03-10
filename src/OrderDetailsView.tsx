@@ -960,16 +960,19 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-couplings', 'Couplings', quantity * getExtraCouplings(Math.max(0, length - 10), 1));
   } else if (skuType === 'sku148') {
     // Single L-shaped Floor-to-Wall point
-    addPipes(Math.max(0, height - 2.5), 1, 'p-vert');
-    addPipes(Math.max(0, length - 2.5), 1, 'p-wall-conn');
+    const targetCutLength = length - 5;
+    const targetCutHeight = height - 5;
+
+    addPipes(Math.max(0, targetCutHeight), 1, 'p-vert');
+    addPipes(Math.max(0, targetCutLength), 1, 'p-wall-conn');
 
     addFitting('f-floor-flanges', 'Floor Flanges', quantity * 1);
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
     addFitting('f-90deg-elbows', '90° Elbows', quantity * 1);
 
     // Coupling calculation for potentially long pipes
-    const vertCouplings = getExtraCouplings(Math.max(0, height - 2.5), 1);
-    const horizCouplings = getExtraCouplings(Math.max(0, length - 2.5), 1);
+    const vertCouplings = getExtraCouplings(Math.max(0, targetCutHeight), 1);
+    const horizCouplings = getExtraCouplings(Math.max(0, targetCutLength), 1);
     const totalCouplings = vertCouplings + horizCouplings;
     if (totalCouplings > 0) {
       addFitting('f-couplings', 'Couplings', quantity * totalCouplings);
