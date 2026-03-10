@@ -922,11 +922,12 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     const targetCutHeight = height - 10;
     const targetCutDepth = wallDistance - 5;
 
-    const halfVert = targetCutHeight / 2;
+    const bottomVert = Math.ceil(targetCutHeight / 10) * 5;
+    const topVert = Math.max(0, targetCutHeight - bottomVert);
 
     addPipes(Math.max(0, targetCutLength), 1, 'p-horiz');
-    addPipes(halfVert, 2, 'p-vert-bot');
-    addPipes(halfVert, 2, 'p-vert-top');
+    addPipes(bottomVert, 2, 'p-vert-bot');
+    addPipes(topVert, 2, 'p-vert-top');
     addPipes(Math.max(0, targetCutDepth), 4, 'p-wall-arms'); // 2 middle, 2 top
 
     addFitting('f-floor-flanges', 'Floor Flanges', quantity * 2);
@@ -936,7 +937,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
 
     const horizCouplings = getExtraCouplings(Math.max(0, targetCutLength), 1);
     const depthCouplings = getExtraCouplings(Math.max(0, targetCutDepth), 4);
-    const vertCouplings = getExtraCouplings(halfVert, 4);
+    const vertCouplings = getExtraCouplings(bottomVert, 2) + getExtraCouplings(topVert, 2);
     const totalCouplings = horizCouplings + depthCouplings + vertCouplings;
     if (totalCouplings > 0) {
       addFitting('f-couplings', 'Couplings', quantity * totalCouplings);

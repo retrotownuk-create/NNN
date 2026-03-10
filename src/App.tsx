@@ -2353,12 +2353,13 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const targetCutHeight = height - 10;
     const targetCutDepth = wallDistance - 5;
 
-    const halfVert = targetCutHeight / 2;
+    const bottomVert = Math.ceil(targetCutHeight / 10) * 5; // e.g. 175 -> 90
+    const topVert = Math.max(0, targetCutHeight - bottomVert); // e.g. 175 -> 85
 
     const actualCutDepth = getPipesForLength(Math.max(0, targetCutDepth)).reduce((a, b) => a + b, 0) || 10;
     const actualCutLength = getPipesForLength(Math.max(0, targetCutLength)).reduce((a, b) => a + b, 0) || 10;
-    const actualCutBottom = getPipesForLength(halfVert).reduce((a, b) => a + b, 0) || 10;
-    const actualCutTop = getPipesForLength(halfVert).reduce((a, b) => a + b, 0) || 10;
+    const actualCutBottom = getPipesForLength(bottomVert).reduce((a, b) => a + b, 0) || 10;
+    const actualCutTop = getPipesForLength(topVert).reduce((a, b) => a + b, 0) || 10;
 
     const zFront = 0;
     const zWall = zFront - actualCutDepth - 4.35;
