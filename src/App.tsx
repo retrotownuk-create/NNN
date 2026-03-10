@@ -2346,6 +2346,74 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     );
   }
 
+  if (skuType === 'sku150') {
+    const e = explode * 1.5;
+    const floorY = -height / 2;
+    const topY = height / 2;
+    const zWall = -wallDistance;
+    const zFront = 0;
+
+    // length > 120 ? 3 legs : 2 legs
+    const legsCount = length > 120 ? 3 : 2;
+    const xPositions = legsCount === 3 ? [-length / 2, 0, length / 2] : [-length / 2, length / 2];
+
+    return (
+      <group position={[0, 0, 0]}>
+        {xPositions.map((x, i) => {
+          const isLeft = i === 0;
+          const isRight = i === legsCount - 1;
+          const isMiddle = !isLeft && !isRight;
+
+          return (
+            <group key={`leg-${i}`}>
+              {/* Vertical drops to floor */}
+              <group position={[x, 0, zFront]}>
+                <Flange position={[0, floorY - e * 2, 0]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel && isLeft} colorOption={colorOption} />
+                <Pipe start={[0, floorY + 2.8 - e * 1, 0]} end={[0, topY - 2.8 - e * 1, 0]} showLabel={showLabel && isLeft} colorOption={colorOption} />
+              </group>
+
+              {/* Top Fitting */}
+              <group position={[x, topY, zFront]}>
+                {isLeft && (
+                  <CornerFitting position={[0, 0, 0]} side="left" showLabel={showLabel} colorOption={colorOption} />
+                )}
+                {isRight && (
+                  <CornerFitting position={[0, 0, 0]} side="right" showLabel={showLabel} colorOption={colorOption} />
+                )}
+                {isMiddle && (
+                  <SideOutletTee position={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                )}
+              </group>
+
+              {/* Horizontal wall standoffs */}
+              <group position={[x, topY, 0]}>
+                <Pipe start={[0, 0, -2.8 - e * 1]} end={[0, 0, zWall + 2.8 - e * 1]} showLabel={showLabel && isLeft} colorOption={colorOption} />
+                <Flange position={[0, 0, zWall - e * 2]} rotation={[0, Math.PI, 0]} showLabel={showLabel && isLeft} colorOption={colorOption} />
+              </group>
+            </group>
+          );
+        })}
+
+        {/* Horizontal main rails */}
+        {legsCount === 2 && (
+          <group position={[0, topY, zFront]}>
+            <Pipe start={[xPositions[0] + 2.8 + e, 0, 0]} end={[xPositions[1] - 2.8 - e, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+        )}
+        {legsCount === 3 && (
+          <>
+            <group position={[0, topY, zFront]}>
+              <Pipe start={[xPositions[0] + 2.8 + e, 0, 0]} end={[xPositions[1] - 2.8 - e, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            </group>
+            <group position={[0, topY, zFront]}>
+              <Pipe start={[xPositions[1] + 2.8 + e, 0, 0]} end={[xPositions[2] - 2.8 - e, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            </group>
+          </>
+        )}
+      </group>
+    );
+  }
+
   if (skuType === 'sku151') {
     const e = explode * 1.5;
     const yBulb = -15; // Y position of the horizontal pipe
