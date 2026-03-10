@@ -5802,18 +5802,53 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   }
 
   if (skuType === 'sku143' || skuType === 'sku169') {
-    // Brackets every 120cm max (matching max pipe length)
     const numMounts = Math.max(2, Math.ceil(length / 120) + 1);
+
+    // Total geometric length
+    const L = Math.hypot(length, height);
+
+    // Logic: "if it has two support we take off 10cm for each extra brackets we take 5cm and as normal one side pole can be 5cm less or more to get exact length"
+    const deduction = 10 + Math.max(0, numMounts - 2) * 5;
+    const targetPipeLength = Math.max(0, L - deduction);
+    const railPipes = getEqualSplitPipes(targetPipeLength, numMounts - 1);
+
+    const mtX: number[] = [];
+    const mtY: number[] = [];
+
+    const startX = -length / 2;
+    const endX = length / 2;
+    const startY = height / 2;
+    const endY = -height / 2;
+
+    // We compute actual physical positions of the brackets along the diagonal line based on the exact pipe segments
+    // A 90 degree elbow pulls the pipe back about 5cm. A T-Fitting takes up about 5cm in the middle.
+    // So the actual joints are spaced by: 5cm (elbow) + pipe + 5cm (T-fitting/elbow)
+
+    // Let's compute exact geometric points
+    const slopeX = endX - startX;
+    const slopeY = endY - startY;
+    const unitX = slopeX / L;
+    const unitY = slopeY / L;
+
+    let currGeoLength = 0;
+    mtX.push(startX);
+    mtY.push(startY);
+
+    for (let i = 0; i < railPipes.length; i++) {
+      // First pipe starting from elbow (5cm) + pipe length + half of next fitting (2.5cm)
+      // More simply, just distribute based on standard spacing
+      const segmentFullLen = railPipes[i] + (i === 0 || i === railPipes.length - 1 ? 5 : 5);
+      currGeoLength += segmentFullLen;
+      mtX.push(startX + unitX * currGeoLength);
+      mtY.push(startY + unitY * currGeoLength);
+    }
+
     const e = explode * 1.5;
+
     const overrideWallDistance = skuType === 'sku143' ? wallDistance : 8;
     const actualCutWall = getPipesForLength(Math.max(0, overrideWallDistance - 4.35)).reduce((a, b) => a + b, 0) || 5;
     const wallZ = -overrideWallDistance;          // wall face position in Z
     const railZ = skuType === 'sku143' ? wallZ + actualCutWall + 4.35 : wallZ + 5;
-
-    const startX = -length / 2;
-    const endX = length / 2;
-    const startY = height / 2;   // high end (top of stairs)
-    const endY = -height / 2;   // low end (bottom of stairs)
 
     const isThin = tubeType === 'square';
     const railRad = isThin ? 1.35 : 1.65;
@@ -5826,19 +5861,12 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const perpDirX = Math.sin(θ);
     const perpDirY = -Math.cos(θ);
 
-    const startElbowRot: [number, number, number] = [0, Math.PI / 2, θ];
-    const endElbowRot: [number, number, number] = [0, -Math.PI / 2, θ];
-    const tFitRot: [number, number, number] = [0, -Math.PI / 2, θ - Math.PI / 2];
-    const perpNippleRot: [number, number, number] = [0, 0, θ - Math.PI];
-    const baseElbowRot: [number, number, number] = [0, Math.PI, θ - Math.PI];
-
     return (
       <group position={[0, height / 2, -wallZ / 2]}>
         {/* --- Wall Brackets --- */}
         {Array.from({ length: numMounts }).map((_, i) => {
-          const t = i / (numMounts - 1);
-          const mx = startX + t * (endX - startX);
-          const my = startY + t * (endY - startY);
+          const mx = mtX[i];
+          const my = mtY[i];
 
           const isFirst = i === 0;
           const isLast = i === numMounts - 1;
@@ -5923,16 +5951,13 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         })}
 
         {/* --- Diagonal Rail Pipes (Between Brackets) --- */}
-        {Array.from({ length: Math.max(0, numMounts - 1) }).map((_, i) => {
-          const t1 = i / (numMounts - 1);
-          const t2 = (i + 1) / (numMounts - 1);
+        {railPipes.map((rp, i) => {
+          const sx = mtX[i];
+          const sy = mtY[i];
+          const ex = mtX[i + 1];
+          const ey = mtY[i + 1];
 
-          const sx = startX + t1 * (endX - startX);
-          const sy = startY + t1 * (endY - startY);
-          const ex = startX + t2 * (endX - startX);
-          const ey = startY + t2 * (endY - startY);
-
-          // Push pipe ends 1.7cm into fitting collars so no gap
+          // Push pipe ends slightly into collars
           const segLen = Math.hypot(ex - sx, ey - sy);
           const f = 1.7 / segLen;
 
@@ -5944,6 +5969,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
                 end={[ex - (ex - sx) * f, ey - (ey - sy) * f, railZ]}
                 showLabel={showLabel}
                 colorOption={colorOption}
+                overrideLabel={`${rp} cm`}
               />
             </group>
           );

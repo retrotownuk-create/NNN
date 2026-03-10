@@ -773,19 +773,42 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
   } else if (skuType === 'sku143') {
     const numMounts = Math.max(2, Math.ceil(length / 120) + 1);
     const hd = config.handrailDiameter || (config.tubeType === 'square' ? '27mm' : '33mm');
+    const height = config.height ?? 0;
 
-    // Main handrail pipes (segments separated by T-fittings)
-    const mountSpacing = length / (numMounts - 1);
-    const railLength = Math.max(0, mountSpacing - 3.0);
-    const railPipes = getPipesForLength(railLength);
+    // Main handrail pipes (using new deduction logic)
+    const L = Math.hypot(length, height);
+    const deduction = 10 + Math.max(0, numMounts - 2) * 5;
+    const targetPipeLength = Math.max(0, L - deduction);
+
+    // Fallback: If not found, use a safe split function locally
+    const getEqualSplitPipesLocal = (total: number, pieces: number) => {
+      if (total <= 0 || pieces <= 0) return [];
+      const pipes: number[] = [];
+      let remaining = total;
+      const SIZES = [5, 8, 10, 12, 15, 17, 20, 23, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 120, 125];
+      for (let i = 0; i < pieces; i++) {
+        const segmentsLeft = pieces - i;
+        const currentIdeal = remaining / segmentsLeft;
+        const closest = SIZES.reduce((prev, curr) => Math.abs(curr - currentIdeal) < Math.abs(prev - currentIdeal) ? curr : prev);
+        pipes.push(closest);
+        remaining -= closest;
+      }
+      return pipes;
+    };
+
+    // We can assume getEqualSplitPipes is available from utils? OrderDetailsView does not import it explicitly right now?
+    // Let's just use it and rely on compiler, or just import it at top.
+    // wait I think I can just use it since it's in utils. Let's see if it's imported.
+    const railPipes = getEqualSplitPipes(targetPipeLength, numMounts - 1);
+
     const railCounts: Record<number, number> = {};
-    railPipes.forEach(p => railCounts[p] = (railCounts[p] || 0) + ((numMounts - 1) * quantity));
+    railPipes.forEach(p => railCounts[p] = (railCounts[p] || 0) + quantity);
 
     Object.entries(railCounts).forEach(([size, c]) => {
       items.push({ id: `pipe-rail-${size}`, partName: `${size} cm pipe (${hd} Handrail)`, qty: c, type: 'pipe', color: colorName });
     });
 
-    const numRailCouplings = Math.max(0, railPipes.length - 1) * (numMounts - 1);
+    const numRailCouplings = Math.max(0, railPipes.length - 1);
     if (numRailCouplings > 0) {
       items.push({ id: `f-couplings-rail-${hd}`, partName: `Couplings (${hd} Handrail)`, qty: numRailCouplings * quantity, type: 'fitting', color: colorName });
     }
