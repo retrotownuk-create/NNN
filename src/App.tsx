@@ -2344,7 +2344,16 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         })}
       </group>
     );
+  } if (skuType === 'sku154') {
+    return (
+      <group position={[0, -length / 2, 0]}>
+        <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        <Pipe start={[0, 0.5, 0]} end={[0, length - 0.5, 0]} showLabel={showLabel} colorOption={colorOption} />
+        <Flange position={[0, length, 0]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+      </group>
+    );
   }
+
 
   if (skuType === 'sku155') {
     // Wall-mounted double rail with unions
@@ -7923,7 +7932,7 @@ export default function App() {
                     </div>
                   )}
 
-                  {skuType !== 'sku108' && skuType !== 'sku109' && skuType !== 'sku110' && skuType !== 'sku111' && skuType !== 'sku113' && skuType !== 'sku116' && skuType !== 'sku119' && skuType !== 'sku120' && skuType !== 'sku121' && skuType !== 'sku122' && skuType !== 'sku123' && skuType !== 'sku143' && skuType !== 'sku155' && skuType !== 'sku156' && skuType !== 'sku157' && skuType !== 'sku169' && (
+                  {skuType !== 'sku108' && skuType !== 'sku109' && skuType !== 'sku110' && skuType !== 'sku111' && skuType !== 'sku113' && skuType !== 'sku116' && skuType !== 'sku119' && skuType !== 'sku120' && skuType !== 'sku121' && skuType !== 'sku122' && skuType !== 'sku123' && skuType !== 'sku143' && skuType !== 'sku154' && skuType !== 'sku155' && skuType !== 'sku156' && skuType !== 'sku157' && skuType !== 'sku169' && (
                     <div>
                       <div className="flex justify-between mb-2">
                         <label className="text-xs font-bold text-gray-700">{((skuType as string) === 'sku000' || (skuType as string) === 'sku106' || (skuType as string) === 'sku107' || (skuType as string) === 'sku129') ? 'Shelf Depth' : ((skuType as string) === 'sku111' || (skuType as string) === 'sku113' || (skuType as string) === 'sku116' || (skuType as string) === 'sku119' || (skuType as string) === 'sku124' || (skuType as string) === 'sku125') ? 'Drop Depth' : 'Depth'}</label>
