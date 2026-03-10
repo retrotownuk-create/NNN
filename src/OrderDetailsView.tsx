@@ -931,7 +931,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
   } else if (skuType === 'sku146') {
     // Twin separate wall brackets supporting a top shelf
     const backLength = 10;
-    const frontLength = 5;
+    const frontLength = 10;
     const upLength = 3;
 
     addPipes(backLength, 2, 'p-bracket-back');

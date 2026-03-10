@@ -2351,10 +2351,10 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
     // Based on user provided geometry for twin wall brackets.
     // Base is centered around T-fitting Z=0 intercept.
-    // 10cm pole at back, 5cm pole at front, 3cm pole up.
+    // 10cm pole at back, 10cm pole at front, 3cm pole up.
     const zTee = 0;
     const zWallFlange = -14.35; // 0 - 2.2 (tee collar) - 10 (pipe) - 2.15 (flange collar)
-    const zEndCap = +7.8; // 0 + 2.2 (tee collar) + 5 (pipe) + 0.6 (cap collar offset)
+    const zEndCap = +12.8; // 0 + 2.2 (tee collar) + 10 (pipe) + 0.6 (cap collar offset)
     const yTee = 0;
     const yTopFlange = 7.35; // 0 + 2.2 (tee collar up) + 3 (pipe) + 2.15 (flange collar down)
 
@@ -8605,7 +8605,7 @@ export default function App() {
                   </div>
                 </div>
 
-                {(skuType === 'standard' || skuType === 'sku107' || skuType === 'sku108' || skuType === 'sku109' || skuType === 'sku110' || skuType === 'sku115' || skuType === 'sku127' || skuType === 'sku128' || skuType === 'sku131' || skuType === 'sku133' || skuType === 'sku137' || skuType === 'sku156' || skuType === 'sku157' || skuType === 'sku158' || skuType === 'sku177') && (
+                {(skuType === 'standard' || skuType === 'sku107' || skuType === 'sku108' || skuType === 'sku109' || skuType === 'sku110' || skuType === 'sku115' || skuType === 'sku127' || skuType === 'sku128' || skuType === 'sku131' || skuType === 'sku133' || skuType === 'sku137' || skuType === 'sku146' || skuType === 'sku156' || skuType === 'sku157' || skuType === 'sku158' || skuType === 'sku177') && (
                   <>
                     <div className="flex items-center justify-between p-3 bg-gray-50 rounded-2xl border border-gray-100">
                       <div className="flex items-center gap-2">
