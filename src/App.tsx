@@ -5880,11 +5880,11 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
                   <group position={[mx, my, railZ]}>
                     {isFirst ? (
                       <group rotation={[0, 0, θ]}>
-                        <Elbow position={[0, 0, 0]} rotation={[Math.PI, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                        <Elbow position={[0, 0, 0]} rotation={[Math.PI, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
                       </group>
                     ) : isLast ? (
                       <group rotation={[0, 0, θ]}>
-                        <Elbow position={[0, 0, 0]} rotation={[Math.PI, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                        <Elbow position={[0, 0, 0]} rotation={[Math.PI, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
                       </group>
                     ) : (
                       <group rotation={[0, 0, θ - Math.PI / 2]}>
