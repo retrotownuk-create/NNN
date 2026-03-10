@@ -4391,11 +4391,13 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
   if (skuType === 'sku158') {
     const e = explode * 1.5;
-    const zTee = -4.0;
-    const zElbow = 0;
     const zWallSurface = -wallDistance;
+    // Exactly center the 23cm shelf (23 / 2 = 11.5)
+    const zTee = zWallSurface + 11.5;
+    const zElbow = 0;
     const yTee = 0;
-    const yFlangeTop = yTee + 3.0;
+    // 5cm pipe means collars (1.5 + 1.0) + pipe (5.0) = 7.5cm total height
+    const yFlangeTop = yTee + 7.5;
 
     return (
       <group position={[0, -height / 2 + 10, 0]}>
@@ -4453,6 +4455,13 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         <group position={[0, 0, e * 1.0]}>
           <Pipe start={[leftX + 2.5 + 1.5, yTee, zElbow]} end={[rightX - 2.5 - 1.5, yTee, zElbow]} showLabel={showLabel} colorOption={colorOption} />
         </group>
+
+        {/* Shelf */}
+        {hasShelves && (
+          <group position={[0, e * 1.5, 0]}>
+            <Shelf position={[0, yFlangeTop, zWallSurface + 11.5]} length={length} depth={23} woodColor={woodColor} highlightFront={false} />
+          </group>
+        )}
       </group>
     );
   }
