@@ -2362,8 +2362,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
       const expX = isLeft ? -e : e;
 
       const rotTee: [number, number, number] = isLeft
-        ? [Math.PI / 2, -Math.PI / 2, 0]
-        : [Math.PI / 2, Math.PI / 2, 0];
+        ? [-Math.PI / 2, -Math.PI / 2, 0]
+        : [-Math.PI / 2, Math.PI / 2, 0];
 
       const rotElbow: [number, number, number] = isLeft
         ? [Math.PI / 2, -Math.PI / 2, 0]
