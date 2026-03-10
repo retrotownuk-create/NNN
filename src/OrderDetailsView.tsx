@@ -1175,32 +1175,25 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       addFitting('f-couplings', 'Couplings', quantity * totalCouplings);
     }
   } else if (skuType === 'sku132') {
-    // Exact requested measurements:
-    const adjLength = length - 10;
-    const adjHeight = height - 5;
-    const adjWallDistance = wallDistance - 5;
+    // Exact requested measurements directly forming the cutlist:
+    const cutLength = length - 10;
+    const cutHeight = height - 5;
+    const cutDepth = wallDistance - 5;
 
-    // L-shaped: 2 floor posts with couplings at mid, top rail, 2 wall arms
-    const topY = adjHeight / 2;
-    const bottomY = -adjHeight / 2;
-    const pipeSpan = (topY - 2.2) - (bottomY + 1.2);
-    const pipeLen = (pipeSpan - 2.4) / 2; // Subtract Coupling space
+    // Height leg is divided in two by a coupling
+    const legPipeCut = cutHeight / 2;
 
-    // exact identical lengths for both halves
-    const lowerLen = pipeLen;
-    const upperLen = pipeLen;
-
-    const lowerPipes = getPipesForLength(lowerLen);
+    const lowerPipes = getPipesForLength(legPipeCut);
     lowerPipes.forEach((p, i) => addPipes(p, 2, `p-lower-${i}`));
 
-    const upperPipes = getPipesForLength(upperLen);
+    const upperPipes = getPipesForLength(legPipeCut);
     upperPipes.forEach((p, i) => addPipes(p, 2, `p-upper-${i}`));
 
-    const horizPipes = getPipesForLength(adjLength - 4.4);
+    const horizPipes = getPipesForLength(cutLength);
     horizPipes.forEach((p, i) => addPipes(p, 1, `p-rail-${i}`));
 
     // Left wall arm + right wall arm
-    addPipes(adjWallDistance - 3.4, 2, 'p-wall-arm');
+    addPipes(cutDepth, 2, 'p-wall-arm');
 
     const totalCouplings132 = ((lowerPipes.length - 1) * 2) + ((upperPipes.length - 1) * 2) + (horizPipes.length - 1) + 2; // +2 = 1 per leg (mid coupling)
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
