@@ -1001,9 +1001,19 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     const cutHeight = height - 5;
     const cutDepth = wallDistance - 5;
 
+    // Asymmetrical split across available 5cm increments logic for horizontal pipe pieces
+    const baseLen = Math.floor((Math.max(0, cutLength) / segments) / 5) * 5;
+    const remLength = Math.max(0, cutLength) - (baseLen * segments);
+    const spans = new Array(segments).fill(baseLen);
+    for (let j = 0; j < Math.round(remLength / 5); j++) {
+      spans[j % segments] += 5;
+    }
+
     addPipes(Math.max(0, cutHeight), legs, 'p-vert');       // Vertical drops
     addPipes(Math.max(0, cutDepth), legs, 'p-wall'); // Wall standoffs
-    addPipes(Math.max(0, cutLength / segments), segments, 'p-horiz');
+    spans.forEach((span, idx) => {
+      addPipes(Math.max(0, span), 1, `p-horiz-${idx}`);
+    });
 
     addFitting('f-floor-flanges', 'Floor Flanges', quantity * legs);
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * legs);
@@ -1011,7 +1021,10 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-4way-fittings', '4-Way Fittings', quantity * 1);
 
     // Couplings
-    const horizCouplings = getExtraCouplings(cutLength / segments, segments);
+    let horizCouplings = 0;
+    spans.forEach(span => {
+      horizCouplings += getExtraCouplings(Math.max(0, span), 1);
+    });
     const vertCouplings = getExtraCouplings(Math.max(0, cutHeight), legs);
     const depthCouplings = getExtraCouplings(Math.max(0, cutDepth), legs);
     const totalCouplings = horizCouplings + vertCouplings + depthCouplings;

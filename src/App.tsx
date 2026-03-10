@@ -2354,10 +2354,19 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const targetCutHeight = height - 5;
     const targetCutDepth = wallDistance - 5;
 
+    // Split the target horizontal length unevenly across available 5cm increments
+    const baseLen = Math.floor((Math.max(0, targetCutLength) / 2) / 5) * 5;
+    const remLength = Math.max(0, targetCutLength) - (baseLen * 2);
+    const spans = [baseLen, baseLen];
+    for (let j = 0; j < Math.round(remLength / 5); j++) {
+      spans[j % 2] += 5;
+    }
+
     // Use ACTUAL calculated sums of pipes we are going to draw (to avoid precision floating gaps)
     const actualCutHeight = getPipesForLength(Math.max(0, targetCutHeight)).reduce((a, b) => a + b, 0) || 10;
     const actualCutDepth = getPipesForLength(Math.max(0, targetCutDepth)).reduce((a, b) => a + b, 0) || 10;
-    const singleHorizSegment = getPipesForLength(Math.max(0, targetCutLength / 2)).reduce((a, b) => a + b, 0) || 10;
+    const leftHorizSpan = getPipesForLength(spans[0]).reduce((a, b) => a + b, 0) || 10;
+    const rightHorizSpan = getPipesForLength(spans[1]).reduce((a, b) => a + b, 0) || 10;
 
     // Fixed physical layout based cleanly on strict fitting distances + actual pipe dimensions
     const spanY = actualCutHeight + 4.35;
@@ -2368,9 +2377,12 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const zFront = spanZ / 2;
     const zWall = -spanZ / 2;
 
-    // 3 Legs = 2 horizontal segments
-    const segSpanX = singleHorizSegment + 4.4;
-    const xPositions = [-segSpanX, 0, segSpanX];
+    // 3 Legs = 2 asymmetrical horizontal segments
+    const distBetweenOuterLegs = leftHorizSpan + rightHorizSpan + 8.8;
+    const x0 = -distBetweenOuterLegs / 2;
+    const x1 = x0 + leftHorizSpan + 4.4;
+    const x2 = x1 + rightHorizSpan + 4.4;
+    const xPositions = [x0, x1, x2];
 
     return (
       <group position={[0, 0, 0]}>
