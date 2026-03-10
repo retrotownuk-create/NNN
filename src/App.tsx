@@ -2346,6 +2346,104 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     );
   }
 
+  if (skuType === 'sku147') {
+    const e = explode * 1.5;
+
+    // Explicit user specifications
+    const targetCutLength = length;
+    const targetCutDepth = wallDistance;
+
+    // Actual geometric lengths
+    const actualCutDepth = getPipesForLength(Math.max(0, targetCutDepth)).reduce((a, b) => a + b, 0) || 10;
+    const actualCutLength = getPipesForLength(Math.max(0, targetCutLength)).reduce((a, b) => a + b, 0) || 10;
+
+    const spanZ = actualCutDepth + 4.35;
+    const zWall = -spanZ;
+    const zFront = 0;
+
+    // Tee placed at center
+    const yTee = 0;
+
+    // Pipe length from Tee upward and downward collar is precisely 5cm
+    const verticalDrop = 5.0;
+
+    // Top Elbow is placed above Tee: Tee upward collar (y=2.2) + Pipe (5.0) + Elbow downward collar (y=2.2)
+    const yTopElbow = yTee + 2.2 + verticalDrop + 2.2;
+
+    // Bottom Elbow is placed below Tee: Tee downward collar (y=-2.2) - Pipe (5.0) - Elbow upward collar (-2.2)
+    const yBottomElbow = yTee - 2.2 - verticalDrop - 2.2;
+
+    const spanX = actualCutLength + 4.35;
+    const xPositions = [-spanX / 2, spanX / 2];
+
+    return (
+      <group position={[0, 0, 0]}>
+        {xPositions.map((x, i) => {
+          const isLeft = i === 0;
+          const sign = isLeft ? -1 : 1;
+          const dx = sign * e; // Exploding left/right
+
+          return (
+            <group key={`leg-${i}`}>
+              {/* TOP LEVEL */}
+              {/* Wall Flange Top */}
+              <group position={[x + dx, yTopElbow + e, zWall - e]}>
+                <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* Arm Top */}
+              <group position={[x + dx, yTopElbow + e, 0]}>
+                <Pipe start={[0, 0, zFront - 2.2]} end={[0, 0, zWall + 2.15]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* Top 90-deg Elbow (points DOWN and BACK) */}
+              <group position={[x + dx, yTopElbow + e, zFront + e]}>
+                <Elbow position={[0, 0, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* Top 5cm Drop Pipe */}
+              <group position={[x + dx, 0, zFront + e]}>
+                <Pipe start={[0, yTopElbow - 2.2, 0]} end={[0, yTee + 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* MIDDLE LEVEL (T-Fittings) */}
+              {/* Tee (points UP, DOWN, INWARDS) */}
+              <group position={[x + dx, yTee, zFront + e]}>
+                <TFitting position={[0, 0, 0]} rotation={[0, isLeft ? -Math.PI / 2 : Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* Bottom 5cm Drop Pipe */}
+              <group position={[x + dx, 0, zFront + e]}>
+                <Pipe start={[0, yTee - 2.2, 0]} end={[0, yBottomElbow + 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* BOTTOM LEVEL */}
+              {/* Bottom 90-deg Elbow (points UP and BACK) */}
+              <group position={[x + dx, yBottomElbow - e, zFront + e]}>
+                <Elbow position={[0, 0, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* Arm Bottom */}
+              <group position={[x + dx, yBottomElbow - e, 0]}>
+                <Pipe start={[0, 0, zFront - 2.2]} end={[0, 0, zWall + 2.15]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* Wall Flange Bottom */}
+              <group position={[x + dx, yBottomElbow - e, zWall - e]}>
+                <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+            </group>
+          );
+        })}
+
+        {/* Horizontal Main Bar connecting the two inner-facing Tees */}
+        <group position={[0, yTee, zFront + e]}>
+          <Pipe start={[xPositions[0] + 2.2, 0, 0]} end={[xPositions[1] - 2.2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+      </group>
+    );
+  }
+
   if (skuType === 'sku148') {
     const e = explode * 1.5;
 
@@ -6609,6 +6707,7 @@ export default function App() {
     const default141: SavedSKU = { name: 'SKU 141', length: 120, height: 80, wallDistance: 40, hasShelves: false, isFreestanding: true, colorName: 'Black', skuType: 'sku141' };
     const default142: SavedSKU = { name: 'SKU 142', length: 100, height: 0, wallDistance: 20, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku142' };
     const default143: SavedSKU = { name: 'SKU 143', length: 200, height: 100, wallDistance: 8, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku143' };
+    const default147: SavedSKU = { name: 'SKU 147', length: 120, height: 0, wallDistance: 25, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku147' };
     const default148: SavedSKU = { name: 'SKU 148', length: 30, height: 160, wallDistance: 0, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku148' };
     const default149: SavedSKU = { name: 'SKU 149', length: 50, height: 23, wallDistance: 10, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku149' };
     const default150: SavedSKU = { name: 'SKU 150', length: 120, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku150' };
@@ -6634,7 +6733,7 @@ export default function App() {
 
     const allDefaults = [
       default4210, default300, default103, default105, default106, default107, default108, default109, default110, default111, default112, default113, default114, default115, default116, default117, default118, default119, default120, default121, default122, default123, default124, default125, default126, default127, default128, default129, default130, default131, default132, default133, default134, default135, default136, default137, default138,
-      default140, default141, default142, default143, default148, default149, default150, default152, default155, default156, default157, default161, default162, default163, default164, default165, default166, default167, default168, default169, default170, default171, default172, default173, default174, default175, default176, default177, default178
+      default140, default141, default142, default143, default147, default148, default149, default150, default152, default155, default156, default157, default161, default162, default163, default164, default165, default166, default167, default168, default169, default170, default171, default172, default173, default174, default175, default176, default177, default178
     ];
 
     const saved = localStorage.getItem('savedSKUs');

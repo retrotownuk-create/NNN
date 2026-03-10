@@ -948,16 +948,25 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     }
   } else if (skuType === 'sku147') {
     // Wall-mounted two-level rack (5cm drop gap between elbows and T-fitting)
-    addPipes(Math.max(0, length - 10), 1, 'p-horiz');
-    addPipes(Math.max(0, wallDistance - 2), 4, 'p-wall-arms');
+    const targetCutLength = length;
+    const targetCutDepth = wallDistance;
+
+    addPipes(Math.max(0, targetCutLength), 1, 'p-horiz');
+    addPipes(Math.max(0, targetCutDepth), 4, 'p-wall-arms');
 
     // The exact distance between 90-deg Elbow and T-Fitting is 5cm.
     addPipes(5, 4, 'p-vert-drop');
 
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 4);
-    addFitting('f-90deg-elbows', '90° Elbows', quantity * 4);
+    addFitting('f-90-elbows', '90° Elbows', quantity * 4);
     addFitting('f-tees', 'T-Fittings', quantity * 2);
-    addFitting('f-couplings', 'Couplings', quantity * getExtraCouplings(Math.max(0, length - 10), 1));
+
+    const horizCouplings = getExtraCouplings(Math.max(0, targetCutLength), 1);
+    const depthCouplings = getExtraCouplings(Math.max(0, targetCutDepth), 4);
+    const totalCouplings = horizCouplings + depthCouplings;
+    if (totalCouplings > 0) {
+      addFitting('f-couplings', 'Couplings', quantity * totalCouplings);
+    }
   } else if (skuType === 'sku148') {
     // Single L-shaped Floor-to-Wall point
     const targetCutLength = length - 5;
