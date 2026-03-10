@@ -4973,7 +4973,19 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const elbowOffset = 1.5;
     const lX = -(length / 2) + elbowOffset;
     const rX =  (length / 2) - elbowOffset;
-    const midX = 0;
+    
+    // We take out 15cm from length (total)
+    const totalRailLength = Math.max(0, length - 15);
+    const cut1 = Math.ceil(totalRailLength / 2 / 5) * 5;
+    const cut2 = Math.max(0, totalRailLength - cut1);
+    
+    // The midpoint must proportionally shift to accommodate unequal pipe sides
+    let midX = 0;
+    if (cut1 + cut2 > 0) {
+      const totalWidth = rX - lX;
+      const leftRatio = cut1 / (cut1 + cut2);
+      midX = lX + totalWidth * leftRatio;
+    }
 
     return (
       <group position={[0, height / 2, -bracketZ / 2]}>

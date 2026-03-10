@@ -683,14 +683,22 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     const poleLength = Math.max(0, wallDistance - 5);
     addPipes(poleLength, 3, 'p-support-arm');
     
-    // We take out 15cm from length (total), 2 horizontal pipes: (length - 15) / 2
-    const railLength = Math.max(0, (length - 15) / 2);
-    addPipes(railLength, 2, 'p-horizontal-rail');
+    // We take out 15cm from length (total), one side may be 5cm longer/shorter
+    const totalRailLength = Math.max(0, length - 15);
+    const cut1 = Math.ceil(totalRailLength / 2 / 5) * 5;
+    const cut2 = Math.max(0, totalRailLength - cut1);
+    
+    if (cut1 === cut2) {
+      addPipes(cut1, 2, 'p-horizontal-rail');
+    } else {
+      addPipes(cut1, 1, 'p-horizontal-rail-left');
+      addPipes(cut2, 1, 'p-horizontal-rail-right');
+    }
     
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 3);
     addFitting('f-t-fittings', 'T-Fittings', quantity * 1);
     addFitting('f-90-elbows', '90° Elbows', quantity * 2);
-    addFitting('f-couplings', 'Couplings', quantity * getExtraCouplings(railLength, 2));
+    addFitting('f-couplings', 'Couplings', quantity * (getExtraCouplings(cut1, 1) + getExtraCouplings(cut2, 1)));
   } else if (skuType === 'sku141') {
     const yTFitting = height - 3.4;
     const yBottomPipeStart = yTFitting - 2.2;
