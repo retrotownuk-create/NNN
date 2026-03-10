@@ -2360,8 +2360,9 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
     const buildSupport = (x: number, isLeft: boolean) => {
       const expX = isLeft ? -e : e;
-      // Rotations mapping: local +Z to -Z, local +X to point inward
-      const rotBase = [Math.PI / 2, 0, isLeft ? 0 : Math.PI] as [number, number, number];
+      // Precise rotations to point connections INWARD along X axis and FORWARD backward along Z axis
+      const rotTee = [0, isLeft ? -Math.PI / 2 : Math.PI / 2, 0] as [number, number, number];
+      const rotElbow = [Math.PI / 2, isLeft ? Math.PI / 2 : -Math.PI / 2, 0] as [number, number, number];
 
       return (
         <group key={`support-${x}`}>
@@ -2372,7 +2373,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             <Pipe start={[x, 0, wallZ + 0.5]} end={[x, 0, zTee - 1.2]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           <group position={[expX, 0, -e * 0.5]}>
-            <TFitting position={[x, 0, zTee]} rotation={rotBase} showLabel={showLabel} colorOption={colorOption} />
+            <TFitting position={[x, 0, zTee]} rotation={rotTee} showLabel={showLabel} colorOption={colorOption} />
           </group>
           <group position={[expX, 0, 0]}>
             <HexNipple position={[x, 0, (zTee + zUnion) / 2]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
@@ -2384,7 +2385,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             <HexNipple position={[x, 0, (zUnion + zElbow) / 2]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           <group position={[expX, 0, e * 1.5]}>
-            <Elbow position={[x, 0, zElbow]} rotation={rotBase} showLabel={showLabel} colorOption={colorOption} />
+            <Elbow position={[x, 0, zElbow]} rotation={rotElbow} showLabel={showLabel} colorOption={colorOption} />
           </group>
         </group>
       );
