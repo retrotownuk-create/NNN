@@ -3727,11 +3727,6 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const topY = adjHeight / 2;
     const bottomY = -adjHeight / 2;
 
-    // Mathematically perfectly split the leg pipe so upper and lower segments are absolutely identical lengths.
-    const pipeSpan = (topY - 2.2) - (bottomY + 1.2);
-    const pipeLen = (pipeSpan - 2.4) / 2; // Subtract Coupling space
-    const couplingY = bottomY + 1.2 + pipeLen + 1.2;
-
     const frontZ = 0;
     const wallZ = -adjWallDistance;
 
@@ -3739,17 +3734,11 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
       const eX = isLeft ? -e : e;
       return (
         <group position={[eX, 0, 0]}>
-          <group position={[0, -e * 0.6, 0]}>
+          <group position={[0, -e, 0]}>
             <Flange position={[x, bottomY, frontZ]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[0, -e * 0.3, 0]}>
-            <Pipe start={[x, bottomY + 1.2, frontZ]} end={[x, couplingY - 1.2, frontZ]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${(adjHeight / 2).toFixed(1)} cm`} />
-          </group>
-          <group position={[0, 0, 0]}>
-            <Coupling position={[x, couplingY, frontZ]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
-          <group position={[0, e * 0.3, 0]}>
-            <Pipe start={[x, couplingY + 1.2, frontZ]} end={[x, topY - 2.2, frontZ]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${(adjHeight / 2).toFixed(1)} cm`} />
+          <group position={[0, -e * 0.5, 0]}>
+            <Pipe start={[x, bottomY, frontZ]} end={[x, topY, frontZ]} showLabel={showLabel} colorOption={colorOption} />
           </group>
         </group>
       );
@@ -3761,34 +3750,34 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         {buildLeg(rX, false)}
 
         {/* LEFT TOP: CornerFitting */}
-        <group position={[-e, e * 0.8, 0]}>
+        <group position={[-e, e * 0.5, 0]}>
           <CornerFitting position={[lX, topY, frontZ]} side="left" rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Left wall arm */}
-        <group position={[-e, e * 0.8, -e * 0.4]}>
-          <Pipe start={[lX, topY, frontZ - 2.2]} end={[lX, topY, wallZ + 1.2]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${adjWallDistance.toFixed(1)} cm`} />
+        <group position={[-e, e * 0.5, -e * 0.5]}>
+          <Pipe start={[lX, topY, frontZ]} end={[lX, topY, wallZ]} showLabel={showLabel} colorOption={colorOption} />
         </group>
-        <group position={[-e, e * 0.8, -e * 0.8]}>
+        <group position={[-e, e * 0.5, -e]}>
           <Flange position={[lX, topY, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* RIGHT TOP: CornerFitting */}
-        <group position={[e, e * 0.8, 0]}>
+        <group position={[e, e * 0.5, 0]}>
           <CornerFitting position={[rX, topY, frontZ]} side="right" rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Right wall arm */}
-        <group position={[e, e * 0.8, -e * 0.4]}>
-          <Pipe start={[rX, topY, frontZ - 2.2]} end={[rX, topY, wallZ + 1.2]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${adjWallDistance.toFixed(1)} cm`} />
+        <group position={[e, e * 0.5, -e * 0.5]}>
+          <Pipe start={[rX, topY, frontZ]} end={[rX, topY, wallZ]} showLabel={showLabel} colorOption={colorOption} />
         </group>
-        <group position={[e, e * 0.8, -e * 0.8]}>
+        <group position={[e, e * 0.5, -e]}>
           <Flange position={[rX, topY, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Horizontal rail */}
-        <group position={[0, e * 0.8, 0]}>
-          <Pipe start={[lX + 2.2, topY, frontZ]} end={[rX - 2.2, topY, frontZ]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${adjLength.toFixed(1)} cm`} />
+        <group position={[0, e * 0.5, 0]}>
+          <Pipe start={[lX, topY, frontZ]} end={[rX, topY, frontZ]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );

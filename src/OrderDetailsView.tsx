@@ -1180,18 +1180,16 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     const cutHeight = height - 5;
     const cutDepth = wallDistance - 5;
 
-    // Height leg is divided in two by a coupling
-    const legPipeCut = cutHeight / 2;
+    const vertPipes = getPipesForLength(cutHeight);
+    vertPipes.forEach((p, i) => addPipes(p, 2, `p-leg-${i}`));
 
-    // Directly use the exact cut sizes, bypassing getPipesForLength which rounds to stock sizes
-    addPipes(legPipeCut, 2, 'p-lower');
-    addPipes(legPipeCut, 2, 'p-upper');
-    addPipes(cutLength, 1, 'p-rail');
+    const horizPipes = getPipesForLength(cutLength);
+    horizPipes.forEach((p, i) => addPipes(p, 1, `p-rail-${i}`));
 
-    // Left wall arm + right wall arm
-    addPipes(cutDepth, 2, 'p-wall-arm');
+    const wallPipes = getPipesForLength(cutDepth);
+    wallPipes.forEach((p, i) => addPipes(p, 2, `p-wall-arm-${i}`));
 
-    const totalCouplings132 = 2; // Exactly 1 coupling connecting each split leg
+    const totalCouplings132 = ((vertPipes.length - 1) * 2) + (horizPipes.length - 1) + ((wallPipes.length - 1) * 2);
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
     addFitting('f-floor-flanges', 'Floor Flanges', quantity * 2);
     addFitting('f-corner-elbows', '3-Way Fitting', quantity * 2);  // both top corners
