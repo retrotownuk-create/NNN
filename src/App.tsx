@@ -2402,7 +2402,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
               </group>
 
               {/* Top 5cm Drop Pipe */}
-              <group position={[x + dx, 0, zFront + e]}>
+              <group position={[x + dx, e / 2, zFront + e]}>
                 <Pipe start={[0, yTopElbow - 2.2, 0]} end={[0, yTee + 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
@@ -2413,7 +2413,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
               </group>
 
               {/* Bottom 5cm Drop Pipe */}
-              <group position={[x + dx, 0, zFront + e]}>
+              <group position={[x + dx, -e / 2, zFront + e]}>
                 <Pipe start={[0, yTee - 2.2, 0]} end={[0, yBottomElbow + 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
@@ -2473,7 +2473,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
         {/* Vertical Pipe */}
         <group position={[xBase - e, 0, 0]}>
-          <Pipe start={[0, bottomY + 2.15 - e, 0]} end={[0, topY - 2.2 + e, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[0, bottomY + 2.15, 0]} end={[0, topY - 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Top 90-degree Elbow */}
