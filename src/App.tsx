@@ -615,6 +615,26 @@ const EndCap = ({ position, rotation = [0, 0, 0], showLabel, colorOption = COLOR
   );
 };
 
+const Reducer = ({ position, rotation = [0, 0, 0], showLabel, colorOption = COLORS['Raw grey'] }: { position: [number, number, number], rotation?: [number, number, number], showLabel?: boolean, colorOption?: ColorOption }) => {
+  return (
+    <group position={position} rotation={rotation}>
+      <mesh castShadow receiveShadow position={[0, -1.0, 0]}>
+        <cylinderGeometry args={[1.65, 3.5, 3.0, 16]} />
+        <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
+      </mesh>
+      <mesh castShadow receiveShadow position={[0, 0.5, 0]}>
+        <cylinderGeometry args={[1.95, 1.95, 0.7, 16]} />
+        <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
+      </mesh>
+      <mesh castShadow receiveShadow position={[0, -2.5, 0]}>
+        <cylinderGeometry args={[3.7, 3.7, 0.5, 24]} />
+        <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
+      </mesh>
+      {showLabel && <Label text="Reducer" type="fitting" lineClass="h-10" />}
+    </group>
+  );
+};
+
 const ConnectorBracket = ({ position, rotation = [0, 0, 0], showLabel, colorOption = COLORS['Raw grey'] }: { position: [number, number, number], rotation?: [number, number, number], showLabel?: boolean, colorOption?: ColorOption }) => {
   return (
     <group position={position} rotation={rotation}>
@@ -2239,6 +2259,73 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
                   </group>
                 </>
               )}
+            </group>
+          );
+        })}
+      </group>
+    );
+  }
+
+  if (skuType === 'sku157') {
+    const e = explode * 1.5;
+    const numRails = Math.max(2, tiers || 3);
+    const shelfDepth = 23;
+    const zFront = shelfDepth / 2 - 3.5;
+    const zBack = -shelfDepth / 2 + 3.5;
+    const leftX = -(length / 2) + 12;
+    const rightX = (length / 2) - 12;
+
+    const shelfSpacing = 26; // Approx 23cm + flanges
+    const baseHeight = 9.5; // Reducer + Pipe + Flange
+    const bottomY = 0;
+
+    const totalHeight = baseHeight + 1.5 + ((numRails - 1) * shelfSpacing);
+
+    const getEY = (i: number) => {
+      const maxIdx = numRails - 1;
+      if (maxIdx === 0) return 0;
+      return ((i / maxIdx) * 2 - 1) * e * 0.5;
+    };
+
+    const buildLegAndPole = (x: number, z: number, isLeft: boolean, isFront: boolean) => {
+      const xExp = isLeft ? -e : e;
+      const zExp = isFront ? e : -e;
+      let parts = [];
+
+      parts.push(
+        <group key={`foot-${x}-${z}`} position={[xExp, bottomY - totalHeight / 2, z + zExp * 0.5]}>
+          <Reducer position={[x, 2.5, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[x, 3.0, 0]} end={[x, 8.0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Flange position={[x, 9.5, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+      );
+
+      for (let i = 0; i < numRails - 1; i++) {
+        const tierY = bottomY - totalHeight / 2 + baseHeight + 1.5 + (i * shelfSpacing);
+        parts.push(
+          <group key={`pole-${i}-${x}-${z}`} position={[xExp, tierY + getEY(i + 1), z + zExp * 0.5]}>
+            <Flange position={[x, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Pipe start={[x, 1.2, 0]} end={[x, 24.5, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Flange position={[x, 26, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+        );
+      }
+      return parts;
+    };
+
+    return (
+      <group position={[0, 0, 0]}>
+        {buildLegAndPole(leftX, zFront, true, true)}
+        {buildLegAndPole(leftX, zBack, true, false)}
+        {buildLegAndPole(rightX, zFront, false, true)}
+        {buildLegAndPole(rightX, zBack, false, false)}
+
+        {hasShelves && Array.from({ length: numRails }).map((_, i) => {
+          const tierY = bottomY - totalHeight / 2 + baseHeight + (i * shelfSpacing);
+          const eY = getEY(i);
+          return (
+            <group key={`shelf-${i}`} position={[0, tierY + 0.75 + eY, 0]}>
+              <Shelf position={[0, 0, 0]} length={length} depth={shelfDepth} woodColor={woodColor} highlightFront={true} />
             </group>
           );
         })}
@@ -6012,6 +6099,7 @@ export default function App() {
     const default103: SavedSKU = { name: 'SKU 103', length: 120, height: 10, wallDistance: 15, hasShelves: false, isFreestanding: false, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku103' };
     const default105: SavedSKU = { name: 'SKU 105', length: 15, height: 15, wallDistance: 20, hasShelves: false, isFreestanding: false, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku105' };
     const default106: SavedSKU = { name: 'SKU 106', length: 120, height: 92, wallDistance: 23, hasShelves: true, isFreestanding: true, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku106', tiers: 4 };
+    const default157: SavedSKU = { name: 'SKU 157', length: 150, height: 92, wallDistance: 23, hasShelves: true, isFreestanding: true, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku157', tiers: 3 };
     const default107: SavedSKU = { name: 'SKU 107', length: 120, height: 92, wallDistance: 23, hasShelves: true, isFreestanding: false, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku107', tiers: 4 };
     const default108: SavedSKU = { name: 'SKU 108', length: 100, height: 86, wallDistance: 15, hasShelves: true, isFreestanding: true, colorName: 'Black', woodColor: 'Black', skuType: 'sku108' };
     const default109: SavedSKU = { name: 'SKU 109', length: 100, height: 86, wallDistance: 23, hasShelves: true, isFreestanding: true, colorName: 'Black', woodColor: 'Black', skuType: 'sku109' };
@@ -7720,7 +7808,7 @@ export default function App() {
                     </div>
                   )}
 
-                  {(skuType === 'sku106' || skuType === 'sku107' || skuType === 'sku129' || skuType === 'sku177') && (
+                  {(skuType === 'sku106' || skuType === 'sku107' || skuType === 'sku129' || skuType === 'sku157' || skuType === 'sku177') && (
                     <div>
                       <div className="flex justify-between mb-2">
                         <label className="text-xs font-bold text-gray-700">Tiers</label>
@@ -7752,7 +7840,7 @@ export default function App() {
                     </div>
                   )}
 
-                  {skuType !== 'sku108' && skuType !== 'sku109' && skuType !== 'sku110' && skuType !== 'sku111' && skuType !== 'sku113' && skuType !== 'sku116' && skuType !== 'sku119' && skuType !== 'sku120' && skuType !== 'sku121' && skuType !== 'sku122' && skuType !== 'sku123' && skuType !== 'sku143' && skuType !== 'sku169' && (
+                  {skuType !== 'sku108' && skuType !== 'sku109' && skuType !== 'sku110' && skuType !== 'sku111' && skuType !== 'sku113' && skuType !== 'sku116' && skuType !== 'sku119' && skuType !== 'sku120' && skuType !== 'sku121' && skuType !== 'sku122' && skuType !== 'sku123' && skuType !== 'sku143' && skuType !== 'sku157' && skuType !== 'sku169' && (
                     <div>
                       <div className="flex justify-between mb-2">
                         <label className="text-xs font-bold text-gray-700">{((skuType as string) === 'sku000' || (skuType as string) === 'sku106' || (skuType as string) === 'sku107' || (skuType as string) === 'sku129') ? 'Shelf Depth' : ((skuType as string) === 'sku111' || (skuType as string) === 'sku113' || (skuType as string) === 'sku116' || (skuType as string) === 'sku119' || (skuType as string) === 'sku124' || (skuType as string) === 'sku125') ? 'Drop Depth' : 'Depth'}</label>
@@ -7866,7 +7954,7 @@ export default function App() {
                   </div>
                 </div>
 
-                {(skuType === 'standard' || skuType === 'sku107' || skuType === 'sku108' || skuType === 'sku109' || skuType === 'sku110' || skuType === 'sku115' || skuType === 'sku127' || skuType === 'sku128' || skuType === 'sku131' || skuType === 'sku133' || skuType === 'sku137' || skuType === 'sku158' || skuType === 'sku177') && (
+                {(skuType === 'standard' || skuType === 'sku107' || skuType === 'sku108' || skuType === 'sku109' || skuType === 'sku110' || skuType === 'sku115' || skuType === 'sku127' || skuType === 'sku128' || skuType === 'sku131' || skuType === 'sku133' || skuType === 'sku137' || skuType === 'sku157' || skuType === 'sku158' || skuType === 'sku177') && (
                   <>
                     <div className="flex items-center justify-between p-3 bg-gray-50 rounded-2xl border border-gray-100">
                       <div className="flex items-center gap-2">

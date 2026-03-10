@@ -191,10 +191,10 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
   } else if (skuType === 'sku106') {
     addPipes(23, 2 * (tiers - 1), 'p-vert-tier');
   } else if (skuType === 'sku156') {
-    addPipes(23, 2 * (tiers - 1), 'p-vert-tier');
+    addPipes(23, 4 * (tiers - 1), 'p-vert-tier');
     addPipes(5, 4, 'p-feet');
   } else if (skuType === 'sku157') {
-    addPipes(23, 2 * (tiers - 1), 'p-vert-tier');
+    addPipes(23, 4 * (tiers - 1), 'p-vert-tier');
     addPipes(5, 4, 'p-feet');
   } else if (skuType === 'sku158') {
     addPipes(8, 2, 'p-wall-conn');
@@ -436,7 +436,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
   } else if (skuType === 'sku156') {
     addFitting('f-wall-flanges', 'Flanges', quantity * (4 * (tiers - 1) + 8)); // 8 flanges for the 4 x 5cm feet (one top, one bottom)
   } else if (skuType === 'sku157') {
-    addFitting('f-wall-flanges', 'Flanges', quantity * (4 * (tiers - 1) + 4)); // 4 less flanges because bottom 4 are reducers
+    addFitting('f-wall-flanges', 'Flanges', quantity * (8 * (tiers - 1) + 4)); // 4 less flanges because bottom 4 are reducers
     addFitting('f-reducers', 'Reducers', quantity * 4); // 4 bottom feet
   } else if (skuType === 'sku158') {
     addFitting('f-wall-flanges', 'Flanges', quantity * 4);
@@ -1347,7 +1347,8 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addWood('w-shelf', 'Shelf', quantity, `${length} × ${wallDistance} cm`);
   }
   if ((skuType === 'sku106' || skuType === 'sku156' || skuType === 'sku157' || skuType === 'sku107') && hasShelves) {
-    addWood('w-shelf', 'Wood Shelf', quantity * tiers, `${length} × ${wallDistance} cm`);
+    const depth = skuType === 'sku157' ? 23 : wallDistance;
+    addWood('w-shelf', 'Wood Shelf', quantity * tiers, `${length} × ${depth} cm`);
   }
   if (skuType === 'sku158' && hasShelves) {
     addWood('w-shelf', 'Wood Shelf', quantity, `${length} × ${wallDistance} cm`);
