@@ -5805,8 +5805,10 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     // Brackets every 120cm max (matching max pipe length)
     const numMounts = Math.max(2, Math.ceil(length / 120) + 1);
     const e = explode * 1.5;
-    const wallZ = -8;          // wall face position in Z
-    const railZ = wallZ + 5;   // rail at 5cm out from wall (Z = -3)
+    const overrideWallDistance = skuType === 'sku143' ? wallDistance : 8;
+    const actualCutWall = getPipesForLength(Math.max(0, overrideWallDistance - 4.35)).reduce((a, b) => a + b, 0) || 5;
+    const wallZ = -overrideWallDistance;          // wall face position in Z
+    const railZ = skuType === 'sku143' ? wallZ + actualCutWall + 4.35 : wallZ + 5;
 
     const startX = -length / 2;
     const endX = length / 2;
@@ -5857,41 +5859,65 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
           return (
             <group key={`mount-${i}`} position={[0, 0, 0]}>
-              <group position={[expEx, expEy, -e * 0.5]}>
-                <Flange position={[ex, ey, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-              </group>
-
-              <group position={[expEx, expEy, -e * 0.25]}>
-                <HexNipple position={[ex, ey, wallZ + 2.35]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-              </group>
-
-              <group position={[expEx, expEy, 0]}>
-                <group position={[ex, ey, railZ]} rotation={[0, 0, θ]}>
-                  <Elbow position={[0, 0, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-                </group>
-              </group>
-
-              <group position={[expNx, expNy, 0]}>
-                <group position={[nx, ny, railZ]} rotation={[0, 0, θ]}>
-                  <HexNipple position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-                </group>
-              </group>
-
-              <group position={[mx, my, railZ]}>
-                {isFirst ? (
-                  <group rotation={[0, 0, θ]}>
-                    <Elbow position={[0, 0, 0]} rotation={[0, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+              {skuType === 'sku169' ? (
+                <>
+                  <group position={[expEx, expEy, -e * 0.5]}>
+                    <Flange position={[ex, ey, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
                   </group>
-                ) : isLast ? (
-                  <group rotation={[0, 0, θ]}>
-                    <Elbow position={[0, 0, 0]} rotation={[0, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+                  <group position={[expEx, expEy, -e * 0.25]}>
+                    <HexNipple position={[ex, ey, wallZ + 2.35]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
                   </group>
-                ) : (
-                  <group rotation={[0, 0, θ - Math.PI / 2]}>
-                    <TFitting position={[0, 0, 0]} rotation={[0, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+                  <group position={[expEx, expEy, 0]}>
+                    <group position={[ex, ey, railZ]} rotation={[0, 0, θ]}>
+                      <Elbow position={[0, 0, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                    </group>
                   </group>
-                )}
-              </group>
+                  <group position={[expNx, expNy, 0]}>
+                    <group position={[nx, ny, railZ]} rotation={[0, 0, θ]}>
+                      <HexNipple position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                    </group>
+                  </group>
+                  <group position={[mx, my, railZ]}>
+                    {isFirst ? (
+                      <group rotation={[0, 0, θ]}>
+                        <Elbow position={[0, 0, 0]} rotation={[Math.PI, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                      </group>
+                    ) : isLast ? (
+                      <group rotation={[0, 0, θ]}>
+                        <Elbow position={[0, 0, 0]} rotation={[Math.PI, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                      </group>
+                    ) : (
+                      <group rotation={[0, 0, θ - Math.PI / 2]}>
+                        <TFitting position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                      </group>
+                    )}
+                  </group>
+                </>
+              ) : (
+                <>
+                  <group position={[mx, my, wallZ - e]}>
+                    <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                  </group>
+                  <group position={[mx, my, 0]}>
+                    <Pipe start={[0, 0, wallZ + 2.15]} end={[0, 0, railZ - 2.2]} id={isFirst ? `p-wall-bracket` : undefined} showLabel={showLabel} colorOption={colorOption} />
+                  </group>
+                  <group position={[mx, my, railZ]}>
+                    {isFirst ? (
+                      <group rotation={[0, 0, θ]}>
+                        <Elbow position={[0, 0, 0]} rotation={[0, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+                      </group>
+                    ) : isLast ? (
+                      <group rotation={[0, 0, θ]}>
+                        <Elbow position={[0, 0, 0]} rotation={[0, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+                      </group>
+                    ) : (
+                      <group rotation={[0, 0, θ - Math.PI / 2]}>
+                        <TFitting position={[0, 0, 0]} rotation={[0, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+                      </group>
+                    )}
+                  </group>
+                </>
+              )}
             </group>
           );
         })}

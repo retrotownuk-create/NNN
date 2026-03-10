@@ -790,10 +790,10 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       items.push({ id: `f-couplings-rail-${hd}`, partName: `Couplings (${hd} Handrail)`, qty: numRailCouplings * quantity, type: 'fitting', color: colorName });
     }
 
-    // Fittings Bracket specifically uses explicit Hex Nipples + Base elbows instead of stem pipes
+    // Fittings Bracket (Flange -> 5cm pipe -> Tee/Elbow)
     items.push({ id: `f-wall-flanges-${hd}`, partName: `Wall Flanges (${hd})`, qty: numMounts * quantity, type: 'fitting', color: colorName });
-    items.push({ id: `f-hex-nipples-${hd}`, partName: `Hex Nipples (${hd})`, qty: (numMounts * 2) * quantity, type: 'fitting', color: colorName }); // Out + vertical nipples
-    items.push({ id: `f-90-elbows-${hd}`, partName: `90° Elbows (${hd})`, qty: (numMounts + 2) * quantity, type: 'fitting', color: colorName }); // Bracket bases + 2 rail ends
+    items.push({ id: `pipe-bracket-5-${hd}`, partName: `5 cm pipe (${hd} Handrail)`, qty: numMounts * quantity, type: 'pipe', color: colorName });
+    items.push({ id: `f-90-elbows-${hd}`, partName: `90° Elbows (${hd})`, qty: 2 * quantity, type: 'fitting', color: colorName }); // 2 rail ends
 
     if (numMounts > 2) {
       items.push({ id: `f-t-fittings-${hd}`, partName: `T-Fittings (${hd})`, qty: (numMounts - 2) * quantity, type: 'fitting', color: colorName });
