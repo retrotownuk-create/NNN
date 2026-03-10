@@ -2270,8 +2270,6 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const e = explode * 1.5;
     const numRails = Math.max(2, tiers || 3);
     const shelfDepth = 23;
-    const zFront = shelfDepth / 2 - 3.5;
-    const zBack = -shelfDepth / 2 + 3.5;
     const leftX = -(length / 2) + 12;
     const rightX = (length / 2) - 12;
 
@@ -2287,13 +2285,12 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
       return ((i / maxIdx) * 2 - 1) * e * 0.5;
     };
 
-    const buildLegAndPole = (x: number, z: number, isLeft: boolean, isFront: boolean) => {
+    const buildLegAndPole = (x: number, isLeft: boolean) => {
       const xExp = isLeft ? -e : e;
-      const zExp = isFront ? e : -e;
       let parts = [];
 
       parts.push(
-        <group key={`foot-${x}-${z}`} position={[xExp, bottomY - totalHeight / 2, z + zExp * 0.5]}>
+        <group key={`foot-${x}`} position={[xExp, bottomY - totalHeight / 2, 0]}>
           <Reducer position={[x, 2.5, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           <Pipe start={[x, 3.0, 0]} end={[x, 8.0, 0]} showLabel={showLabel} colorOption={colorOption} />
           <Flange position={[x, 9.5, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
@@ -2303,7 +2300,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
       for (let i = 0; i < numRails - 1; i++) {
         const tierY = bottomY - totalHeight / 2 + baseHeight + 1.5 + (i * shelfSpacing);
         parts.push(
-          <group key={`pole-${i}-${x}-${z}`} position={[xExp, tierY + getEY(i + 1), z + zExp * 0.5]}>
+          <group key={`pole-${i}-${x}`} position={[xExp, tierY + getEY(i + 1), 0]}>
             <Flange position={[x, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
             <Pipe start={[x, 1.2, 0]} end={[x, 24.5, 0]} showLabel={showLabel} colorOption={colorOption} />
             <Flange position={[x, 26, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
@@ -2315,10 +2312,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
     return (
       <group position={[0, 0, 0]}>
-        {buildLegAndPole(leftX, zFront, true, true)}
-        {buildLegAndPole(leftX, zBack, true, false)}
-        {buildLegAndPole(rightX, zFront, false, true)}
-        {buildLegAndPole(rightX, zBack, false, false)}
+        {buildLegAndPole(leftX, true)}
+        {buildLegAndPole(rightX, false)}
 
         {hasShelves && Array.from({ length: numRails }).map((_, i) => {
           const tierY = bottomY - totalHeight / 2 + baseHeight + (i * shelfSpacing);
