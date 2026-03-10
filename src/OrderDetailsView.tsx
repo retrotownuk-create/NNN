@@ -210,6 +210,12 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     } else {
       addPipes(Math.max(0, length - 25), 1, 'p-horiz-bar');
     }
+  } else if (skuType === 'sku155') {
+    const seg = Math.max(0, wallDistance / 3 - 2);
+    addPipes(seg, 2, 'p-fwd-conn-1');
+    addPipes(seg, 2, 'p-fwd-conn-2');
+    addPipes(seg, 2, 'p-fwd-conn-3');
+    addPipes(length - 5, 2, 'p-horiz-bars');
   } else if (skuType === 'sku160') {
     let numSegments = 2; // Always at least 1 middle bracket
     while ((length - 15) / numSegments > 120) {
@@ -441,6 +447,11 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
   } else if (skuType === 'sku158') {
     addFitting('f-wall-flanges', 'Flanges', quantity * 4);
     addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
+    addFitting('f-90-elbows', '90° Elbows', quantity * 2);
+  } else if (skuType === 'sku155') {
+    addFitting('f-wall-flanges', 'Flanges', quantity * 2);
+    addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
+    addFitting('f-unions', 'Unions', quantity * 2);
     addFitting('f-90-elbows', '90° Elbows', quantity * 2);
   } else if (skuType === 'sku159') {
     addFitting('f-wall-flanges', 'Flanges', quantity * 4);

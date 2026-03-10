@@ -2346,6 +2346,67 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     );
   }
 
+  if (skuType === 'sku155') {
+    // Wall-mounted double rail with unions
+    const e = explode * 1.5;
+    const leftX = -(length / 2) + 5;
+    const rightX = (length / 2) - 5;
+
+    const wallZ = -wallDistance;
+    const tierSpacing = wallDistance / 3;
+    const zTee = wallZ + tierSpacing;
+    const zUnion = wallZ + 2 * tierSpacing;
+    const zElbow = 0;
+
+    const buildSupport = (x: number, isLeft: boolean) => {
+      const expX = isLeft ? -e : e;
+      const rotBase = [Math.PI / 2, 0, isLeft ? 0 : Math.PI] as [number, number, number];
+
+      return (
+        <group key={`support-${x}`}>
+          <group position={[expX, 0, -e * 1.5]}>
+            <Flange position={[x, 0, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[expX, 0, -e * 1.0]}>
+            <Pipe start={[x, 0, wallZ + 0.5]} end={[x, 0, zTee - 1.2]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[expX, 0, -e * 0.5]}>
+            <TFitting position={[x, 0, zTee]} rotation={rotBase} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[expX, 0, 0]}>
+            <Pipe start={[x, 0, zTee + 1.2]} end={[x, 0, zUnion - 1.2]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[expX, 0, e * 0.5]}>
+            <Union position={[x, 0, zUnion]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[expX, 0, e * 1.0]}>
+            <Pipe start={[x, 0, zUnion + 1.2]} end={[x, 0, zElbow - 1.2]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[expX, 0, e * 1.5]}>
+            <Elbow position={[x, 0, zElbow]} rotation={rotBase} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+        </group>
+      );
+    };
+
+    return (
+      <group position={[0, 0, wallDistance / 2]}>
+        {buildSupport(leftX, true)}
+        {buildSupport(rightX, false)}
+
+        {/* Horizontal Rail 1 */}
+        <group position={[0, 0, -e * 0.5]}>
+          <Pipe start={[leftX + 1.2, 0, zTee]} end={[rightX - 1.2, 0, zTee]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Horizontal Rail 2 */}
+        <group position={[0, 0, e * 1.5]}>
+          <Pipe start={[leftX + 1.2, 0, zElbow]} end={[rightX - 1.2, 0, zElbow]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+      </group>
+    );
+  }
+
   if (skuType === 'sku107') {
     const e = explode * 1.5;
     const tierSpacing = 23;
@@ -6111,6 +6172,7 @@ export default function App() {
     const default300: SavedSKU = { name: 'SKU 300', length: 120, height: 10, wallDistance: 8, hasShelves: false, isFreestanding: false, colorName: 'Raw grey', woodColor: 'Natural Oak', skuType: 'sku300' };
     const default103: SavedSKU = { name: 'SKU 103', length: 120, height: 10, wallDistance: 15, hasShelves: false, isFreestanding: false, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku103' };
     const default105: SavedSKU = { name: 'SKU 105', length: 15, height: 15, wallDistance: 20, hasShelves: false, isFreestanding: false, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku105' };
+    const default155: SavedSKU = { name: 'SKU 155', length: 100, height: 0, wallDistance: 35, hasShelves: false, isFreestanding: false, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku155' };
     const default106: SavedSKU = { name: 'SKU 106', length: 120, height: 92, wallDistance: 23, hasShelves: true, isFreestanding: true, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku106', tiers: 4 };
     const default156: SavedSKU = { name: 'SKU 156', length: 150, height: 92, wallDistance: 23, hasShelves: true, isFreestanding: true, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku156', tiers: 4 };
     const default157: SavedSKU = { name: 'SKU 157', length: 150, height: 92, wallDistance: 23, hasShelves: true, isFreestanding: true, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku157', tiers: 3 };
