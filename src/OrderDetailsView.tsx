@@ -975,18 +975,22 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       addFitting('f-couplings', 'Couplings', quantity * totalCouplings);
     }
   } else if (skuType === 'sku149') {
-    // Wall-mounted U-shaped clothes rack
-    addPipes(Math.max(0, length - 4.4), 1, 'p-horiz');       // Main cross bar
-    addPipes(Math.max(0, wallDistance - 3.5), 2, 'p-wall');  // Wall standoffs
-    addPipes(Math.max(0, height - 3.5), 2, 'p-vert');        // Vertical drops
+    // Wall-mounted U-shaped rack
+    // Exact user specifications: 10cm from wall, 23cm going down, user length
+    const targetCutLength = length;
+    const targetCutHeight = 23;
+    const targetCutDepth = 10;
+
+    addPipes(Math.max(0, targetCutLength), 1, 'p-horiz');
+    addPipes(Math.max(0, targetCutDepth), 2, 'p-wall');
+    addPipes(Math.max(0, targetCutHeight), 2, 'p-vert');
 
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
-    addFitting('f-90deg-elbows', '90° Elbows', quantity * 4);
+    addFitting('f-90-elbows', '90° Elbows', quantity * 4); // 2 top, 2 bottom
 
-    // Check for large gap couplings horizontally or vertically
-    const horizCouplings = getExtraCouplings(Math.max(0, length - 4.4), 1);
-    const vertCouplings = getExtraCouplings(Math.max(0, height - 3.5), 2);
-    const depthCouplings = getExtraCouplings(Math.max(0, wallDistance - 3.5), 2);
+    const horizCouplings = getExtraCouplings(Math.max(0, targetCutLength), 1);
+    const vertCouplings = getExtraCouplings(Math.max(0, targetCutHeight), 2);
+    const depthCouplings = getExtraCouplings(Math.max(0, targetCutDepth), 2);
     const totalCouplings = horizCouplings + vertCouplings + depthCouplings;
     if (totalCouplings > 0) {
       addFitting('f-couplings', 'Couplings', quantity * totalCouplings);
