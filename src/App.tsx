@@ -6707,6 +6707,7 @@ export default function App() {
     const default141: SavedSKU = { name: 'SKU 141', length: 120, height: 80, wallDistance: 40, hasShelves: false, isFreestanding: true, colorName: 'Black', skuType: 'sku141' };
     const default142: SavedSKU = { name: 'SKU 142', length: 100, height: 0, wallDistance: 20, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku142' };
     const default143: SavedSKU = { name: 'SKU 143', length: 200, height: 100, wallDistance: 8, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku143' };
+    const default146: SavedSKU = { name: 'SKU 146', length: 120, height: 40, wallDistance: 23, hasShelves: true, isFreestanding: false, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku146' };
     const default147: SavedSKU = { name: 'SKU 147', length: 120, height: 0, wallDistance: 25, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku147' };
     const default148: SavedSKU = { name: 'SKU 148', length: 30, height: 160, wallDistance: 0, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku148' };
     const default149: SavedSKU = { name: 'SKU 149', length: 50, height: 23, wallDistance: 10, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku149' };
@@ -6733,7 +6734,7 @@ export default function App() {
 
     const allDefaults = [
       default4210, default300, default103, default105, default106, default107, default108, default109, default110, default111, default112, default113, default114, default115, default116, default117, default118, default119, default120, default121, default122, default123, default124, default125, default126, default127, default128, default129, default130, default131, default132, default133, default134, default135, default136, default137, default138,
-      default140, default141, default142, default143, default147, default148, default149, default150, default152, default155, default156, default157, default161, default162, default163, default164, default165, default166, default167, default168, default169, default170, default171, default172, default173, default174, default175, default176, default177, default178
+      default140, default141, default142, default143, default146, default147, default148, default149, default150, default152, default155, default156, default157, default161, default162, default163, default164, default165, default166, default167, default168, default169, default170, default171, default172, default173, default174, default175, default176, default177, default178
     ];
 
     const saved = localStorage.getItem('savedSKUs');

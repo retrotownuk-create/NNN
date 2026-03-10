@@ -929,22 +929,33 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
     addFitting('f-couplings', 'Couplings', quantity * getExtraCouplings(Math.max(0, length - 4.4), 1));
   } else if (skuType === 'sku146') {
-    // Twin brackets supporting an optional shelf
-    // Two pipes back to wall, two front pipes, and two vertical stubs under shelf
-    const zCenter = -wallDistance / 2;
-    const backLength = Math.max(0, Math.abs(-wallDistance + 1.25 - (zCenter - 2.2)));
-    const frontLength = Math.max(0, Math.abs(-1.8 - (zCenter + 2.2)));
+    // Twin U-shaped Wall brackets with centered horizontal bar and top shelf support
+    const targetCutLength = length;
+    const targetCutDepth = wallDistance;
+    // Lower pole size relative to the fixed 10cm top pole
+    const bottomVertPole = Math.max(0, height - 10);
 
-    addPipes(backLength, 2, 'p-bracket-back');
-    addPipes(frontLength, 2, 'p-bracket-front');
-    addPipes(2.3, 2, 'p-bracket-up'); // Standard short pipe underneath the shelf
+    addPipes(Math.max(0, targetCutLength), 1, 'p-horiz');
+    addPipes(Math.max(0, targetCutDepth), 4, 'p-wall-arms');
+    addPipes(10, 2, 'p-vert-top');
+    addPipes(bottomVertPole, 2, 'p-vert-bot');
 
-    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 4); // 2 wall, 2 shelf
-    addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
-    addFitting('f-end-caps', 'End Caps', quantity * 2);
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 4);
+    addFitting('f-90-elbows', '90° Elbows', quantity * 4);
+    addFitting('f-tees', 'T-Fittings', quantity * 2);
+
+    const horizCouplings = getExtraCouplings(Math.max(0, targetCutLength), 1);
+    const depthCouplings = getExtraCouplings(Math.max(0, targetCutDepth), 4);
+    const vertCouplings = getExtraCouplings(bottomVertPole, 2);
+    const totalCouplings = horizCouplings + depthCouplings + vertCouplings;
+    if (totalCouplings > 0) {
+      addFitting('f-couplings', 'Couplings', quantity * totalCouplings);
+    }
 
     if (hasShelves) {
-      items.push({ id: `wood-shelf-${length}x${wallDistance}`, partName: `${length}x${wallDistance}x3cm Wooden Shelf`, qty: 1 * quantity, type: 'wood', color: woodColor });
+      // User specific 23cm depth option preference standard mapping
+      const exactShelfDepth = 23;
+      items.push({ id: `wood-shelf-${length}x${exactShelfDepth}`, partName: `${length}x${exactShelfDepth}x3cm Wooden Shelf`, qty: 1 * quantity, type: 'wood', color: woodColor });
     }
   } else if (skuType === 'sku147') {
     // Wall-mounted two-level rack (5cm drop gap between elbows and T-fitting)
