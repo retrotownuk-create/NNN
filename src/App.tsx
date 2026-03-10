@@ -4584,7 +4584,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const e = explode * 1.5;
 
     const zElbow = 0;
-    const zWallSurface = -33.4;
+    const zWallSurface = -33.0; // Math constraint guaranteeing 30.0cm side poles
     const yTee = 0;
 
     let numSegments = 1;
@@ -4665,7 +4665,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
               {isMiddle && (
                 <group position={[groupX, 0, 0]}>
                   <group position={[0, 0, e * 0.5]}>
-                    <TFitting position={[bx, yTee, zElbow]} rotation={[0, Math.PI / 4, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                    <TFitting position={[bx, yTee, zElbow]} rotation={[Math.PI / 4, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
                   </group>
                   <group position={[0, e * 0.5, e * 0.5 - e * 0.5]}>
                     <Pipe start={[bx, diagTopY, diagTopZ]} end={[bx, diagBotY, diagBotZ]} showLabel={showLabel} colorOption={colorOption} />
