@@ -4587,7 +4587,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const zWallSurface = -33.0; // Math constraint guaranteeing 30.0cm side poles
     const yTee = 0;
 
-    let numSegments = 1;
+    let numSegments = 2; // Always at least 1 middle bracket required
     while ((length - 15) / numSegments > 120) {
       numSegments++;
     }
@@ -7703,7 +7703,7 @@ export default function App() {
                       </div>
                       <input
                         type="range"
-                        min={skuType === 'sku116' ? 50 : 30} max={(skuType === 'sku136' || skuType === 'sku137') ? "600" : "400"} step="5"
+                        min={skuType === 'sku116' || skuType === 'sku160' ? 50 : 30} max={(skuType === 'sku136' || skuType === 'sku137') ? "600" : "400"} step="5"
                         value={length}
                         onChange={(e) => setLength(Number(e.target.value))}
                         className="w-full accent-black h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"

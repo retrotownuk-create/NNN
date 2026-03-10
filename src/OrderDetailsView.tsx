@@ -211,7 +211,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       addPipes(Math.max(0, length - 25), 1, 'p-horiz-bar');
     }
   } else if (skuType === 'sku160') {
-    let numSegments = 1;
+    let numSegments = 2; // Always at least 1 middle bracket
     while ((length - 15) / numSegments > 120) {
       numSegments++;
     }
@@ -449,7 +449,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-90-elbows', '90° Elbows', quantity * 2);
     addFitting('f-close-nipples', 'Close Nipples', quantity * 4);
   } else if (skuType === 'sku160') {
-    let numSegments = 1;
+    let numSegments = 2; // Always at least 1 middle bracket
     while ((length - 15) / numSegments > 120) {
       numSegments++;
     }
