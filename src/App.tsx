@@ -2350,24 +2350,26 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const e = explode * 1.5;
 
     // Explicit subtractive dimensions requested by user
-    const cutLength = length - 15;
-    const cutHeight = height - 5;
-    const cutDepth = wallDistance - 5;
+    const targetCutLength = length - 15;
+    const targetCutHeight = height - 5;
+    const targetCutDepth = wallDistance - 5;
 
-    // Fixed physical layout based cleanly on strict fitting distances
-    // Total vertical span = cutHeight + bottom flange (2.15) + top fitting (2.2)
-    const spanY = cutHeight + 4.35;
+    // Use ACTUAL calculated sums of pipes we are going to draw (to avoid precision floating gaps)
+    const actualCutHeight = getPipesForLength(Math.max(0, targetCutHeight)).reduce((a, b) => a + b, 0) || 10;
+    const actualCutDepth = getPipesForLength(Math.max(0, targetCutDepth)).reduce((a, b) => a + b, 0) || 10;
+    const singleHorizSegment = getPipesForLength(Math.max(0, targetCutLength / 2)).reduce((a, b) => a + b, 0) || 10;
+
+    // Fixed physical layout based cleanly on strict fitting distances + actual pipe dimensions
+    const spanY = actualCutHeight + 4.35;
     const topY = spanY / 2;
     const floorY = -spanY / 2;
 
-    // Total depth span = cutDepth + wall flange (2.15) + top fitting (2.2)
-    const spanZ = cutDepth + 4.35;
+    const spanZ = actualCutDepth + 4.35;
     const zFront = spanZ / 2;
     const zWall = -spanZ / 2;
 
     // 3 Legs = 2 horizontal segments
-    // Distance between left fitting center and middle fitting center = cutLength / 2 + 4.4
-    const segSpanX = (cutLength / 2) + 4.4;
+    const segSpanX = singleHorizSegment + 4.4;
     const xPositions = [-segSpanX, 0, segSpanX];
 
     return (
@@ -2386,16 +2388,16 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
               {/* Vertical pipe (from Flange collar UP to Top Fitting collar) */}
               <group position={[x, 0, zFront]}>
-                <Pipe start={[0, floorY + 2.15 - e, 0]} end={[0, topY - 2.2 - e, 0]} showLabel={showLabel && isLeft} colorOption={colorOption} overrideLabel={isLeft ? `${cutHeight} cm` : undefined} />
+                <Pipe start={[0, floorY + 2.15 - e, 0]} end={[0, topY - 2.2 - e, 0]} showLabel={showLabel && isLeft} colorOption={colorOption} />
               </group>
 
               {/* Top Fitting (Center is at [x, topY, zFront]) */}
               <group position={[x, topY, zFront]}>
                 {isLeft && (
-                  <CornerFitting position={[0, 0, 0]} side="left" showLabel={showLabel} colorOption={colorOption} />
+                  <CornerFitting position={[0, 0, 0]} side="left" showLabel={showLabel && isLeft} colorOption={colorOption} />
                 )}
                 {isRight && (
-                  <CornerFitting position={[0, 0, 0]} side="right" showLabel={showLabel} colorOption={colorOption} />
+                  <CornerFitting position={[0, 0, 0]} side="right" showLabel={false} colorOption={colorOption} />
                 )}
                 {isMiddle && (
                   <SideOutletTee position={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
@@ -2404,7 +2406,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
               {/* Wall Standoff Pipe (from Top Fitting collar BACK to Wall Flange collar) */}
               <group position={[x, topY, 0]}>
-                <Pipe start={[0, 0, zFront - 2.2 - e]} end={[0, 0, zWall + 2.15 - e]} showLabel={showLabel && isLeft} colorOption={colorOption} overrideLabel={isLeft ? `${cutDepth} cm` : undefined} />
+                <Pipe start={[0, 0, zFront - 2.2 - e]} end={[0, 0, zWall + 2.15 - e]} showLabel={showLabel && isLeft} colorOption={colorOption} />
               </group>
 
               {/* Wall Flange (Base is Z=zWall, rotates to point +Z. Collar ends at Z=zWall+2.15) */}
@@ -2417,10 +2419,10 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
         {/* Horizontal main rails */}
         <group position={[0, topY, zFront]}>
-          <Pipe start={[xPositions[0] + 2.2 + e, 0, 0]} end={[xPositions[1] - 2.2 - e, 0, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${cutLength / 2} cm`} />
+          <Pipe start={[xPositions[0] + 2.2 + e, 0, 0]} end={[xPositions[1] - 2.2 - e, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
         <group position={[0, topY, zFront]}>
-          <Pipe start={[xPositions[1] + 2.2 + e, 0, 0]} end={[xPositions[2] - 2.2 - e, 0, 0]} showLabel={false} colorOption={colorOption} overrideLabel={`${cutLength / 2} cm`} />
+          <Pipe start={[xPositions[1] + 2.2 + e, 0, 0]} end={[xPositions[2] - 2.2 - e, 0, 0]} showLabel={false} colorOption={colorOption} />
         </group>
       </group>
     );
