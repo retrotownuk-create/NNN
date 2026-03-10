@@ -2353,35 +2353,37 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     return (
       <group position={[0, 1.4, 0]}>
         {/* Wall branch */}
+        {/* Flange is at [0, 0, -5], socket pushes pipe out to [0, 0, -3.8] */}
         <group position={[0, 0, -e]}>
           <Flange position={[0, 0, -5.0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          {/* 5cm pipe connects Flange socket (-3.8) to Elbow 1 back socket (-1.2) */}
           <Pipe start={[0, 0, -3.8]} end={[0, 0, -1.2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
-        {/* Elbow 1 connects directly into the wall pipe */}
+        {/* Elbow 1 receives pipe from wall and outputs DOWN */}
         <group position={[-e * 0.5, 0, 0]}>
-          <Elbow position={[0, 0, 0]} rotation={[-Math.PI / 2, Math.PI / 2, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+          <Elbow position={[0, 0, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
-        {/* Hex Nipple connects Elbow 1 to Elbow 2 vertically */}
+        {/* Hex Nipple sits perfectly between Elbow 1's down socket (-2.4) and Elbow 2's up socket (-3.4) */}
         <group position={[0, -e * 0.5, 0]}>
-          <HexNipple position={[0, -1.9, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <HexNipple position={[0, -2.9, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
-        {/* Elbow 2 */}
-        <group position={[0, -e * 0.5, 0]}>
-          {/* Hex nipple separates the centers of the two elbows by 3.8cm */}
-          <Elbow position={[0, -3.8, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        {/* Elbow 2 sits below the nipple, receiving vertically and outputting RIGHT */}
+        /* Center is at -5.8 because its UP socket reaches to -5.8 + 2.4 = -3.4 */
+        <group position={[0, -e, 0]}>
+          <Elbow position={[0, -5.8, 0]} rotation={[0, Math.PI / 2, Math.PI]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
-        {/* Horizontal output pole */}
-        <group position={[e * 0.5, 0, 0]}>
-          <Pipe start={[1.2, -3.8, 0]} end={[1.2 + poleLength, -3.8, 0]} showLabel={showLabel} colorOption={colorOption} />
+        {/* Horizontal 15cm pole connects from Elbow 2 right socket (+1.2) */}
+        <group position={[e * 0.5, -e, 0]}>
+          <Pipe start={[1.2, -5.8, 0]} end={[1.2 + poleLength, -5.8, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
-        {/* End cap */}
-        <group position={[e, 0, 0]}>
-          <EndCap position={[1.2 + poleLength, -3.8, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        {/* End cap caps the right horizontally */}
+        <group position={[e, -e, 0]}>
+          <EndCap position={[1.2 + poleLength, -5.8, 0]} rotation={[0, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );
