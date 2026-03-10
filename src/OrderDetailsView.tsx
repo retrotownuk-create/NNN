@@ -212,7 +212,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     }
   } else if (skuType === 'sku155') {
     addPipes(10, 2, 'p-wall-conn'); // 10cm pipe
-    addPipes(length - 5, 2, 'p-horiz-bars');
+    addPipes(length - 10, 2, 'p-horiz-bars');
   } else if (skuType === 'sku160') {
     let numSegments = 2; // Always at least 1 middle bracket
     while ((length - 15) / numSegments > 120) {

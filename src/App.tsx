@@ -2354,14 +2354,14 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
     // Fixed depth structure
     const wallZ = -10;
-    const zTee = wallZ + 11.2; // 10cm pipe + flange (+1.2 into fitting limit)
-    const zUnion = zTee + 4.5; // Perfect 4.5cm gap for Hex Nipples
-    const zElbow = zUnion + 4.5;
+    const zTee = wallZ + 11.7; // exactly 10cm pipe + flange
+    const zUnion = zTee + 5.5; // Enough gap for Hex Nipples visually spacing out
+    const zElbow = zUnion + 5.5;
 
     const buildSupport = (x: number, isLeft: boolean) => {
       const expX = isLeft ? -e : e;
-      // Rotations mapping: local -X to -Z, local +Y to +X(left)/-X(right)
-      const rotBase = [0, -Math.PI / 2, isLeft ? -Math.PI / 2 : Math.PI / 2] as [number, number, number];
+      // Rotations mapping: local +Z to -Z, local +X to point inward
+      const rotBase = [Math.PI / 2, 0, isLeft ? 0 : Math.PI] as [number, number, number];
 
       return (
         <group key={`support-${x}`}>
