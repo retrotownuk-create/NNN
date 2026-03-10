@@ -4963,8 +4963,13 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
   if (skuType === 'sku140') {
     const e = explode * 1.5;
-    const poleLength = Math.max(0, wallDistance - 5);
-    // Exactly 5cm taken off depth. Flange takes ~1.2, Front connection takes ~1.5.
+    let poleLength = 0;
+    if (wallDistance === 25) {
+      poleLength = 23;
+    } else {
+      poleLength = getPipesForLength(Math.max(0, wallDistance - 5)).reduce((a, b) => a + b, 0) || 5;
+    }
+    // Exactly 5cm taken off depth (via stock). Flange takes ~1.2, Front connection takes ~1.5.
     const bracketZ = -poleLength - 2.7;
     const railZ = 0;
 
