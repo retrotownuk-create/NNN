@@ -917,17 +917,33 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-t-fittings', 'T-Fittings', quantity * 1);
     addFitting('f-end-caps', 'End Caps', quantity * 2);
   } else if (skuType === 'sku145') {
-    // Floor-to-wall clothing rack with 4 wall ties
-    addPipes(Math.max(0, length - 4.4), 1, 'p-horiz');
-    addPipes(Math.max(0, (height / 2) - 3), 2, 'p-vert-bot');
-    addPipes(Math.max(0, (height / 2) - 4), 2, 'p-vert-top');
-    addPipes(Math.max(0, wallDistance - 2), 4, 'p-wall-arms');
+    // Floor-to-wall rack: Floor Flanges -> Middle Wall-Tees -> Top Hanger-Tees -> Top Wall-Elbows
+    const targetCutLength = length;
+    const targetCutHeight = height;
+    const targetCutDepth = wallDistance;
+
+    const shortTopStub = 10;
+    const remainingVert = Math.max(0, targetCutHeight - shortTopStub);
+    const halfVert = remainingVert / 2;
+
+    addPipes(Math.max(0, targetCutLength), 1, 'p-horiz');
+    addPipes(halfVert, 2, 'p-vert-bot');
+    addPipes(halfVert, 2, 'p-vert-mid');
+    addPipes(shortTopStub, 2, 'p-vert-top');
+    addPipes(Math.max(0, targetCutDepth), 4, 'p-wall-arms'); // 2 middle, 2 top
 
     addFitting('f-floor-flanges', 'Floor Flanges', quantity * 2);
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 4);
-    addFitting('f-3way-corner-elbows', '3-Way Corner Elbows', quantity * 2);
-    addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
-    addFitting('f-couplings', 'Couplings', quantity * getExtraCouplings(Math.max(0, length - 4.4), 1));
+    addFitting('f-tees', 'T-Fittings', quantity * 4);
+    addFitting('f-90-elbows', '90° Elbows', quantity * 2);
+
+    const horizCouplings = getExtraCouplings(Math.max(0, targetCutLength), 1);
+    const depthCouplings = getExtraCouplings(Math.max(0, targetCutDepth), 4);
+    const vertCouplings = getExtraCouplings(halfVert, 4) + getExtraCouplings(shortTopStub, 2);
+    const totalCouplings = horizCouplings + depthCouplings + vertCouplings;
+    if (totalCouplings > 0) {
+      addFitting('f-couplings', 'Couplings', quantity * totalCouplings);
+    }
   } else if (skuType === 'sku146') {
     // Twin separate wall brackets supporting a top shelf
     const backLength = 10;

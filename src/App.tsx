@@ -2346,6 +2346,114 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     );
   }
 
+  if (skuType === 'sku145') {
+    const e = explode * 1.5;
+
+    const targetCutLength = length;
+    const targetCutHeight = height;
+    const targetCutDepth = wallDistance;
+
+    const shortTopStub = 10;
+    const remainingVert = Math.max(0, targetCutHeight - shortTopStub);
+    const halfVert = remainingVert / 2;
+
+    const actualCutDepth = getPipesForLength(Math.max(0, targetCutDepth)).reduce((a, b) => a + b, 0) || 10;
+    const actualCutLength = getPipesForLength(Math.max(0, targetCutLength)).reduce((a, b) => a + b, 0) || 10;
+    const actualCutBottom = getPipesForLength(halfVert).reduce((a, b) => a + b, 0) || 10;
+    const actualCutMid = getPipesForLength(halfVert).reduce((a, b) => a + b, 0) || 10;
+    const actualCutTop = getPipesForLength(shortTopStub).reduce((a, b) => a + b, 0) || 10;
+
+    const zFront = 0;
+    const zWall = zFront - actualCutDepth - 4.35;
+
+    const yFloor = 0;
+    const yMidTee = yFloor + 2.15 + actualCutBottom + 2.2;
+    const yTopTee = yMidTee + 2.2 + actualCutMid + 2.2;
+    const yTopElbow = yTopTee + 2.2 + actualCutTop + 2.2;
+
+    const spanX = actualCutLength + 4.35;
+    const halfLength = spanX / 2;
+    const xPositions = [-halfLength, halfLength];
+
+    const yOffset = -(yTopElbow + yFloor) / 2;
+
+    return (
+      <group position={[0, yOffset, 0]}>
+        {xPositions.map((x, i) => {
+          const isLeft = i === 0;
+          const sign = isLeft ? -1 : 1;
+          const dx = sign * e;
+
+          return (
+            <group key={`post-${i}`}>
+              {/* Floor Flange */}
+              <group position={[x + dx, yFloor - e, zFront]}>
+                <Flange position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* Bottom Vert Pipe */}
+              <group position={[x + dx, 0, zFront]}>
+                <Pipe start={[0, yFloor + 2.15, 0]} end={[0, yMidTee - 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* Mid Tee (points back to wall) */}
+              <group position={[x + dx, yMidTee, zFront]}>
+                {/* [0,0,0] points branch -Z backward */}
+                <TFitting position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* Mid Wall Pipe */}
+              <group position={[x + dx, yMidTee, -e / 2]}>
+                <Pipe start={[0, 0, zFront - 2.2]} end={[0, 0, zWall + 2.15]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* Mid Wall Flange */}
+              <group position={[x + dx, yMidTee, zWall - e]}>
+                <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* Mid Vert Pipe */}
+              <group position={[x + dx, 0, zFront]}>
+                <Pipe start={[0, yMidTee + 2.2, 0]} end={[0, yTopTee - 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* Top Tee (points INWARD) */}
+              <group position={[x + dx, yTopTee, zFront]}>
+                <TFitting position={[0, 0, 0]} rotation={[0, isLeft ? -Math.PI / 2 : Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* Top Stub Pipe */}
+              <group position={[x + dx, 0, zFront]}>
+                <Pipe start={[0, yTopTee + 2.2, 0]} end={[0, yTopElbow - 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* Top Elbow (points back connecting top to wall) */}
+              <group position={[x + dx, yTopElbow, zFront]}>
+                {/* [0,0,0] has Y-down collar and Z-back collar */}
+                <Elbow position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* Top Wall Pipe */}
+              <group position={[x + dx, yTopElbow, -e / 2]}>
+                <Pipe start={[0, 0, zFront - 2.2]} end={[0, 0, zWall + 2.15]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* Top Wall Flange */}
+              <group position={[x + dx, yTopElbow, zWall - e]}>
+                <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+            </group>
+          );
+        })}
+
+        {/* Horizontal Hanger Bar */}
+        <group position={[0, yTopTee, zFront]}>
+          <Pipe start={[xPositions[0] + 2.2 - e, 0, 0]} end={[xPositions[1] - 2.2 + e, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+      </group>
+    );
+  }
+
   if (skuType === 'sku146') {
     const e = explode * 1.5;
 
@@ -6781,6 +6889,7 @@ export default function App() {
     const default141: SavedSKU = { name: 'SKU 141', length: 120, height: 80, wallDistance: 40, hasShelves: false, isFreestanding: true, colorName: 'Black', skuType: 'sku141' };
     const default142: SavedSKU = { name: 'SKU 142', length: 100, height: 0, wallDistance: 20, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku142' };
     const default143: SavedSKU = { name: 'SKU 143', length: 200, height: 100, wallDistance: 8, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku143' };
+    const default145: SavedSKU = { name: 'SKU 145', length: 120, height: 160, wallDistance: 20, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku145' };
     const default146: SavedSKU = { name: 'SKU 146', length: 120, height: 40, wallDistance: 23, hasShelves: true, isFreestanding: false, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku146' };
     const default147: SavedSKU = { name: 'SKU 147', length: 120, height: 0, wallDistance: 25, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku147' };
     const default148: SavedSKU = { name: 'SKU 148', length: 30, height: 160, wallDistance: 0, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku148' };
@@ -6808,7 +6917,7 @@ export default function App() {
 
     const allDefaults = [
       default4210, default300, default103, default105, default106, default107, default108, default109, default110, default111, default112, default113, default114, default115, default116, default117, default118, default119, default120, default121, default122, default123, default124, default125, default126, default127, default128, default129, default130, default131, default132, default133, default134, default135, default136, default137, default138,
-      default140, default141, default142, default143, default146, default147, default148, default149, default150, default152, default155, default156, default157, default161, default162, default163, default164, default165, default166, default167, default168, default169, default170, default171, default172, default173, default174, default175, default176, default177, default178
+      default140, default141, default142, default143, default145, default146, default147, default148, default149, default150, default152, default155, default156, default157, default161, default162, default163, default164, default165, default166, default167, default168, default169, default170, default171, default172, default173, default174, default175, default176, default177, default178
     ];
 
     const saved = localStorage.getItem('savedSKUs');
