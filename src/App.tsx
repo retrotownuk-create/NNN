@@ -5018,8 +5018,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const zBack = -wallDistance / 2;
 
     const yTopFlange = height;
-    const yHexNipple = height - 1.2;
-    const yTFitting = height - 3.4;
+    const yHexNipple = height - 2.8;
+    const yTFitting = height - 5.5;
     const yBottomPipeStart = yTFitting - 2.2;
 
     // Bottom pipe connects from TFitting bottom to Floor Flange top
@@ -5042,7 +5042,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             <group position={[0, yTFitting, 0]}>
               <TFitting position={[0, 0, 0]} rotation={[0, -Math.PI / 2, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
             </group>
-            <HexNipple position={[0, yHexNipple, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <HexNipple position={[0, yHexNipple, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
             <Flange position={[0, yTopFlange, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
 
@@ -5053,7 +5053,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             <group position={[0, yTFitting, 0]}>
               <TFitting position={[0, 0, 0]} rotation={[0, Math.PI / 2, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
             </group>
-            <HexNipple position={[0, yHexNipple, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <HexNipple position={[0, yHexNipple, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
             <Flange position={[0, yTopFlange, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
 
