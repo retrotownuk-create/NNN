@@ -5832,17 +5832,11 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const perpNippleRot: [number, number, number] = [0, 0, θ - Math.PI];
     const baseElbowRot: [number, number, number] = [0, Math.PI, θ - Math.PI];
 
-    // Overall diagonal line length
-    const L = Math.hypot(length, height);
-    const bracketInsetAlongRail = Math.min(10, L / 3);
-    const startT = bracketInsetAlongRail / L;
-    const endT = 1 - startT;
-
     return (
       <group position={[0, height / 2, -wallZ / 2]}>
         {/* --- Wall Brackets --- */}
         {Array.from({ length: numMounts }).map((_, i) => {
-          const t = numMounts > 1 ? startT + (i / (numMounts - 1)) * (endT - startT) : 0.5;
+          const t = i / (numMounts - 1);
           const mx = startX + t * (endX - startX);
           const my = startY + t * (endY - startY);
 
@@ -5920,8 +5914,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
         {/* --- Diagonal Rail Pipes (Between Brackets) --- */}
         {Array.from({ length: Math.max(0, numMounts - 1) }).map((_, i) => {
-          const t1 = startT + (i / (numMounts - 1)) * (endT - startT);
-          const t2 = startT + ((i + 1) / (numMounts - 1)) * (endT - startT);
+          const t1 = i / (numMounts - 1);
+          const t2 = (i + 1) / (numMounts - 1);
 
           const sx = startX + t1 * (endX - startX);
           const sy = startY + t1 * (endY - startY);
@@ -5944,44 +5938,6 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             </group>
           );
         })}
-
-        {/* --- Outer Stubs & End Caps --- */}
-        {(() => {
-          // Left Stub
-          const lsx = startX;
-          const lsy = startY;
-          const lex = startX + startT * (endX - startX);
-          const ley = startY + startT * (endY - startY);
-          const lf = 1.7 / Math.hypot(lex - lsx, ley - lsy);
-
-          // Right Stub
-          const rsx = startX + endT * (endX - startX);
-          const rsy = startY + endT * (endY - startY);
-          const rex = endX;
-          const rey = endY;
-          const rf = 1.7 / Math.hypot(rex - rsx, rey - rsy);
-
-          return (
-            <>
-              {/* Left End */}
-              <group position={[0, 0, 0]}>
-                <Pipe radius={railRad} start={[lsx + (lex - lsx) * lf, lsy + (ley - lsy) * lf, railZ]} end={[lex - (lex - lsx) * lf, ley - (ley - lsy) * lf, railZ]} showLabel={showLabel} colorOption={colorOption} />
-                <group position={[lsx + (lex - lsx) * lf, lsy + (ley - lsy) * lf, railZ]} rotation={[0, 0, θ + Math.PI / 2]}>
-                  {/* Point cap away from rail center */}
-                  <EndCap position={[0, -0.6, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
-                </group>
-              </group>
-
-              {/* Right End */}
-              <group position={[0, 0, 0]}>
-                <Pipe radius={railRad} start={[rsx + (rex - rsx) * rf, rsy + (rey - rsy) * rf, railZ]} end={[rex - (rex - rsx) * rf, rey - (rey - rsy) * rf, railZ]} showLabel={showLabel} colorOption={colorOption} />
-                <group position={[rex - (rex - rsx) * rf, rey - (rey - rsy) * rf, railZ]} rotation={[0, 0, θ - Math.PI / 2]}>
-                  <EndCap position={[0, -0.6, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
-                </group>
-              </group>
-            </>
-          );
-        })()}
       </group>
     );
   }
