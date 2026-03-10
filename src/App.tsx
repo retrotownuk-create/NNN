@@ -2290,8 +2290,9 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const buildFoot = (x: number, z: number, isLeft: boolean, isFront: boolean) => {
       const xExp = isLeft ? -e : e;
       const zExp = isFront ? e : -e;
+      const eY = getEY(0); // bottom feet explode calculation
       return (
-        <group key={`foot-${x}-${z}`} position={[xExp, bottomY - totalHeight / 2, z + zExp * 0.5]}>
+        <group key={`foot-${x}-${z}`} position={[xExp, bottomY - totalHeight / 2 + eY, z + zExp * 0.5]}>
           <Reducer position={[x, 2.5, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           <Pipe start={[x, 3.0, 0]} end={[x, 8.0, 0]} showLabel={showLabel} colorOption={colorOption} />
           <Flange position={[x, 9.5, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
@@ -2304,8 +2305,9 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
       let parts = [];
       for (let i = 0; i < numRails - 1; i++) {
         const tierY = bottomY - totalHeight / 2 + baseHeight + 1.5 + (i * shelfSpacing);
+        const eY = getEY(i + 1); // pole explodes with the upper tier
         parts.push(
-          <group key={`pole-${i}-${x}`} position={[xExp, tierY + getEY(i + 1), 0]}>
+          <group key={`pole-${i}-${x}`} position={[xExp, tierY + eY * 0.9, 0]}> {/* slightly offset explode to show joint */}
             <Flange position={[x, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
             <Pipe start={[x, 1.2, 0]} end={[x, 24.5, 0]} showLabel={showLabel} colorOption={colorOption} />
             <Flange position={[x, 26, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
