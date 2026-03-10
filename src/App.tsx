@@ -4603,14 +4603,19 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
       bracketX[i] += offsetX;
     }
 
-    const eZ = zWallSurface + 4.4; // 1.2 flange + 3.2 nipple = 4.4
-    const eY = Math.abs(eZ);
-
+    // Exact Mathematical Precision for 35cm pole
     const diagTopY = yTee + 1.556;
     const diagTopZ = zElbow - 1.556;
+    const delta = 35 / Math.SQRT2; // 24.7487 for a strict 35cm angled pipe
 
-    const diagBotY = eY - 1.414;
-    const diagBotZ = eZ + 1.414;
+    const diagBotY = diagTopY + delta;
+    const diagBotZ = diagTopZ - delta;
+
+    const eY = diagBotY + 1.414;
+    const eZ = diagBotZ - 1.414;
+
+    const nippleZ = eZ - 3.6; // Anchor Nipple center precisely to elbow downward 2.0 extension
+    const flangeZ = eZ - 5.7; // Anchor Flange center precisely to back of Nipple
 
     const getBracketExplode = (i: number) => bracketX.length === 1 ? 0 : (-e * 0.5) + (i / (bracketX.length - 1)) * e;
 
@@ -4669,10 +4674,10 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
                     <FortyFiveElbow position={[bx, eY, eZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
                   </group>
                   <group position={[0, e * 1.0, e * 0.5 - e * 1.5]}>
-                    <HexNipple position={[bx, eY, zWallSurface + 1.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                    <HexNipple position={[bx, eY, nippleZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
                   </group>
                   <group position={[0, e * 1.0, e * 0.5 - e * 2.0]}>
-                    <Flange position={[bx, eY, zWallSurface + 0.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                    <Flange position={[bx, eY, flangeZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
                   </group>
                 </group>
               )}
