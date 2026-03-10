@@ -1020,18 +1020,12 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-ceiling-light', 'Ceiling Light', quantity);
   } else if (skuType === 'sku152') {
     // Wall-mounted toilet roll holder
-    const isWallHex = wallDistance <= 5;
-
-    if (!isWallHex) {
-      addPipes(Math.max(0, wallDistance - 3.5), 1, 'p-wall');
-    }
-
-    // Exact requested pole size
+    addPipes(5, 1, 'p-wall');
     addPipes(15, 1, 'p-horiz');
 
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
     addFitting('f-90-elbows', '90° Elbows', quantity * 2);
-    addFitting('f-hex-nipples', 'Hex Nipples', quantity * (isWallHex ? 2 : 1));
+    addFitting('f-hex-nipples', 'Hex Nipples', quantity * 1);
     addFitting('f-end-caps', 'End Caps', quantity * 1);
   } else if (skuType === 'sku153') {
     // 4 Independent Table Legs

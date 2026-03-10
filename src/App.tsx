@@ -2347,30 +2347,27 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   }
 
   if (skuType === 'sku152') {
-    const isWallHex = wallDistance <= 5;
     const e = explode * 1.5;
-    // Hardcode 15cm length for the visual model
     const poleLength = 15;
 
     return (
-      <group position={[0, 0, 0]}>
+      <group position={[0, 1.4, 0]}>
         <group position={[0, 0, -e]}>
-          <Flange position={[0, 0, -wallDistance]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          {!isWallHex && (
-            <Pipe start={[0, 0, -wallDistance + 1.2]} end={[0, 0, -2.4]} showLabel={showLabel} colorOption={colorOption} />
-          )}
+          <Flange position={[0, 0, -5.0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[0, 0, -3.8]} end={[0, 0, -1.2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
         <group position={[-e * 0.5, 0, 0]}>
-          <Elbow position={[0, 0, -1.2]} rotation={[0, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Elbow position={[0, 0, 0]} rotation={[-Math.PI / 2, Math.PI / 2, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
         <group position={[0, -e * 0.5, 0]}>
-          <Elbow position={[0, -4.8, -1.2]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          {/* Hex Nipple connects these directly together with minimal gap */}
+          <Elbow position={[0, -2.8, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
         <group position={[e * 0.5, 0, 0]}>
-          <Pipe start={[1.2, -4.8, -1.2]} end={[1.2 + poleLength, -4.8, -1.2]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[1.2, -2.8, 0]} end={[1.2 + poleLength, -2.8, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
         <group position={[e, 0, 0]}>
-          <EndCap position={[1.2 + poleLength, -4.8, -1.2]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+          <EndCap position={[1.2 + poleLength, -2.8, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );
