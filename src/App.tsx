@@ -2376,8 +2376,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
               </group>
 
               {/* Rear 10cm pipe */}
-              <group position={[x + dx, yTee, 0]}>
-                <Pipe start={[0, 0, zWallFlange + 2.15 - e]} end={[0, 0, zTee - 2.2]} showLabel={showLabel} colorOption={colorOption} />
+              <group position={[x + dx, yTee, -e / 2]}>
+                <Pipe start={[0, 0, zWallFlange + 2.15]} end={[0, 0, zTee - 2.2]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
               {/* T-Fitting (Branch points UP, Body along Z) */}
@@ -2386,8 +2386,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
               </group>
 
               {/* Upward 3cm pipe */}
-              <group position={[x + dx, 0, zTee]}>
-                <Pipe start={[0, yTee + 2.2, 0]} end={[0, yTopFlange - 2.15 + e, 0]} showLabel={showLabel} colorOption={colorOption} />
+              <group position={[x + dx, e / 2, zTee]}>
+                <Pipe start={[0, yTee + 2.2, 0]} end={[0, yTopFlange - 2.15, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
               {/* Top Flange under shelf */}
@@ -2395,9 +2395,9 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
                 <Flange position={[0, 0, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
-              {/* Forward 5cm pipe */}
-              <group position={[x + dx, yTee, 0]}>
-                <Pipe start={[0, 0, zTee + 2.2]} end={[0, 0, zEndCap - 0.6 + e]} showLabel={showLabel} colorOption={colorOption} />
+              {/* Forward 10cm pipe */}
+              <group position={[x + dx, yTee, e / 2]}>
+                <Pipe start={[0, 0, zTee + 2.2]} end={[0, 0, zEndCap - 0.6]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
               {/* Front End Cap */}
