@@ -2347,11 +2347,16 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   }
 
   if (skuType === 'sku154') {
+    const e = explode * 1.5;
     return (
       <group position={[0, 0, 0]}>
-        <Flange position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-        <Pipe start={[0, 1.2, 0]} end={[0, length - 1.2, 0]} showLabel={showLabel} colorOption={colorOption} />
-        <Flange position={[0, length, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        <group position={[0, -e, 0]}>
+          <Flange position={[0, -1.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <Pipe start={[0, 0, 0]} end={[0, length, 0]} showLabel={showLabel} colorOption={colorOption} />
+        <group position={[0, e, 0]}>
+          <Flange position={[0, length + 1.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
       </group>
     );
   }
@@ -7894,7 +7899,7 @@ export default function App() {
                       </div>
                       <input
                         type="range"
-                        min={skuType === 'sku116' || skuType === 'sku160' ? 50 : 30} max={(skuType === 'sku136' || skuType === 'sku137') ? "600" : "400"} step="5"
+                        min={skuType === 'sku154' ? 5 : skuType === 'sku116' || skuType === 'sku160' ? 50 : 30} max={(skuType === 'sku136' || skuType === 'sku137') ? "600" : "400"} step="5"
                         value={length}
                         onChange={(e) => setLength(Number(e.target.value))}
                         className="w-full accent-black h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
