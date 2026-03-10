@@ -1175,9 +1175,14 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       addFitting('f-couplings', 'Couplings', quantity * totalCouplings);
     }
   } else if (skuType === 'sku132') {
+    // Exact requested measurements:
+    const adjLength = length - 10;
+    const adjHeight = height - 5;
+    const adjWallDistance = wallDistance - 5;
+
     // L-shaped: 2 floor posts with couplings at mid, top rail, 2 wall arms
-    const topY = height / 2;
-    const bottomY = -height / 2;
+    const topY = adjHeight / 2;
+    const bottomY = -adjHeight / 2;
     const pipeSpan = (topY - 2.2) - (bottomY + 1.2);
     const pipeLen = (pipeSpan - 2.4) / 2; // Subtract Coupling space
 
@@ -1191,11 +1196,11 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     const upperPipes = getPipesForLength(upperLen);
     upperPipes.forEach((p, i) => addPipes(p, 2, `p-upper-${i}`));
 
-    const horizPipes = getPipesForLength(length - 4.4);
+    const horizPipes = getPipesForLength(adjLength - 4.4);
     horizPipes.forEach((p, i) => addPipes(p, 1, `p-rail-${i}`));
 
     // Left wall arm + right wall arm
-    addPipes(wallDistance - 3.4, 2, 'p-wall-arm');
+    addPipes(adjWallDistance - 3.4, 2, 'p-wall-arm');
 
     const totalCouplings132 = ((lowerPipes.length - 1) * 2) + ((upperPipes.length - 1) * 2) + (horizPipes.length - 1) + 2; // +2 = 1 per leg (mid coupling)
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);

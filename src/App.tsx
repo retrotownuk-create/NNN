@@ -3715,12 +3715,17 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   }
 
   if (skuType === 'sku132') {
-    // L-shaped: 2 floor posts + 2 wall flanges at top, coupling at mid of each leg
-    // Left top: CornerFitting (down=leg, back=wall arm, right=horizontal rail)
-    // Right top: Elbow (down=leg, back=wall arm)
+    // Exact requested adjustments for drawing visually perfectly
+    const adjLength = length - 10;
+    const adjHeight = height - 5;
+    const adjWallDistance = wallDistance - 5;
+
+    const lX = -adjLength / 2;
+    const rX = adjLength / 2;
+
     const e = explode * 1.5;
-    const topY = height / 2;
-    const bottomY = -height / 2;
+    const topY = adjHeight / 2;
+    const bottomY = -adjHeight / 2;
 
     // Mathematically perfectly split the leg pipe so upper and lower segments are absolutely identical lengths.
     const pipeSpan = (topY - 2.2) - (bottomY + 1.2);
@@ -3728,28 +3733,21 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const couplingY = bottomY + 1.2 + pipeLen + 1.2;
 
     const frontZ = 0;
-    const wallZ = -wallDistance;
+    const wallZ = -adjWallDistance;
 
     const buildLeg = (x: number, isLeft: boolean) => {
       const eX = isLeft ? -e : e;
       return (
         <group position={[eX, 0, 0]}>
-          {/* Floor Flange */}
           <group position={[0, -e * 0.6, 0]}>
             <Flange position={[x, bottomY, frontZ]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-
-          {/* Lower Pipe: floor flange top → coupling bottom */}
           <group position={[0, -e * 0.3, 0]}>
             <Pipe start={[x, bottomY + 1.2, frontZ]} end={[x, couplingY - 1.2, frontZ]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-
-          {/* Coupling at exact mid-leg */}
           <group position={[0, 0, 0]}>
             <Coupling position={[x, couplingY, frontZ]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-
-          {/* Upper Pipe: coupling top → top fitting bottom */}
           <group position={[0, e * 0.3, 0]}>
             <Pipe start={[x, couplingY + 1.2, frontZ]} end={[x, topY - 2.2, frontZ]} showLabel={showLabel} colorOption={colorOption} />
           </group>
@@ -3759,50 +3757,38 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
     return (
       <group>
-        {buildLeg(leftX, true)}
-        {buildLeg(rightX, false)}
+        {buildLeg(lX, true)}
+        {buildLeg(rX, false)}
 
-        {/* LEFT TOP: CornerFitting — opens down (leg), back (wall arm), right (horizontal rail) */}
+        {/* LEFT TOP: CornerFitting */}
         <group position={[-e, e * 0.8, 0]}>
-          <CornerFitting
-            position={[leftX, topY, frontZ]}
-            side="left"
-            rotation={[0, 0, 0]}
-            showLabel={showLabel}
-            colorOption={colorOption}
-          />
+          <CornerFitting position={[lX, topY, frontZ]} side="left" rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Left wall arm */}
         <group position={[-e, e * 0.8, -e * 0.4]}>
-          <Pipe start={[leftX, topY, frontZ - 2.2]} end={[leftX, topY, wallZ + 1.2]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[lX, topY, frontZ - 2.2]} end={[lX, topY, wallZ + 1.2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
         <group position={[-e, e * 0.8, -e * 0.8]}>
-          <Flange position={[leftX, topY, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Flange position={[lX, topY, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
-        {/* RIGHT TOP: CornerFitting — opens down (leg), back (wall arm), left (horizontal rail) */}
+        {/* RIGHT TOP: CornerFitting */}
         <group position={[e, e * 0.8, 0]}>
-          <CornerFitting
-            position={[rightX, topY, frontZ]}
-            side="right"
-            rotation={[0, 0, 0]}
-            showLabel={showLabel}
-            colorOption={colorOption}
-          />
+          <CornerFitting position={[rX, topY, frontZ]} side="right" rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Right wall arm */}
         <group position={[e, e * 0.8, -e * 0.4]}>
-          <Pipe start={[rightX, topY, frontZ - 2.2]} end={[rightX, topY, wallZ + 1.2]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[rX, topY, frontZ - 2.2]} end={[rX, topY, wallZ + 1.2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
         <group position={[e, e * 0.8, -e * 0.8]}>
-          <Flange position={[rightX, topY, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Flange position={[rX, topY, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Horizontal rail */}
         <group position={[0, e * 0.8, 0]}>
-          <Pipe start={[leftX + 2.2, topY, frontZ]} end={[rightX - 2.2, topY, frontZ]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[lX + 2.2, topY, frontZ]} end={[rX - 2.2, topY, frontZ]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );
