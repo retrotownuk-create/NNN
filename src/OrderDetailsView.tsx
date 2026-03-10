@@ -195,7 +195,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addPipes(5, 2, 'p-feet');
   } else if (skuType === 'sku157') {
     addPipes(23, 2 * (tiers - 1), 'p-vert-tier');
-    addPipes(5, 2, 'p-feet');
+    addPipes(5, 4, 'p-feet');
   } else if (skuType === 'sku158') {
     addPipes(8, 2, 'p-wall-conn');
     addPipes(Math.max(0, wallDistance - 14.5), 2, 'p-fwd-conn'); // from Tee to Elbow
@@ -436,8 +436,8 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
   } else if (skuType === 'sku156') {
     addFitting('f-wall-flanges', 'Flanges', quantity * (4 * (tiers - 1) + 4));
   } else if (skuType === 'sku157') {
-    addFitting('f-wall-flanges', 'Flanges', quantity * (4 * (tiers - 1) + 2));
-    addFitting('f-reducers', 'Reducers', quantity * 2);
+    addFitting('f-wall-flanges', 'Flanges', quantity * (4 * (tiers - 1) + 4));
+    addFitting('f-reducers', 'Reducers', quantity * 4);
   } else if (skuType === 'sku158') {
     addFitting('f-wall-flanges', 'Flanges', quantity * 4);
     addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
