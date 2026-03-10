@@ -5018,7 +5018,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const zBack = -wallDistance / 2;
 
     const yTopFlange = height;
-    const yHexNipple = height - 2.8;
+    const yHexNipple = height - 2.25;
     const yTFitting = height - 5.5;
     const yBottomPipeStart = yTFitting - 2.2;
 
@@ -5030,8 +5030,9 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
     const buildHFrame = (x: number, isLeft: boolean) => {
       const xExp = isLeft ? -e : e;
-      const zExpFront = e * 0.5;
-      const zExpBack = -e * 0.5;
+      // Do not explode on Z to preserve the crossbar attachment visually
+      const zExpFront = 0;
+      const zExpBack = 0;
 
       return (
         <group key={`hframe-${x}`} position={[xExp, legOffset, 0]}>
@@ -5040,7 +5041,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             <Flange position={[0, yBottomPipeEnd - 1.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
             <Pipe start={[0, yBottomPipeStart, 0]} end={[0, yBottomPipeEnd, 0]} showLabel={showLabel} colorOption={colorOption} />
             <group position={[0, yTFitting, 0]}>
-              <TFitting position={[0, 0, 0]} rotation={[0, -Math.PI / 2, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+              <TFitting position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
             </group>
             <HexNipple position={[0, yHexNipple, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
             <Flange position={[0, yTopFlange, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
@@ -5051,7 +5052,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             <Flange position={[0, yBottomPipeEnd - 1.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
             <Pipe start={[0, yBottomPipeStart, 0]} end={[0, yBottomPipeEnd, 0]} showLabel={showLabel} colorOption={colorOption} />
             <group position={[0, yTFitting, 0]}>
-              <TFitting position={[0, 0, 0]} rotation={[0, Math.PI / 2, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+              <TFitting position={[0, 0, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
             </group>
             <HexNipple position={[0, yHexNipple, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
             <Flange position={[0, yTopFlange, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
