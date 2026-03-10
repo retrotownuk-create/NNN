@@ -27,13 +27,13 @@ export const WOOD_COLORS: Record<string, string> = {
 
 const AVAILABLE_PIPE_SIZES = [
   5, 8, 10, 12, 15, 17, 20, 23, 25,
-  30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 120
+  30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 120, 125
 ];
 
 export const getPipesForLength = (target: number): number[] => {
   if (target <= 0) return [];
 
-  const numPipes = Math.ceil(target / 120);
+  const numPipes = Math.ceil(target / 125);
   const idealLength = target / numPipes;
 
   const pipes: number[] = [];
