@@ -2346,6 +2346,80 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     );
   }
 
+  if (skuType === 'sku146') {
+    const e = explode * 1.5;
+
+    // Based on user provided geometry for twin wall brackets.
+    // Base is centered around T-fitting Z=0 intercept.
+    // 10cm pole at back, 5cm pole at front, 3cm pole up.
+    const zTee = 0;
+    const zWallFlange = -14.35; // 0 - 2.2 (tee collar) - 10 (pipe) - 2.15 (flange collar)
+    const zEndCap = +7.8; // 0 + 2.2 (tee collar) + 5 (pipe) + 0.6 (cap collar offset)
+    const yTee = 0;
+    const yTopFlange = 7.35; // 0 + 2.2 (tee collar up) + 3 (pipe) + 2.15 (flange collar down)
+
+    const halfLength = length / 2;
+    const xPositions = [-halfLength, halfLength];
+
+    return (
+      <group position={[0, 0, 0]}>
+        {xPositions.map((x, i) => {
+          const isLeft = i === 0;
+          const sign = isLeft ? -1 : 1;
+          const dx = sign * e;
+
+          return (
+            <group key={`bkt-${i}`}>
+              {/* Wall Flange */}
+              <group position={[x + dx, yTee, zWallFlange - e]}>
+                <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* Rear 10cm pipe */}
+              <group position={[x + dx, yTee, 0]}>
+                <Pipe start={[0, 0, zWallFlange + 2.15 - e]} end={[0, 0, zTee - 2.2]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* T-Fitting (Branch points UP, Body along Z) */}
+              <group position={[x + dx, yTee, zTee]}>
+                <TFitting position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* Upward 3cm pipe */}
+              <group position={[x + dx, 0, zTee]}>
+                <Pipe start={[0, yTee + 2.2, 0]} end={[0, yTopFlange - 2.15 + e, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* Top Flange under shelf */}
+              <group position={[x + dx, yTopFlange + e, zTee]}>
+                <Flange position={[0, 0, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* Forward 5cm pipe */}
+              <group position={[x + dx, yTee, 0]}>
+                <Pipe start={[0, 0, zTee + 2.2]} end={[0, 0, zEndCap - 0.6 + e]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* Front End Cap */}
+              <group position={[x + dx, yTee, zEndCap + e]}>
+                {/* Math.PI/2 makes its mouth (-Y) point to -Z (backward) */}
+                <EndCap position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+            </group>
+          );
+        })}
+
+        {hasShelves && (
+          <group position={[0, yTopFlange + 0.35 + e, zTee + 2]}>
+            {/* Shelf centered mostly around Tee, let's offset it slightly forward so back hits wall */}
+            {/* Wall is at -14.35. If depth is 23, shelf goes from -14.35 to 8.65. Center is at -2.85 */}
+            <Shelf position={[0, 0, -2.85 - zTee - 2]} length={length + 15} depth={23} woodColor={woodColor} highlightFront={true} />
+          </group>
+        )}
+      </group>
+    );
+  }
+
   if (skuType === 'sku147') {
     const e = explode * 1.5;
 

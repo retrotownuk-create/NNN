@@ -929,28 +929,18 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
     addFitting('f-couplings', 'Couplings', quantity * getExtraCouplings(Math.max(0, length - 4.4), 1));
   } else if (skuType === 'sku146') {
-    // Twin U-shaped Wall brackets with centered horizontal bar and top shelf support
-    const targetCutLength = length;
-    const targetCutDepth = wallDistance;
-    // Lower pole size relative to the fixed 10cm top pole
-    const bottomVertPole = Math.max(0, height - 10);
+    // Twin separate wall brackets supporting a top shelf
+    const backLength = 10;
+    const frontLength = 5;
+    const upLength = 3;
 
-    addPipes(Math.max(0, targetCutLength), 1, 'p-horiz');
-    addPipes(Math.max(0, targetCutDepth), 4, 'p-wall-arms');
-    addPipes(10, 2, 'p-vert-top');
-    addPipes(bottomVertPole, 2, 'p-vert-bot');
+    addPipes(backLength, 2, 'p-bracket-back');
+    addPipes(frontLength, 2, 'p-bracket-front');
+    addPipes(upLength, 2, 'p-bracket-up');
 
-    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 4);
-    addFitting('f-90-elbows', '90° Elbows', quantity * 4);
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 4); // 2 wall, 2 shelf
     addFitting('f-tees', 'T-Fittings', quantity * 2);
-
-    const horizCouplings = getExtraCouplings(Math.max(0, targetCutLength), 1);
-    const depthCouplings = getExtraCouplings(Math.max(0, targetCutDepth), 4);
-    const vertCouplings = getExtraCouplings(bottomVertPole, 2);
-    const totalCouplings = horizCouplings + depthCouplings + vertCouplings;
-    if (totalCouplings > 0) {
-      addFitting('f-couplings', 'Couplings', quantity * totalCouplings);
-    }
+    addFitting('f-end-caps', 'End Caps', quantity * 2);
 
     if (hasShelves) {
       // User specific 23cm depth option preference standard mapping
