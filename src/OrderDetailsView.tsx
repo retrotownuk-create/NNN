@@ -918,9 +918,9 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-end-caps', 'End Caps', quantity * 2);
   } else if (skuType === 'sku145') {
     // Floor-to-wall rack: Floor Flanges -> Middle Wall-Tees -> Top 3-Way Corner Elbows
-    const targetCutLength = length;
-    const targetCutHeight = height;
-    const targetCutDepth = wallDistance;
+    const targetCutLength = length - 10;
+    const targetCutHeight = height - 10;
+    const targetCutDepth = wallDistance - 5;
 
     const halfVert = targetCutHeight / 2;
 

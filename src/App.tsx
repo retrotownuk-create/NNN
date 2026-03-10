@@ -2349,9 +2349,9 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   if (skuType === 'sku145') {
     const e = explode * 1.5;
 
-    const targetCutLength = length;
-    const targetCutHeight = height;
-    const targetCutDepth = wallDistance;
+    const targetCutLength = length - 10;
+    const targetCutHeight = height - 10;
+    const targetCutDepth = wallDistance - 5;
 
     const halfVert = targetCutHeight / 2;
 
