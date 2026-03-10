@@ -2346,6 +2346,112 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     );
   }
 
+  if (skuType === 'sku151') {
+    const e = explode * 1.5;
+    const yBulb = -15; // Y position of the horizontal pipe
+    const canopyY = 15; // Ceiling drop anchor
+
+    // Fixed gap for 5 bulbs across the main bar
+    const gap = 20;
+    const xPositions = [-gap * 2, -gap, 0, gap, gap * 2];
+
+    const LightBulb = ({ position }: { position: [number, number, number] }) => (
+      <group position={position}>
+        {/* Metal Base */}
+        <mesh position={[0, -0.6, 0]}>
+          <cylinderGeometry args={[1.4, 1.0, 1.2, 16]} />
+          <meshStandardMaterial color={colorOption.fittingColor} metalness={0.8} roughness={0.3} />
+        </mesh>
+        {/* Glowing glass */}
+        <mesh position={[0, -2.5, 0]}>
+          <sphereGeometry args={[2.2, 32, 32]} />
+          <meshStandardMaterial color="#fffbe0" emissive="#ffeeaa" emissiveIntensity={1.5} transparent opacity={0.8} />
+        </mesh>
+        <pointLight position={[0, -2.5, 0]} color="#ffeeaa" intensity={2} distance={50} decay={2} />
+      </group>
+    );
+
+    const ChainDrop = ({ x }: { x: number }) => {
+      const dropDist = canopyY - (yBulb + 2.2);
+      const linkLength = 1.0;
+      const numLinks = Math.floor(dropDist / linkLength);
+      return (
+        <group position={[x, yBulb + 2.2, 0]}>
+          {Array.from({ length: numLinks }).map((_, i) => (
+            <mesh key={i} position={[0, i * linkLength + linkLength / 2, 0]} rotation={[0, i % 2 === 0 ? 0 : Math.PI / 2, 0]}>
+              <torusGeometry args={[0.5, 0.15, 8, 16]} />
+              <meshStandardMaterial color={colorOption.fittingColor} metalness={0.9} roughness={0.5} />
+            </mesh>
+          ))}
+        </group>
+      );
+    };
+
+    return (
+      <group position={[0, 0, 0]}>
+        {/* Ceiling Canopy */}
+        <mesh position={[0, canopyY + 1, 0]}>
+          <boxGeometry args={[gap * 2 + 10, 2, 8]} />
+          <meshStandardMaterial color={colorOption.fittingColor} metalness={0.7} roughness={0.5} />
+        </mesh>
+
+        {/* --- Bulb 1 (Left End) --- */}
+        <group position={[xPositions[0] - e, yBulb - e, 0]}>
+          <Elbow position={[xPositions[0], yBulb, 0]} rotation={[0, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <LightBulb position={[xPositions[0], yBulb - 2.2, 0]} />
+        </group>
+
+        {/* Pipe 1 */}
+        <group position={[0, -e, 0]}>
+          <Pipe start={[xPositions[0] + 2.2, yBulb, 0]} end={[xPositions[1] - 2.2, yBulb, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel="20 cm" />
+        </group>
+
+        {/* --- Bulb 2 (Chain) --- */}
+        <group position={[xPositions[1] - e * 0.5, yBulb - e, 0]}>
+          <CrossFitting position={[xPositions[1], yBulb, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <ChainDrop x={xPositions[1]} />
+          <LightBulb position={[xPositions[1], yBulb - 2.2, 0]} />
+        </group>
+
+        {/* Pipe 2 */}
+        <group position={[0, -e, 0]}>
+          <Pipe start={[xPositions[1] + 2.2, yBulb, 0]} end={[xPositions[2] - 2.2, yBulb, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel="20 cm" />
+        </group>
+
+        {/* --- Bulb 3 (Center) --- */}
+        <group position={[xPositions[2], yBulb - e, 0]}>
+          <group position={[xPositions[2], yBulb, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+            <TFitting position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <LightBulb position={[xPositions[2], yBulb - 2.2, 0]} />
+        </group>
+
+        {/* Pipe 3 */}
+        <group position={[0, -e, 0]}>
+          <Pipe start={[xPositions[2] + 2.2, yBulb, 0]} end={[xPositions[3] - 2.2, yBulb, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel="20 cm" />
+        </group>
+
+        {/* --- Bulb 4 (Chain) --- */}
+        <group position={[xPositions[3] + e * 0.5, yBulb - e, 0]}>
+          <CrossFitting position={[xPositions[3], yBulb, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <ChainDrop x={xPositions[3]} />
+          <LightBulb position={[xPositions[3], yBulb - 2.2, 0]} />
+        </group>
+
+        {/* Pipe 4 */}
+        <group position={[0, -e, 0]}>
+          <Pipe start={[xPositions[3] + 2.2, yBulb, 0]} end={[xPositions[4] - 2.2, yBulb, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel="20 cm" />
+        </group>
+
+        {/* --- Bulb 5 (Right End) --- */}
+        <group position={[xPositions[4] + e, yBulb - e, 0]}>
+          <Elbow position={[xPositions[4], yBulb, 0]} rotation={[0, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <LightBulb position={[xPositions[4], yBulb - 2.2, 0]} />
+        </group>
+      </group>
+    );
+  }
+
   if (skuType === 'sku152') {
     const e = explode * 1.5;
     const poleLength = 15;
