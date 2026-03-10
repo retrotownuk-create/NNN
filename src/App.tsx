@@ -2346,6 +2346,51 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     );
   }
 
+  if (skuType === 'sku144') {
+    const e = explode * 1.5;
+
+    const actualCutWall = getPipesForLength(Math.max(0, wallDistance - 2)).reduce((a, b) => a + b, 0) || 5;
+    const actualCutLength = getPipesForLength(Math.max(0, length)).reduce((a, b) => a + b, 0) || 15;
+
+    const zFront = 0;
+    const zWall = -actualCutWall - 4.35; // pipe length + 2.2 collar + 2.15 flange
+
+    return (
+      <group position={[-(2.2 + actualCutLength) / 2, 0, 0]}>
+        {/* Wall Flange */}
+        <group position={[0, 0, zWall - e]}>
+          <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Standoff Wall Pipe */}
+        <group position={[0, 0, 0]}>
+          <Pipe start={[0, 0, zWall + 2.15]} end={[0, 0, zFront - 2.2]} id="p-wall" showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* T-Fitting rotated Z to point horizontally */}
+        {/* Body natively runs -Y to +Y. Rotated 90 deg around Z means body runs -X to +X */}
+        <group position={[0, 0, zFront]}>
+          <TFitting position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Left EndCap (screwed directly into the TFitting's collar / small gap) */}
+        <group position={[-2.2 - e, 0, zFront]}>
+          <EndCap position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Right Holder Pipe (15cm) */}
+        <group position={[0, 0, zFront]}>
+          <Pipe start={[2.2, 0, 0]} end={[2.2 + actualCutLength, 0, 0]} id="p-roll-holder" showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Right EndCap to prevent rolls falling off */}
+        <group position={[2.2 + actualCutLength + e, 0, zFront]}>
+          <EndCap position={[0, 0, 0]} rotation={[0, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+      </group>
+    );
+  }
+
   if (skuType === 'sku145') {
     const e = explode * 1.5;
 
@@ -6875,6 +6920,7 @@ export default function App() {
     const default141: SavedSKU = { name: 'SKU 141', length: 120, height: 80, wallDistance: 40, hasShelves: false, isFreestanding: true, colorName: 'Black', skuType: 'sku141' };
     const default142: SavedSKU = { name: 'SKU 142', length: 100, height: 0, wallDistance: 20, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku142' };
     const default143: SavedSKU = { name: 'SKU 143', length: 200, height: 100, wallDistance: 8, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku143' };
+    const default144: SavedSKU = { name: 'SKU 144', length: 15, height: 0, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku144' };
     const default145: SavedSKU = { name: 'SKU 145', length: 120, height: 160, wallDistance: 20, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku145' };
     const default146: SavedSKU = { name: 'SKU 146', length: 120, height: 40, wallDistance: 23, hasShelves: true, isFreestanding: false, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku146' };
     const default147: SavedSKU = { name: 'SKU 147', length: 120, height: 0, wallDistance: 25, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku147' };
@@ -6903,7 +6949,7 @@ export default function App() {
 
     const allDefaults = [
       default4210, default300, default103, default105, default106, default107, default108, default109, default110, default111, default112, default113, default114, default115, default116, default117, default118, default119, default120, default121, default122, default123, default124, default125, default126, default127, default128, default129, default130, default131, default132, default133, default134, default135, default136, default137, default138,
-      default140, default141, default142, default143, default145, default146, default147, default148, default149, default150, default152, default155, default156, default157, default161, default162, default163, default164, default165, default166, default167, default168, default169, default170, default171, default172, default173, default174, default175, default176, default177, default178
+      default140, default141, default142, default143, default144, default145, default146, default147, default148, default149, default150, default152, default155, default156, default157, default161, default162, default163, default164, default165, default166, default167, default168, default169, default170, default171, default172, default173, default174, default175, default176, default177, default178
     ];
 
     const saved = localStorage.getItem('savedSKUs');
@@ -8546,7 +8592,7 @@ export default function App() {
                       </div>
                       <input
                         type="range"
-                        min={skuType === 'sku150' ? 80 : skuType === 'sku153' || skuType === 'sku154' ? 5 : skuType === 'sku116' || skuType === 'sku160' ? 50 : 30} max={(skuType === 'sku136' || skuType === 'sku137') ? "600" : "400"} step="5"
+                        min={skuType === 'sku150' ? 80 : skuType === 'sku153' || skuType === 'sku154' || skuType === 'sku144' ? 5 : skuType === 'sku116' || skuType === 'sku160' ? 50 : 30} max={(skuType === 'sku136' || skuType === 'sku137') ? "600" : "400"} step="5"
                         value={length}
                         onChange={(e) => setLength(Number(e.target.value))}
                         className="w-full accent-black h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
@@ -8608,10 +8654,10 @@ export default function App() {
                           onChange={(e) => setWallDistance(Number(e.target.value))}
                           className="w-full accent-black h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                         />
-                      ) : ((skuType as string) === 'sku300' || (skuType as string) === 'sku103' || (skuType as string) === 'sku114' || (skuType as string) === 'sku115' || (skuType as string) === 'sku112' || (skuType as string) === 'sku117' || (skuType as string) === 'sku118' || (skuType as string) === 'sku119' || (skuType as string) === 'sku124' || (skuType as string) === 'sku125') ? (
+                      ) : ((skuType as string) === 'sku300' || (skuType as string) === 'sku103' || (skuType as string) === 'sku114' || (skuType as string) === 'sku115' || (skuType as string) === 'sku112' || (skuType as string) === 'sku117' || (skuType as string) === 'sku118' || (skuType as string) === 'sku119' || (skuType as string) === 'sku124' || (skuType as string) === 'sku125' || (skuType as string) === 'sku144') ? (
                         <input
                           type="range"
-                          min="8" max="60" step="1"
+                          min={skuType === 'sku144' ? "5" : "8"} max="60" step="1"
                           value={wallDistance}
                           onChange={(e) => setWallDistance(Number(e.target.value))}
                           className="w-full accent-black h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
