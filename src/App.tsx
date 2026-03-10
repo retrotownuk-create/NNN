@@ -4584,7 +4584,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const e = explode * 1.5;
 
     const zElbow = 0;
-    const zWallSurface = -wallDistance;
+    const zWallSurface = -33.4;
     const yTee = 0;
 
     let numSegments = 1;
@@ -4666,7 +4666,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
                     <Pipe start={[bx, diagTopY, diagTopZ]} end={[bx, diagBotY, diagBotZ]} showLabel={showLabel} colorOption={colorOption} />
                   </group>
                   <group position={[0, e * 1.0, e * 0.5 - e * 1.0]}>
-                    <FortyFiveElbow position={[bx, eY, eZ]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                    <FortyFiveElbow position={[bx, eY, eZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
                   </group>
                   <group position={[0, e * 1.0, e * 0.5 - e * 1.5]}>
                     <HexNipple position={[bx, eY, zWallSurface + 1.5]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />

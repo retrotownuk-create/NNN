@@ -216,9 +216,8 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       numSegments++;
     }
     const split = getEqualSplitPipes(Math.max(0, length - 15), numSegments);
-    addPipes(wallDistance - 6.6, 2, 'p-wall-conn');
-    const diagonalWallDist = Math.max(0, wallDistance - 4.4);
-    addPipes(Math.sqrt(Math.pow(diagonalWallDist, 2) * 2), numSegments - 1, 'p-angled');
+    addPipes(30, 2, 'p-wall-conn');
+    addPipes(35, numSegments - 1, 'p-angled');
     split.forEach((p, idx) => addPipes(p, 1, `p-horiz-${idx}`));
   } else if (skuType === 'sku161') {
     let numSegments = 1;
