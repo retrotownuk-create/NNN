@@ -5011,29 +5011,66 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
   if (skuType === 'sku141') {
     const e = explode * 1.5;
-    const leftX = -(length / 2);
-    const rightX = (length / 2);
+    const leftX = -(length / 2) + 6;
+    const rightX = (length / 2) - 6;
+
+    const topPipeLength = 10; // fixed ~10cm pipe at top
+    const actualCutTop = getPipesForLength(topPipeLength).reduce((a, b) => a + b, 0) || 10;
+    const remainingHeight = Math.max(0, height - actualCutTop - 4.4 - 2.4);
+    const actualCutBottom = getPipesForLength(remainingHeight).reduce((a, b) => a + b, 0) || 20;
+    const actualCutDepth = getPipesForLength(Math.max(0, wallDistance - 4.4)).reduce((a, b) => a + b, 0) || 10;
+
     const zFront = wallDistance / 2;
     const zBack = -wallDistance / 2;
 
-    const buildLeg = (x: number, z: number, isLeft: boolean, isFront: boolean) => {
+    const yTopFlange = height;
+    const yTopPipeStart = yTopFlange - 1.2;
+    const yTFitting = yTopPipeStart - actualCutTop - 2.2;
+    const yBottomPipeStart = yTFitting - 2.2;
+    const yBottomPipeEnd = Math.max(0, yBottomPipeStart - actualCutBottom);
+    const legOffset = -yBottomPipeEnd + 1.2; // Move it so flange is exactly at 0
+
+    const buildHFrame = (x: number, isLeft: boolean) => {
       const xExp = isLeft ? -e : e;
-      const zExp = isFront ? e : -e;
+      const zExpFront = e * 0.5;
+      const zExpBack = -e * 0.5;
+
       return (
-        <group key={`leg-${x}-${z}`} position={[xExp, 0, zExp]}>
-          <Flange position={[x, 0, z]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          <Pipe start={[x, 1.2, z]} end={[x, height - 1.2, z]} showLabel={showLabel} colorOption={colorOption} />
-          <Flange position={[x, height, z]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        <group key={`hframe-${x}`} position={[xExp, legOffset, 0]}>
+          {/* Front Leg */}
+          <group position={[x, 0, zFront + zExpFront]}>
+            <Flange position={[0, yBottomPipeEnd - 1.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Pipe start={[0, yBottomPipeStart, 0]} end={[0, yBottomPipeEnd, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <group position={[0, yTFitting, 0]}>
+              <TFitting position={[0, 0, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+            </group>
+            <Pipe start={[0, yTopPipeStart, 0]} end={[0, yTFitting + 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Flange position={[0, yTopFlange, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+
+          {/* Back Leg */}
+          <group position={[x, 0, zBack + zExpBack]}>
+            <Flange position={[0, yBottomPipeEnd - 1.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Pipe start={[0, yBottomPipeStart, 0]} end={[0, yBottomPipeEnd, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <group position={[0, yTFitting, 0]}>
+              <TFitting position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            </group>
+            <Pipe start={[0, yTopPipeStart, 0]} end={[0, yTFitting + 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Flange position={[0, yTopFlange, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+
+          {/* Horizontal Brace (Depth) */}
+          <group position={[x, yTFitting, 0]}>
+            <Pipe start={[0, 0, zFront - 2.2]} end={[0, 0, zBack + 2.2]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
         </group>
       );
     };
 
     return (
       <group position={[0, 0, 0]}>
-        {buildLeg(leftX + 6, zFront, true, true)}
-        {buildLeg(leftX + 6, zBack, true, false)}
-        {buildLeg(rightX - 6, zFront, false, true)}
-        {buildLeg(rightX - 6, zBack, false, false)}
+        {buildHFrame(leftX, true)}
+        {buildHFrame(rightX, false)}
       </group>
     );
   }
