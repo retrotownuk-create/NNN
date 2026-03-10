@@ -2379,25 +2379,27 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           const isRight = i === 2;
           const isMiddle = i === 1;
 
+          const dx = isLeft ? -e : isRight ? e : 0;
+
           return (
             <group key={`leg-${i}`}>
               {/* Floor Flange (Base is Y=floorY, points UP +Y. Collar ends at Y=floorY+2.15) */}
-              <group position={[x, floorY - e * 2, zFront]}>
-                <Flange position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel && isLeft} colorOption={colorOption} />
+              <group position={[x + dx, floorY - e, zFront + e]}>
+                <Flange position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
               {/* Vertical pipe (from Flange collar UP to Top Fitting collar) */}
-              <group position={[x, 0, zFront]}>
-                <Pipe start={[0, floorY + 2.15 - e, 0]} end={[0, topY - 2.2 - e, 0]} showLabel={showLabel && isLeft} colorOption={colorOption} />
+              <group position={[x + dx, 0, zFront + e]}>
+                <Pipe start={[0, floorY + 2.15, 0]} end={[0, topY - 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
               {/* Top Fitting (Center is at [x, topY, zFront]) */}
-              <group position={[x, topY, zFront]}>
+              <group position={[x + dx, topY + e, zFront + e]}>
                 {isLeft && (
-                  <CornerFitting position={[0, 0, 0]} side="left" showLabel={showLabel && isLeft} colorOption={colorOption} />
+                  <CornerFitting position={[0, 0, 0]} side="left" showLabel={showLabel} colorOption={colorOption} />
                 )}
                 {isRight && (
-                  <CornerFitting position={[0, 0, 0]} side="right" showLabel={false} colorOption={colorOption} />
+                  <CornerFitting position={[0, 0, 0]} side="right" showLabel={showLabel} colorOption={colorOption} />
                 )}
                 {isMiddle && (
                   <SideOutletTee position={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
@@ -2405,24 +2407,24 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
               </group>
 
               {/* Wall Standoff Pipe (from Top Fitting collar BACK to Wall Flange collar) */}
-              <group position={[x, topY, 0]}>
-                <Pipe start={[0, 0, zFront - 2.2 - e]} end={[0, 0, zWall + 2.15 - e]} showLabel={showLabel && isLeft} colorOption={colorOption} />
+              <group position={[x + dx, topY + e, 0]}>
+                <Pipe start={[0, 0, zFront - 2.2]} end={[0, 0, zWall + 2.15]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
               {/* Wall Flange (Base is Z=zWall, rotates to point +Z. Collar ends at Z=zWall+2.15) */}
-              <group position={[x, topY, zWall - e * 2]}>
-                <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel && isLeft} colorOption={colorOption} />
+              <group position={[x + dx, topY + e, zWall - e]}>
+                <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
             </group>
           );
         })}
 
         {/* Horizontal main rails */}
-        <group position={[0, topY, zFront]}>
-          <Pipe start={[xPositions[0] + 2.2 + e, 0, 0]} end={[xPositions[1] - 2.2 - e, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        <group position={[0, topY + e, zFront + e]}>
+          <Pipe start={[xPositions[0] + 2.2, 0, 0]} end={[xPositions[1] - 2.2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
-        <group position={[0, topY, zFront]}>
-          <Pipe start={[xPositions[1] + 2.2 + e, 0, 0]} end={[xPositions[2] - 2.2 - e, 0, 0]} showLabel={false} colorOption={colorOption} />
+        <group position={[0, topY + e, zFront + e]}>
+          <Pipe start={[xPositions[1] + 2.2, 0, 0]} end={[xPositions[2] - 2.2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );
