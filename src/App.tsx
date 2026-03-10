@@ -5014,21 +5014,19 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const leftX = -(length / 2) + 6;
     const rightX = (length / 2) - 6;
 
-    const topPipeLength = 10; // fixed ~10cm pipe at top
-    const actualCutTop = getPipesForLength(topPipeLength).reduce((a, b) => a + b, 0) || 10;
-    const remainingHeight = Math.max(0, height - actualCutTop - 4.4 - 2.4);
-    const actualCutBottom = getPipesForLength(remainingHeight).reduce((a, b) => a + b, 0) || 20;
-    const actualCutDepth = getPipesForLength(Math.max(0, wallDistance - 4.4)).reduce((a, b) => a + b, 0) || 10;
-
     const zFront = wallDistance / 2;
     const zBack = -wallDistance / 2;
 
     const yTopFlange = height;
-    const yTopPipeStart = yTopFlange - 1.2;
-    const yTFitting = yTopPipeStart - actualCutTop - 2.2;
+    const yHexNipple = height - 1.2;
+    const yTFitting = height - 3.4;
     const yBottomPipeStart = yTFitting - 2.2;
-    const yBottomPipeEnd = Math.max(0, yBottomPipeStart - actualCutBottom);
-    const legOffset = -yBottomPipeEnd + 1.2; // Move it so flange is exactly at 0
+
+    // Bottom pipe connects from TFitting bottom to Floor Flange top
+    const remainingHeight = Math.max(0, yBottomPipeStart - 1.2);
+    const actualCutBottom = getPipesForLength(remainingHeight).reduce((a, b) => a + b, 0) || 20;
+    const yBottomPipeEnd = yBottomPipeStart - actualCutBottom;
+    const legOffset = -yBottomPipeEnd + 1.2;
 
     const buildHFrame = (x: number, isLeft: boolean) => {
       const xExp = isLeft ? -e : e;
@@ -5042,9 +5040,9 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             <Flange position={[0, yBottomPipeEnd - 1.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
             <Pipe start={[0, yBottomPipeStart, 0]} end={[0, yBottomPipeEnd, 0]} showLabel={showLabel} colorOption={colorOption} />
             <group position={[0, yTFitting, 0]}>
-              <TFitting position={[0, 0, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+              <TFitting position={[0, 0, 0]} rotation={[0, -Math.PI / 2, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
             </group>
-            <Pipe start={[0, yTopPipeStart, 0]} end={[0, yTFitting + 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <HexNipple position={[0, yHexNipple, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
             <Flange position={[0, yTopFlange, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
 
@@ -5053,9 +5051,9 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             <Flange position={[0, yBottomPipeEnd - 1.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
             <Pipe start={[0, yBottomPipeStart, 0]} end={[0, yBottomPipeEnd, 0]} showLabel={showLabel} colorOption={colorOption} />
             <group position={[0, yTFitting, 0]}>
-              <TFitting position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              <TFitting position={[0, 0, 0]} rotation={[0, Math.PI / 2, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
             </group>
-            <Pipe start={[0, yTopPipeStart, 0]} end={[0, yTFitting + 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <HexNipple position={[0, yHexNipple, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
             <Flange position={[0, yTopFlange, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
 

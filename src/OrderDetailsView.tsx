@@ -688,19 +688,19 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-hex-nipples', 'Hex Nipples', quantity * 3);
     addFitting('f-couplings', 'Couplings', quantity * 3);
   } else if (skuType === 'sku141') {
-    const topDrop = 10;
-    const actualCutTop = getPipesForLength(topDrop).reduce((a, b) => a + b, 0) || 10;
-    const remainingHeight = Math.max(0, height - actualCutTop - 4.4 - 2.4);
+    const yTFitting = height - 3.4;
+    const yBottomPipeStart = yTFitting - 2.2;
+    const remainingHeight = Math.max(0, yBottomPipeStart - 1.2);
     const actualCutBottom = getPipesForLength(remainingHeight).reduce((a, b) => a + b, 0) || 20;
     const actualCutDepth = getPipesForLength(Math.max(0, wallDistance - 4.4)).reduce((a, b) => a + b, 0) || 10;
 
-    addPipes(actualCutTop, 4, 'p-leg-top');
-    addPipes(actualCutBottom, 4, 'p-leg-bottom');
+    addPipes(actualCutBottom, 4, 'p-leg');
     addPipes(actualCutDepth, 2, 'p-leg-depth');
 
     addFitting('f-floor-flanges', 'Floor Flanges', quantity * 4);
-    addFitting('f-wall-flanges', 'Top Flanges', quantity * 4);
+    addFitting('f-wall-flanges', 'Top Flanges (for wood)', quantity * 4);
     addFitting('f-t-fittings', 'T-Fittings', quantity * 4);
+    addFitting('f-hex-nipples', 'Hex Nipples', quantity * 4);
   } else if (skuType === 'sku142') {
     addPipes(23, 2, 'p-wall-arms'); // 23cm pole requested
     addPipes(Math.max(0, length - 4.4), 1, 'p-horizontal-rail');
