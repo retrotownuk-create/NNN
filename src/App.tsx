@@ -592,7 +592,7 @@ const FortyFiveElbow = ({ position, rotation = [0, 0, 0], showLabel, colorOption
   );
 };
 
-const EndCap = ({ position, rotation = [0, 0, 0], showLabel, colorOption = COLORS['Raw grey'] }: { position: [number, number, number], rotation?: [number, number, number], showLabel?: boolean, colorOption?: ColorOption }) => {
+const EndCap = ({ position, rotation = [0, 0, 0], showLabel, labelText = "End Cap", colorOption = COLORS['Raw grey'] }: { position: [number, number, number], rotation?: [number, number, number], showLabel?: boolean, labelText?: string, colorOption?: ColorOption }) => {
   return (
     <group position={position} rotation={rotation}>
       {/* Thick collar rim */}
@@ -610,7 +610,7 @@ const EndCap = ({ position, rotation = [0, 0, 0], showLabel, colorOption = COLOR
         <cylinderGeometry args={[1.75, 1.75, 0.4, 16]} />
         <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
       </mesh>
-      {showLabel && <Label text="End Cap" type="fitting" lineClass="h-8" />}
+      {showLabel && <Label text={labelText} type="fitting" lineClass="h-8" />}
     </group>
   );
 };
@@ -2373,9 +2373,9 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           <TFitting position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
-        {/* Left EndCap (screwed directly into the TFitting's collar / small gap) */}
+        {/* Left In Cap (screwed directly into the TFitting's collar / small gap) */}
         <group position={[-2.2 - e, 0, zFront]}>
-          <EndCap position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+          <EndCap position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]} labelText="In cap" showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Right Holder Pipe (15cm) */}

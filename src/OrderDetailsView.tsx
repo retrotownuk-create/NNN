@@ -915,7 +915,8 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
 
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
     addFitting('f-t-fittings', 'T-Fittings', quantity * 1);
-    addFitting('f-end-caps', 'End Caps', quantity * 2);
+    addFitting('f-end-caps', 'In caps', quantity * 1);
+    addFitting('f-end-caps', 'End Caps', quantity * 1);
   } else if (skuType === 'sku145') {
     // Floor-to-wall rack: Floor Flanges -> Middle Wall-Tees -> Top 3-Way Corner Elbows
     const targetCutLength = length - 10;
