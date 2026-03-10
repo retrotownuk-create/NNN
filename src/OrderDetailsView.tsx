@@ -192,7 +192,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addPipes(23, 2 * (tiers - 1), 'p-vert-tier');
   } else if (skuType === 'sku156') {
     addPipes(23, 2 * (tiers - 1), 'p-vert-tier');
-    addPipes(5, 2, 'p-feet');
+    addPipes(5, 4, 'p-feet');
   } else if (skuType === 'sku157') {
     addPipes(23, 2 * (tiers - 1), 'p-vert-tier');
     addPipes(5, 4, 'p-feet');
@@ -434,7 +434,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
   } else if (skuType === 'sku106') {
     addFitting('f-wall-flanges', 'Flanges', quantity * 4 * (tiers - 1));
   } else if (skuType === 'sku156') {
-    addFitting('f-wall-flanges', 'Flanges', quantity * (4 * (tiers - 1) + 4));
+    addFitting('f-wall-flanges', 'Flanges', quantity * (4 * (tiers - 1) + 8));
   } else if (skuType === 'sku157') {
     addFitting('f-wall-flanges', 'Flanges', quantity * (4 * (tiers - 1) + 4));
     addFitting('f-reducers', 'Reducers', quantity * 4);
