@@ -917,29 +917,26 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-t-fittings', 'T-Fittings', quantity * 1);
     addFitting('f-end-caps', 'End Caps', quantity * 2);
   } else if (skuType === 'sku145') {
-    // Floor-to-wall rack: Floor Flanges -> Middle Wall-Tees -> Top Hanger-Tees -> Top Wall-Elbows
+    // Floor-to-wall rack: Floor Flanges -> Middle Wall-Tees -> Top 3-Way Corner Elbows
     const targetCutLength = length;
     const targetCutHeight = height;
     const targetCutDepth = wallDistance;
 
-    const shortTopStub = 10;
-    const remainingVert = Math.max(0, targetCutHeight - shortTopStub);
-    const halfVert = remainingVert / 2;
+    const halfVert = targetCutHeight / 2;
 
     addPipes(Math.max(0, targetCutLength), 1, 'p-horiz');
     addPipes(halfVert, 2, 'p-vert-bot');
-    addPipes(halfVert, 2, 'p-vert-mid');
-    addPipes(shortTopStub, 2, 'p-vert-top');
+    addPipes(halfVert, 2, 'p-vert-top');
     addPipes(Math.max(0, targetCutDepth), 4, 'p-wall-arms'); // 2 middle, 2 top
 
     addFitting('f-floor-flanges', 'Floor Flanges', quantity * 2);
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 4);
-    addFitting('f-tees', 'T-Fittings', quantity * 4);
-    addFitting('f-90-elbows', '90° Elbows', quantity * 2);
+    addFitting('f-tees', 'T-Fittings', quantity * 2);
+    addFitting('f-3way-corner-elbows', '3-Way Corner Elbows', quantity * 2);
 
     const horizCouplings = getExtraCouplings(Math.max(0, targetCutLength), 1);
     const depthCouplings = getExtraCouplings(Math.max(0, targetCutDepth), 4);
-    const vertCouplings = getExtraCouplings(halfVert, 4) + getExtraCouplings(shortTopStub, 2);
+    const vertCouplings = getExtraCouplings(halfVert, 4);
     const totalCouplings = horizCouplings + depthCouplings + vertCouplings;
     if (totalCouplings > 0) {
       addFitting('f-couplings', 'Couplings', quantity * totalCouplings);

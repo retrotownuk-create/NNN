@@ -2353,29 +2353,25 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const targetCutHeight = height;
     const targetCutDepth = wallDistance;
 
-    const shortTopStub = 10;
-    const remainingVert = Math.max(0, targetCutHeight - shortTopStub);
-    const halfVert = remainingVert / 2;
+    const halfVert = targetCutHeight / 2;
 
     const actualCutDepth = getPipesForLength(Math.max(0, targetCutDepth)).reduce((a, b) => a + b, 0) || 10;
     const actualCutLength = getPipesForLength(Math.max(0, targetCutLength)).reduce((a, b) => a + b, 0) || 10;
     const actualCutBottom = getPipesForLength(halfVert).reduce((a, b) => a + b, 0) || 10;
-    const actualCutMid = getPipesForLength(halfVert).reduce((a, b) => a + b, 0) || 10;
-    const actualCutTop = getPipesForLength(shortTopStub).reduce((a, b) => a + b, 0) || 10;
+    const actualCutTop = getPipesForLength(halfVert).reduce((a, b) => a + b, 0) || 10;
 
     const zFront = 0;
     const zWall = zFront - actualCutDepth - 4.35;
 
     const yFloor = 0;
     const yMidTee = yFloor + 2.15 + actualCutBottom + 2.2;
-    const yTopTee = yMidTee + 2.2 + actualCutMid + 2.2;
-    const yTopElbow = yTopTee + 2.2 + actualCutTop + 2.2;
+    const yTopCorner = yMidTee + 2.2 + actualCutTop + 2.2;
 
     const spanX = actualCutLength + 4.35;
     const halfLength = spanX / 2;
     const xPositions = [-halfLength, halfLength];
 
-    const yOffset = -(yTopElbow + yFloor) / 2;
+    const yOffset = -(yTopCorner + yFloor) / 2;
 
     return (
       <group position={[0, yOffset, 0]}>
@@ -2412,34 +2408,23 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
                 <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
-              {/* Mid Vert Pipe */}
+              {/* Top Vert Pipe */}
               <group position={[x + dx, 0, zFront]}>
-                <Pipe start={[0, yMidTee + 2.2, 0]} end={[0, yTopTee - 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
+                <Pipe start={[0, yMidTee + 2.2, 0]} end={[0, yTopCorner - 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
-              {/* Top Tee (points INWARD) */}
-              <group position={[x + dx, yTopTee, zFront]}>
-                <TFitting position={[0, 0, 0]} rotation={[0, isLeft ? -Math.PI / 2 : Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
-              </group>
-
-              {/* Top Stub Pipe */}
-              <group position={[x + dx, 0, zFront]}>
-                <Pipe start={[0, yTopTee + 2.2, 0]} end={[0, yTopElbow - 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
-              </group>
-
-              {/* Top Elbow (points back connecting top to wall) */}
-              <group position={[x + dx, yTopElbow, zFront]}>
-                {/* [0,0,0] has Y-down collar and Z-back collar */}
-                <Elbow position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              {/* Top 3-Way Corner Elbow (Down, Inward, Backward) */}
+              <group position={[x + dx, yTopCorner, zFront]}>
+                <CornerFitting position={[0, 0, 0]} side={isLeft ? 'left' : 'right'} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
               {/* Top Wall Pipe */}
-              <group position={[x + dx, yTopElbow, -e / 2]}>
+              <group position={[x + dx, yTopCorner, -e / 2]}>
                 <Pipe start={[0, 0, zFront - 2.2]} end={[0, 0, zWall + 2.15]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
               {/* Top Wall Flange */}
-              <group position={[x + dx, yTopElbow, zWall - e]}>
+              <group position={[x + dx, yTopCorner, zWall - e]}>
                 <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
             </group>
@@ -2447,7 +2432,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         })}
 
         {/* Horizontal Hanger Bar */}
-        <group position={[0, yTopTee, zFront]}>
+        <group position={[0, yTopCorner, zFront]}>
           <Pipe start={[xPositions[0] + 2.2 - e, 0, 0]} end={[xPositions[1] - 2.2 + e, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
