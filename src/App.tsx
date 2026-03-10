@@ -2400,68 +2400,72 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
       <group position={[0, 0, 0]}>
         {/* Ceiling Canopy */}
         <mesh position={[0, canopyY + 1, 0]}>
-          <boxGeometry args={[gap * 2 + 10, 2, 8]} />
+          <boxGeometry args={[gap * 3.5, 2, 8]} />
           <meshStandardMaterial color={colorOption.fittingColor} metalness={0.7} roughness={0.5} />
         </mesh>
 
         {/* --- Bulb 1 (Left End) --- */}
-        <group position={[xPositions[0] - e, yBulb - e, 0]}>
+        <group position={[-e * 2, -e, 0]}>
           <Elbow position={[xPositions[0], yBulb, 0]} rotation={[0, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
           <HexNipple position={[xPositions[0], yBulb - 2.8, 0]} showLabel={false} colorOption={colorOption} />
           <LightBulb position={[xPositions[0], yBulb - 2.2, 0]} />
         </group>
 
         {/* Pipe 1 */}
-        <group position={[0, -e, 0]}>
+        <group position={[-e * 1.5, -e, 0]}>
           <Pipe start={[xPositions[0] + 2.2, yBulb, 0]} end={[xPositions[1] - 2.2, yBulb, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel="20 cm" />
         </group>
 
         {/* --- Bulb 2 (Chain 1) --- */}
-        <group position={[xPositions[1] - e * 0.5, yBulb - e, 0]}>
-          <group position={[xPositions[1], yBulb, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-            <TFitting position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        <group position={[-e, -e, 0]}>
+          <group position={[xPositions[1], yBulb, 0]} rotation={[-Math.PI / 2, Math.PI / 2, 0]}>
+            <TFitting position={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           <HexNipple position={[xPositions[1], yBulb - 2.8, 0]} showLabel={false} colorOption={colorOption} />
-          <ChainDrop x={xPositions[1]} />
           <LightBulb position={[xPositions[1], yBulb - 2.2, 0]} />
+        </group>
+        <group position={[-e, 0, 0]}>
+          <ChainDrop x={xPositions[1]} />
         </group>
 
         {/* Pipe 2 */}
-        <group position={[0, -e, 0]}>
+        <group position={[-e * 0.5, -e, 0]}>
           <Pipe start={[xPositions[1] + 2.2, yBulb, 0]} end={[xPositions[2] - 2.2, yBulb, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel="20 cm" />
         </group>
 
         {/* --- Bulb 3 (Center) --- */}
-        <group position={[xPositions[2], yBulb - e, 0]}>
-          <group position={[xPositions[2], yBulb, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-            <TFitting position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        <group position={[0, -e, 0]}>
+          <group position={[xPositions[2], yBulb, 0]} rotation={[-Math.PI / 2, Math.PI / 2, 0]}>
+            <TFitting position={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           <HexNipple position={[xPositions[2], yBulb - 2.8, 0]} showLabel={false} colorOption={colorOption} />
           <LightBulb position={[xPositions[2], yBulb - 2.2, 0]} />
         </group>
 
         {/* Pipe 3 */}
-        <group position={[0, -e, 0]}>
+        <group position={[e * 0.5, -e, 0]}>
           <Pipe start={[xPositions[2] + 2.2, yBulb, 0]} end={[xPositions[3] - 2.2, yBulb, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel="20 cm" />
         </group>
 
         {/* --- Bulb 4 (Chain 2) --- */}
-        <group position={[xPositions[3] + e * 0.5, yBulb - e, 0]}>
-          <group position={[xPositions[3], yBulb, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-            <TFitting position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        <group position={[e, -e, 0]}>
+          <group position={[xPositions[3], yBulb, 0]} rotation={[-Math.PI / 2, Math.PI / 2, 0]}>
+            <TFitting position={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           <HexNipple position={[xPositions[3], yBulb - 2.8, 0]} showLabel={false} colorOption={colorOption} />
-          <ChainDrop x={xPositions[3]} />
           <LightBulb position={[xPositions[3], yBulb - 2.2, 0]} />
+        </group>
+        <group position={[e, 0, 0]}>
+          <ChainDrop x={xPositions[3]} />
         </group>
 
         {/* Pipe 4 */}
-        <group position={[0, -e, 0]}>
+        <group position={[e * 1.5, -e, 0]}>
           <Pipe start={[xPositions[3] + 2.2, yBulb, 0]} end={[xPositions[4] - 2.2, yBulb, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel="20 cm" />
         </group>
 
         {/* --- Bulb 5 (Right End) --- */}
-        <group position={[xPositions[4] + e, yBulb - e, 0]}>
+        <group position={[e * 2, -e, 0]}>
           <Elbow position={[xPositions[4], yBulb, 0]} rotation={[0, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
           <HexNipple position={[xPositions[4], yBulb - 2.8, 0]} showLabel={false} colorOption={colorOption} />
           <LightBulb position={[xPositions[4], yBulb - 2.2, 0]} />
