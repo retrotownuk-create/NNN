@@ -2434,7 +2434,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
         {/* Horizontal Hanger Bar */}
         <group position={[0, yTopCorner, zFront]}>
-          <Pipe start={[xPositions[0] + 2.2 - e, 0, 0]} end={[xPositions[1] - 2.2 + e, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[xPositions[0] + 2.2, 0, 0]} end={[xPositions[1] - 2.2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );
