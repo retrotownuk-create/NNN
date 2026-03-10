@@ -8569,7 +8569,7 @@ export default function App() {
                     </div>
                   )}
 
-                  {((skuType as string) === 'standard' || skuType === 'sku000' || skuType === 'sku100' || skuType === 'sku4210' || skuType === 'sku105' || skuType === 'sku114' || skuType === 'sku116' || skuType === 'sku112' || skuType === 'sku111' || skuType === 'sku113' || skuType === 'sku117' || skuType === 'sku118' || skuType === 'sku119' || skuType === 'sku120' || skuType === 'sku121' || skuType === 'sku122' || skuType === 'sku123' || skuType === 'sku126' || skuType === 'sku127' || skuType === 'sku128' || skuType === 'sku130' || skuType === 'sku131' || skuType === 'sku132' || skuType === 'sku133' || skuType === 'sku135' || skuType === 'sku150') && (
+                  {((skuType as string) === 'standard' || skuType === 'sku000' || skuType === 'sku100' || skuType === 'sku4210' || skuType === 'sku105' || skuType === 'sku114' || skuType === 'sku116' || skuType === 'sku112' || skuType === 'sku111' || skuType === 'sku113' || skuType === 'sku117' || skuType === 'sku118' || skuType === 'sku119' || skuType === 'sku120' || skuType === 'sku121' || skuType === 'sku122' || skuType === 'sku123' || skuType === 'sku126' || skuType === 'sku127' || skuType === 'sku128' || skuType === 'sku130' || skuType === 'sku131' || skuType === 'sku132' || skuType === 'sku133' || skuType === 'sku135' || skuType === 'sku145' || skuType === 'sku150') && (
                     <div>
                       <div className="flex justify-between mb-2">
                         <label className="text-xs font-bold text-gray-700">Height</label>
