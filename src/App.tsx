@@ -4968,7 +4968,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const bracketZ = -poleLength - 2.7;
     const railZ = 0;
 
-    // Center of the elbows are exactly 1.5cm inside from the pure outer edge,.
+    // Center of the elbows are exactly 1.5cm inside from the pure outer edge,
     // so the entire visual rail's outermost width exactly aligns with `length`.
     const elbowOffset = 1.5;
     const lX = -(length / 2) + elbowOffset;
@@ -4977,42 +4977,32 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
     return (
       <group position={[0, height / 2, -bracketZ / 2]}>
-        {/* Wall Flanges */}
-        <group position={[-e, 0, -e]}>
+        {/* Left Leg Group */}
+        <group position={[-e, 0, 0]}>
           <Flange position={[lX, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-        <group position={[0, 0, -e]}>
-          <Flange position={[midX, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-        <group position={[e, 0, -e]}>
-          <Flange position={[rX, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-
-        {/* Support Arms (Wall perpendicular) */}
-        <group position={[-e, 0, -e * 0.5]}>
           <Pipe start={[lX, 0, bracketZ + 1.2]} end={[lX, 0, railZ - 1.5]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-        <group position={[0, 0, -e * 0.5]}>
-          <Pipe start={[midX, 0, bracketZ + 1.2]} end={[midX, 0, railZ - 1.5]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-        <group position={[e, 0, -e * 0.5]}>
-          <Pipe start={[rX, 0, bracketZ + 1.2]} end={[rX, 0, railZ - 1.5]} showLabel={showLabel} colorOption={colorOption} />
+          <Elbow position={[lX, 0, railZ]} rotation={[0, Math.PI / 2, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
-        {/* Front Rail */}
-        <group position={[0, 0, e * 0.5]}>
-          {/* Middle Tee */}
-          <TFitting position={[midX, 0, railZ]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          {/* Left Elbow */}
-          <Elbow position={[lX, 0, railZ]} rotation={[0, Math.PI, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
-          {/* Right Elbow */}
-          <Elbow position={[rX, 0, railZ]} rotation={[0, Math.PI, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
-          
-          {/* Rail Pipes */}
-          {/* Left elbow extends 1.5. Mid TFitting extends 2.2. */}
-          <Pipe start={[lX + 1.5 - e * 0.2, 0, railZ]} end={[midX - 2.2 + e * 0.2, 0, railZ]} showLabel={showLabel} colorOption={colorOption} />
-          {/* Mid TFitting extends 2.2. Right elbow extends 1.5. */}
-          <Pipe start={[midX + 2.2 - e * 0.2, 0, railZ]} end={[rX - 1.5 + e * 0.2, 0, railZ]} showLabel={showLabel} colorOption={colorOption} />
+        {/* Middle Leg Group */}
+        <group position={[0, 0, 0]}>
+          <Flange position={[midX, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[midX, 0, bracketZ + 1.2]} end={[midX, 0, railZ - 1.5]} showLabel={showLabel} colorOption={colorOption} />
+          {/* Straight is mapped to X (left/right) via Z rotation, branch remains -Z via Y. Perfect fit. */}
+          <TFitting position={[midX, 0, railZ]} rotation={[0, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Right Leg Group */}
+        <group position={[e, 0, 0]}>
+          <Flange position={[rX, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[rX, 0, bracketZ + 1.2]} end={[rX, 0, railZ - 1.5]} showLabel={showLabel} colorOption={colorOption} />
+          <Elbow position={[rX, 0, railZ]} rotation={[0, -Math.PI / 2, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Horizontal Rail Pipes (These stay anchored and show the gaps visually) */}
+        <group position={[0, 0, 0]}>
+          <Pipe start={[lX - e + 1.5 + e * 0.2, 0, railZ]} end={[midX - 2.2 - e * 0.2, 0, railZ]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[midX + 2.2 + e * 0.2, 0, railZ]} end={[rX + e - 1.5 - e * 0.2, 0, railZ]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );
