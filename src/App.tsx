@@ -2351,11 +2351,11 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     return (
       <group position={[0, 0, 0]}>
         <group position={[0, -e, 0]}>
-          <Flange position={[0, -1.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Flange position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
-        <Pipe start={[0, 0, 0]} end={[0, length, 0]} showLabel={showLabel} colorOption={colorOption} />
+        <Pipe start={[0, 1.2, 0]} end={[0, length + 1.2, 0]} showLabel={showLabel} colorOption={colorOption} />
         <group position={[0, e, 0]}>
-          <Flange position={[0, length + 1.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Flange position={[0, length + 2.4, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );
