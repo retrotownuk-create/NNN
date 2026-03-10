@@ -2352,11 +2352,11 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const leftX = -(length / 2) + 5;
     const rightX = (length / 2) - 5;
 
-    const wallZ = -wallDistance;
-    const tierSpacing = wallDistance / 3;
-    const zTee = wallZ + tierSpacing;
-    const zUnion = wallZ + 2 * tierSpacing;
-    const zElbow = 0;
+    // Fixed depth structure
+    const wallZ = -10;
+    const zTee = wallZ + 10.5; // 10cm pipe + flange
+    const zUnion = zTee + 2.8; // Tight union fit
+    const zElbow = zUnion + 2.8;
 
     const buildSupport = (x: number, isLeft: boolean) => {
       const expX = isLeft ? -e : e;
@@ -2374,13 +2374,13 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             <TFitting position={[x, 0, zTee]} rotation={rotBase} showLabel={showLabel} colorOption={colorOption} />
           </group>
           <group position={[expX, 0, 0]}>
-            <Pipe start={[x, 0, zTee + 1.2]} end={[x, 0, zUnion - 1.2]} showLabel={showLabel} colorOption={colorOption} />
+            <HexNipple position={[x, 0, zTee + 1.4]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           <group position={[expX, 0, e * 0.5]}>
             <Union position={[x, 0, zUnion]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           <group position={[expX, 0, e * 1.0]}>
-            <Pipe start={[x, 0, zUnion + 1.2]} end={[x, 0, zElbow - 1.2]} showLabel={showLabel} colorOption={colorOption} />
+            <HexNipple position={[x, 0, zUnion + 1.4]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           <group position={[expX, 0, e * 1.5]}>
             <Elbow position={[x, 0, zElbow]} rotation={rotBase} showLabel={showLabel} colorOption={colorOption} />
@@ -2390,7 +2390,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     };
 
     return (
-      <group position={[0, 0, wallDistance / 2]}>
+      <group position={[0, 0, 0]}>
         {buildSupport(leftX, true)}
         {buildSupport(rightX, false)}
 
@@ -7916,7 +7916,7 @@ export default function App() {
                     </div>
                   )}
 
-                  {skuType !== 'sku108' && skuType !== 'sku109' && skuType !== 'sku110' && skuType !== 'sku111' && skuType !== 'sku113' && skuType !== 'sku116' && skuType !== 'sku119' && skuType !== 'sku120' && skuType !== 'sku121' && skuType !== 'sku122' && skuType !== 'sku123' && skuType !== 'sku143' && skuType !== 'sku156' && skuType !== 'sku157' && skuType !== 'sku169' && (
+                  {skuType !== 'sku108' && skuType !== 'sku109' && skuType !== 'sku110' && skuType !== 'sku111' && skuType !== 'sku113' && skuType !== 'sku116' && skuType !== 'sku119' && skuType !== 'sku120' && skuType !== 'sku121' && skuType !== 'sku122' && skuType !== 'sku123' && skuType !== 'sku143' && skuType !== 'sku155' && skuType !== 'sku156' && skuType !== 'sku157' && skuType !== 'sku169' && (
                     <div>
                       <div className="flex justify-between mb-2">
                         <label className="text-xs font-bold text-gray-700">{((skuType as string) === 'sku000' || (skuType as string) === 'sku106' || (skuType as string) === 'sku107' || (skuType as string) === 'sku129') ? 'Shelf Depth' : ((skuType as string) === 'sku111' || (skuType as string) === 'sku113' || (skuType as string) === 'sku116' || (skuType as string) === 'sku119' || (skuType as string) === 'sku124' || (skuType as string) === 'sku125') ? 'Drop Depth' : 'Depth'}</label>

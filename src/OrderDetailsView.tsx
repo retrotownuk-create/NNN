@@ -211,10 +211,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       addPipes(Math.max(0, length - 25), 1, 'p-horiz-bar');
     }
   } else if (skuType === 'sku155') {
-    const seg = Math.max(0, wallDistance / 3 - 2);
-    addPipes(seg, 2, 'p-fwd-conn-1');
-    addPipes(seg, 2, 'p-fwd-conn-2');
-    addPipes(seg, 2, 'p-fwd-conn-3');
+    addPipes(10, 2, 'p-wall-conn'); // 10cm pipe
     addPipes(length - 5, 2, 'p-horiz-bars');
   } else if (skuType === 'sku160') {
     let numSegments = 2; // Always at least 1 middle bracket
@@ -451,6 +448,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
   } else if (skuType === 'sku155') {
     addFitting('f-wall-flanges', 'Flanges', quantity * 2);
     addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
+    addFitting('f-hex-nipples', 'Hex Nipples', quantity * 4); // To connect Tee -> Union -> Elbow
     addFitting('f-unions', 'Unions', quantity * 2);
     addFitting('f-90-elbows', '90° Elbows', quantity * 2);
   } else if (skuType === 'sku159') {
