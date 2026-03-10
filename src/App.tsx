@@ -2377,6 +2377,15 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
       const numLinks = Math.floor(dropDist / linkLength);
       return (
         <group position={[x, yBulb + 2.2, 0]}>
+          {/* Top connection hook ring */}
+          <mesh position={[0, dropDist, 0]} rotation={[Math.PI / 2, 0, 0]}>
+            <torusGeometry args={[1.5, 0.3, 8, 16]} />
+            <meshStandardMaterial color={colorOption.fittingColor} metalness={0.9} roughness={0.5} />
+          </mesh>
+          <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
+            <torusGeometry args={[1.5, 0.3, 8, 16]} />
+            <meshStandardMaterial color={colorOption.fittingColor} metalness={0.9} roughness={0.5} />
+          </mesh>
           {Array.from({ length: numLinks }).map((_, i) => (
             <mesh key={i} position={[0, i * linkLength + linkLength / 2, 0]} rotation={[0, i % 2 === 0 ? 0 : Math.PI / 2, 0]}>
               <torusGeometry args={[0.5, 0.15, 8, 16]} />
@@ -2398,6 +2407,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         {/* --- Bulb 1 (Left End) --- */}
         <group position={[xPositions[0] - e, yBulb - e, 0]}>
           <Elbow position={[xPositions[0], yBulb, 0]} rotation={[0, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <HexNipple position={[xPositions[0], yBulb - 2.8, 0]} showLabel={false} colorOption={colorOption} />
           <LightBulb position={[xPositions[0], yBulb - 2.2, 0]} />
         </group>
 
@@ -2406,9 +2416,12 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           <Pipe start={[xPositions[0] + 2.2, yBulb, 0]} end={[xPositions[1] - 2.2, yBulb, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel="20 cm" />
         </group>
 
-        {/* --- Bulb 2 (Chain) --- */}
+        {/* --- Bulb 2 (Chain 1) --- */}
         <group position={[xPositions[1] - e * 0.5, yBulb - e, 0]}>
-          <CrossFitting position={[xPositions[1], yBulb, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <group position={[xPositions[1], yBulb, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+            <TFitting position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <HexNipple position={[xPositions[1], yBulb - 2.8, 0]} showLabel={false} colorOption={colorOption} />
           <ChainDrop x={xPositions[1]} />
           <LightBulb position={[xPositions[1], yBulb - 2.2, 0]} />
         </group>
@@ -2423,6 +2436,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           <group position={[xPositions[2], yBulb, 0]} rotation={[-Math.PI / 2, 0, 0]}>
             <TFitting position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
           </group>
+          <HexNipple position={[xPositions[2], yBulb - 2.8, 0]} showLabel={false} colorOption={colorOption} />
           <LightBulb position={[xPositions[2], yBulb - 2.2, 0]} />
         </group>
 
@@ -2431,9 +2445,12 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           <Pipe start={[xPositions[2] + 2.2, yBulb, 0]} end={[xPositions[3] - 2.2, yBulb, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel="20 cm" />
         </group>
 
-        {/* --- Bulb 4 (Chain) --- */}
+        {/* --- Bulb 4 (Chain 2) --- */}
         <group position={[xPositions[3] + e * 0.5, yBulb - e, 0]}>
-          <CrossFitting position={[xPositions[3], yBulb, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <group position={[xPositions[3], yBulb, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+            <TFitting position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <HexNipple position={[xPositions[3], yBulb - 2.8, 0]} showLabel={false} colorOption={colorOption} />
           <ChainDrop x={xPositions[3]} />
           <LightBulb position={[xPositions[3], yBulb - 2.2, 0]} />
         </group>
@@ -2446,6 +2463,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         {/* --- Bulb 5 (Right End) --- */}
         <group position={[xPositions[4] + e, yBulb - e, 0]}>
           <Elbow position={[xPositions[4], yBulb, 0]} rotation={[0, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <HexNipple position={[xPositions[4], yBulb - 2.8, 0]} showLabel={false} colorOption={colorOption} />
           <LightBulb position={[xPositions[4], yBulb - 2.2, 0]} />
         </group>
       </group>
