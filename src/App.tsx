@@ -815,7 +815,7 @@ const CornerFitting = ({ position, rotation = [0, 0, 0], side, showLabel, colorO
         <cylinderGeometry args={[1.95, 1.95, 0.7, 16]} />
         <meshStandardMaterial color={colorOption.fittingColor} metalness={colorOption.metalness + 0.2} roughness={colorOption.roughness - 0.1} />
       </mesh>
-      {showLabel && <Label text="Corner Elbow" type="fitting" lineClass="h-16" />}
+      {showLabel && <Label text="3-Way Corner Elbow" type="fitting" lineClass="h-16" />}
     </group>
   );
 };
