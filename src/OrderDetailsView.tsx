@@ -775,10 +775,9 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     const hd = config.handrailDiameter || (config.tubeType === 'square' ? '27mm' : '33mm');
     const height = config.height ?? 0;
 
-    // Main handrail pipes (using new deduction logic)
-    const L = Math.hypot(length, height);
+    // Main handrail pipes (using new deduction logic based precisely on length)
     const deduction = 10 + Math.max(0, numMounts - 2) * 5;
-    const targetPipeLength = Math.max(0, L - deduction);
+    const targetPipeLength = Math.max(0, length - deduction);
 
     // Fallback: If not found, use a safe split function locally
     const getEqualSplitPipesLocal = (total: number, pieces: number) => {

@@ -5807,9 +5807,9 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     // Total geometric length
     const L = Math.hypot(length, height);
 
-    // Logic: "if it has two support we take off 10cm for each extra brackets we take 5cm and as normal one side pole can be 5cm less or more to get exact length"
+    // Logic: "if it has two support we take off 10cm for each extra brackets we take 5cm"
     const deduction = 10 + Math.max(0, numMounts - 2) * 5;
-    const targetPipeLength = Math.max(0, L - deduction);
+    const targetPipeLength = Math.max(0, length - deduction);
     const railPipes = getEqualSplitPipes(targetPipeLength, numMounts - 1);
 
     const mtX: number[] = [];
