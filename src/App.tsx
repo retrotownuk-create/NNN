@@ -5017,12 +5017,15 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const zFront = wallDistance / 2;
     const zBack = -wallDistance / 2;
 
+    // Mathematics of exact, continuous vertical connection:
+    // Flange neck comes down 1.2 from height
+    // HexNipple top extends 1.5 up, and 1.5 down from its center.
+    // TFitting top collar extends 2.2 up, and 2.2 down.
+    // Flange neck comes up 1.2 from floor.
     const yTopFlange = height;
-    const yHexNipple = height - 2.25;
-    const yTFitting = height - 5.5;
+    const yHexNipple = height - 2.7;
+    const yTFitting = height - 6.4;
     const yBottomPipeStart = yTFitting - 2.2;
-
-    // Bottom pipe connects from TFitting bottom to Floor Flange top
     const remainingHeight = Math.max(0, yBottomPipeStart - 1.2);
     const actualCutBottom = getPipesForLength(remainingHeight).reduce((a, b) => a + b, 0) || 20;
     const yBottomPipeEnd = yBottomPipeStart - actualCutBottom;
@@ -5030,6 +5033,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
     const buildHFrame = (x: number, isLeft: boolean) => {
       const xExp = isLeft ? -e : e;
+      // Z Explosion - pull front leg forward, back leg backward
       const zExpFront = e * 0.5;
       const zExpBack = -e * 0.5;
 
@@ -5037,29 +5041,29 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         <group key={`hframe-${x}`} position={[xExp, legOffset, 0]}>
           {/* Front Leg */}
           <group position={[x, 0, zFront + zExpFront]}>
-            <Flange position={[0, yBottomPipeEnd - 1.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-            <Pipe start={[0, yBottomPipeStart, 0]} end={[0, yBottomPipeEnd, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Flange position={[0, yBottomPipeEnd - 1.2 - e * 0.4, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Pipe start={[0, yBottomPipeStart - e * 0.2, 0]} end={[0, yBottomPipeEnd - e * 0.2, 0]} showLabel={showLabel} colorOption={colorOption} />
             <group position={[0, yTFitting, 0]}>
-              <TFitting position={[0, 0, 0]} rotation={[0, -Math.PI / 2, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+              <TFitting position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
             </group>
-            <HexNipple position={[0, yHexNipple, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-            <Flange position={[0, yTopFlange, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <HexNipple position={[0, yHexNipple + e * 0.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Flange position={[0, yTopFlange + e * 0.4, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
 
           {/* Back Leg */}
           <group position={[x, 0, zBack + zExpBack]}>
-            <Flange position={[0, yBottomPipeEnd - 1.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-            <Pipe start={[0, yBottomPipeStart, 0]} end={[0, yBottomPipeEnd, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Flange position={[0, yBottomPipeEnd - 1.2 - e * 0.4, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Pipe start={[0, yBottomPipeStart - e * 0.2, 0]} end={[0, yBottomPipeEnd - e * 0.2, 0]} showLabel={showLabel} colorOption={colorOption} />
             <group position={[0, yTFitting, 0]}>
-              <TFitting position={[0, 0, 0]} rotation={[0, Math.PI / 2, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+              <TFitting position={[0, 0, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
             </group>
-            <HexNipple position={[0, yHexNipple, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-            <Flange position={[0, yTopFlange, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <HexNipple position={[0, yHexNipple + e * 0.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Flange position={[0, yTopFlange + e * 0.4, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
 
-          {/* Horizontal Brace (Depth) */}
+          {/* Horizontal Brace (Depth). It remains horizontally centered between the TFittings */}
           <group position={[x, yTFitting, 0]}>
-            <Pipe start={[0, 0, zFront - 2.2]} end={[0, 0, zBack + 2.2]} showLabel={showLabel} colorOption={colorOption} />
+            <Pipe start={[0, 0, zFront - 2.4]} end={[0, 0, zBack + 2.4]} showLabel={showLabel} colorOption={colorOption} />
           </group>
         </group>
       );
