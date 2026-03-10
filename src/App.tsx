@@ -2350,8 +2350,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const e = explode * 1.5;
 
     // Explicit user specifications
-    const targetCutLength = length;
-    const targetCutDepth = wallDistance;
+    const targetCutLength = length - 10;
+    const targetCutDepth = wallDistance === 25 ? 23 : wallDistance;
 
     // Actual geometric lengths
     const actualCutDepth = getPipesForLength(Math.max(0, targetCutDepth)).reduce((a, b) => a + b, 0) || 10;

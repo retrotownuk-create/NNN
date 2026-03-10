@@ -948,8 +948,8 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     }
   } else if (skuType === 'sku147') {
     // Wall-mounted two-level rack (5cm drop gap between elbows and T-fitting)
-    const targetCutLength = length;
-    const targetCutDepth = wallDistance;
+    const targetCutLength = length - 10;
+    const targetCutDepth = wallDistance === 25 ? 23 : wallDistance;
 
     addPipes(Math.max(0, targetCutLength), 1, 'p-horiz');
     addPipes(Math.max(0, targetCutDepth), 4, 'p-wall-arms');
