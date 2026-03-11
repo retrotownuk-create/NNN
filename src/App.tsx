@@ -6404,20 +6404,48 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const e = explode * 1.5;
 
     return (
-      <group position={[0, 0, 0]}>
+      <group position={[0, -2, 2.9]}>
         {/* Wall Flange at -Z wall */}
-        <group position={[0, 0, -e * 2]}>
+        <group position={[0, 0, -5.8 - e * 3]}>
           <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
-        {/* Hex Nipple */}
-        <group position={[0, 0, 2.75 - e]}>
+        {/* Hex Nipple connecting Flange to T-Fitting */}
+        <group position={[0, 0, -2.8 - e * 1.5]}>
           <HexNipple position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
-        {/* End Cap directly on Hex Nipple */}
-        <group position={[0, 0, 4.0]}>
-          <EndCap position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        {/* Center T-Fitting */}
+        <group position={[0, 0, 0]}>
+          <TFitting position={[0, 0, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* --- LEFT SIDE HOOK --- */}
+        <group position={[-2.8 - e, 0, 0]}>
+          <HexNipple position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <group position={[-5.6 - e * 2, 0, 0]}>
+          <Elbow position={[0, 0, 0]} rotation={[-Math.PI, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <group position={[-5.6 - e * 2, 2.8 + e, 0]}>
+          <HexNipple position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <group position={[-5.6 - e * 2, 4.4 + e * 2, 0]}>
+          <EndCap position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* --- RIGHT SIDE HOOK --- */}
+        <group position={[2.8 + e, 0, 0]}>
+          <HexNipple position={[0, 0, 0]} rotation={[0, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <group position={[5.6 + e * 2, 0, 0]}>
+          <Elbow position={[0, 0, 0]} rotation={[-Math.PI, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <group position={[5.6 + e * 2, 2.8 + e, 0]}>
+          <HexNipple position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <group position={[5.6 + e * 2, 4.4 + e * 2, 0]}>
+          <EndCap position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );
