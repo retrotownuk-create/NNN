@@ -105,7 +105,8 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
   } else if (skuType === 'sku189') {
     const hCut = height - 5;
     const lCut = length - 10;
-    extra += getExtraCouplings(wallDistance - 3.7, 2);
+    const dCut = wallDistance === 25 ? 23 : wallDistance - 5;
+    extra += getExtraCouplings(dCut, 2);
     extra += getExtraCouplings(hCut - 10 - 1.5, 2);
     extra += getExtraCouplings(10, 2);
     if (lCut > 120) {
@@ -290,7 +291,8 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
   } else if (skuType === 'sku189') {
     const hCut = height - 5;
     const lCut = length - 10;
-    addPipes(wallDistance - 3.7, 2, 'p-wall-conn');
+    const dCut = wallDistance === 25 ? 23 : wallDistance - 5;
+    addPipes(dCut, 2, 'p-wall-conn');
     addPipes(hCut - 10 - 1.5, 2, 'p-vert-bot');
     addPipes(10, 2, 'p-vert-top');
     if (lCut > 120) addPipes((lCut - 3) / 2, 2, 'p-horiz-bar');
