@@ -6802,8 +6802,6 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
     const buildSupport190 = (x: number, type: 'left' | 'right') => {
       const sideX = type === 'left' ? -e : e;
-      // Top wall position is at y = vertCut.
-      // Bottom horizontal bar is at y = 0.
       return (
         <group key={type}>
           {/* Top Wall Flange */}
@@ -6819,28 +6817,23 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           {/* Top Junction: Wall pipe meets vertical structure */}
           {hasShelves ? (
             <>
-              {/* T-Fitting: Branch goes +Z (to wall). Run goes UP/DOWN. */}
-              {/* Note: our TFitting has Branch at -Z. So we rotate 180 on Y to point Branch to Wall (-Z in world is +Z local if rotated?) */}
-              {/* Actually TFitting branch points to -Z natively. our wall is at -Z. Wait, if Wall is at -Z, then native orientation has branch pointing to wall! */}
+              {/* T-Fitting */}
               <group position={[sideX, e * 2, 0]}>
                 <TFitting position={[x, vertCut, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
-              {/* Top tiny pipe supporting shelf */}
-              {/* We give it some distance (e.g. 5cm pipe) */}
-              <group position={[sideX, e * 3, 0]}>
-                <Pipe start={[x, vertCut + 2.2, 0]} end={[x, vertCut + 7.2, 0]} showLabel={showLabel} colorOption={colorOption} />
+              {/* Hex Nipple connecting TFitting to Flange (invisible thread logic) */}
+              <group position={[sideX, e * 2.5, 0]}>
+                 <HexNipple position={[x, vertCut + 2.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
               {/* Floor Flange directly under the shelf */}
-              <group position={[sideX, e * 4, 0]}>
-                <Flange position={[x, vertCut + 7.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+              <group position={[sideX, e * 3, 0]}>
+                <Flange position={[x, vertCut + 2.7, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
             </>
           ) : (
              <group position={[sideX, e * 2, 0]}>
-                {/* 90 Elbow connecting pipe from wall (-Z) to DOWNWARD (-Y) */}
-                {/* Elbow natively goes from -Y to +Z if rotated properly. Rotation 0, Math.PI, 0 -> from -Y to -Z. */}
                 <Elbow position={[x, vertCut, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
              </group>
           )}
@@ -6851,11 +6844,9 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           </group>
 
           {/* Bottom 90 Elbow pointing INWARD */}
-          {/* Natively elbow goes -Y to +Z. By rotating we can make it go UP to INWARD */}
           <group position={[sideX, 0, 0]}>
             <Elbow position={[x, 0, 0]} rotation={[0, type === 'left' ? Math.PI / 2 : -Math.PI / 2, Math.PI]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-
         </group>
       );
     };
@@ -6884,10 +6875,10 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           </group>
         )}
 
-        {/* Optional Shelf on Top! */}
+        {/* Optional Shelf on Top! (Centered rigidly over the flanges at Z=0) */}
         {hasShelves && (
-          <group position={[0, e * 4, 0]}>
-            <Shelf position={[0, vertCut + 7.2 + 0.6, zWall / 2 + 2.1]} length={length} depth={23} woodColor={woodColor} />
+          <group position={[0, e * 3, 0]}>
+            <Shelf position={[0, vertCut + 2.7 + 0.6, 0]} length={length + 10} depth={23} woodColor={woodColor} />
           </group>
         )}
       </group>
