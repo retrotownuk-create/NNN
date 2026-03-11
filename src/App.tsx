@@ -6560,7 +6560,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         {/* Top-Right 90-degree Elbow */}
         <group position={[xRight + e, topY + e, frontZ]}>
           {/* Default collar at -Y and +X. We want -Y and -X. */}
-          <Elbow position={[0, 0, 0]} rotation={[0, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Elbow position={[0, 0, 0]} rotation={[0, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* HORIZONTAL RAIL */}
@@ -6573,7 +6573,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         <group position={[xLeft - e, topY + e, frontZ]}>
           {/* We need collar at +X (receive rail) and collar at -Z (receive wall pipe).
               Rotation: [Math.PI/2, 0, 0] sets collars to -Z and +X. */}
-          <Elbow position={[0, 0, 0]} rotation={[Math.PI/2, 0, -Math.PI/2]} showLabel={showLabel} colorOption={colorOption} />
+          <Elbow position={[0, 0, 0]} rotation={[Math.PI, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Depth Pipe */}
