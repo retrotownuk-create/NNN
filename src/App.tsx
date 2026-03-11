@@ -6417,7 +6417,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
         {/* Center T-Fitting */}
         <group position={[0, 0, 0]}>
-          <TFitting position={[0, 0, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <TFitting position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* --- LEFT SIDE HOOK --- */}
