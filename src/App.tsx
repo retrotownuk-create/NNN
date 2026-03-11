@@ -6593,6 +6593,109 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     );
   }
 
+  if (skuType === 'sku188') {
+    const e = explode * 1.5;
+
+    // Dimensions: take 5cm from length and 5cm from height
+    const horizCut = Math.max(0, length - 5);
+    const vertCut = Math.max(0, height - 5);
+
+    const pLen = horizCut / 2;
+
+    const totalX = horizCut + 7.0; // 1.2(Flange) + 3.6(TFitting) + 2.2(Elbow)
+    const totalY = vertCut + 3.4;  // 1.2(Flange) + 2.2(Fittings collar)
+    
+    // We perfectly center this
+    const xLeft = -totalX / 2;
+    const xRight = totalX / 2;
+    
+    // Y aligns with ceiling at height/2? 
+    // Actually the ceiling is at topY, we can just center the whole logic.
+    const topY = totalY / 2;
+    const bottomY = -totalY / 2;
+
+    const zCenter = 0;
+
+    // Component Positions
+    const wallFlangeX = xLeft; 
+    const pipe1StartX = wallFlangeX + 1.2;
+    const pipe1EndX = pipe1StartX + pLen;
+    
+    const tFittingX = pipe1EndX + 1.8; 
+    
+    const pipe2StartX = tFittingX + 1.8;
+    const pipe2EndX = pipe2StartX + pLen;
+    
+    const elbowX = pipe2EndX + 2.2;
+    
+    // Y coordinates
+    const fittingY = bottomY;
+    const pipeVertStartY = bottomY + 2.2;
+    const pipeVertEndY = pipeVertStartY + vertCut;
+    
+    const ceilingFlangeY = pipeVertEndY + 1.2;
+
+    return (
+      <group position={[0, -height/2, 0]}>
+        {/* CEILING SIDE */}
+        {/* Ceiling Flange 1 (Left - over T-Fitting) */}
+        <group position={[tFittingX, ceilingFlangeY + e * 2, zCenter]}>
+          <Flange position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        
+        {/* Ceiling Flange 2 (Right - over Elbow) */}
+        <group position={[elbowX + e, ceilingFlangeY + e * 2, zCenter]}>
+          <Flange position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* VERTICAL PIPES */}
+        {/* Pipe 1 (Left - drops from Flange 1 to T-Fitting) */}
+        <group position={[tFittingX, 0, zCenter]}>
+          <Pipe start={[0, pipeVertStartY + e, 0]} end={[0, pipeVertEndY + e, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Pipe 2 (Right - drops from Flange 2 to Elbow) */}
+        <group position={[elbowX + e, 0, zCenter]}>
+          <Pipe start={[0, pipeVertStartY + e, 0]} end={[0, pipeVertEndY + e, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* BOTTOM FITTINGS */}
+        {/* T-Fitting */}
+        <group position={[tFittingX, fittingY, zCenter]}>
+          {/* Default TFitting faces Y straight and -Z branch.
+              We want straight along X, branch UP (+Y).
+              Using [Math.PI/2, 0, Math.PI/2] mapped it perfectly. */}
+          <TFitting position={[0, 0, 0]} rotation={[Math.PI/2, 0, Math.PI/2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Right 90-degree Elbow */}
+        <group position={[elbowX + e, fittingY, zCenter]}>
+          {/* Point UP (+Y) and LEFT (-X) -> Rotation: [-Math.PI/2, 0, -Math.PI/2] */ }
+          <Elbow position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* HORIZONTAL RAIL */}
+        {/* Rail 1 (Left Wall to T-fitting) */}
+        <group position={[0, fittingY, zCenter]}>
+          <Pipe start={[pipe1StartX - e, 0, 0]} end={[pipe1EndX - e, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Rail 2 (T-fitting to Elbow) */}
+        <group position={[0, fittingY, zCenter]}>
+          <Pipe start={[pipe2StartX + e/2, 0, 0]} end={[pipe2EndX + e/2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* WALL FLANGE */}
+        {/* Wall Flange (Left) */}
+        <group position={[wallFlangeX - e*2, fittingY, zCenter]}>
+          {/* Base against wall, pointing RIGHT (+X) */}
+          <Flange position={[0, 0, 0]} rotation={[0, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+      </group>
+    );
+  }
+
+
 
   if (skuType === 'sku179') {
     // New SKU: Wall mounted straight rail with 2 support arms.
@@ -7489,7 +7592,7 @@ export default function App() {
   const [savedSKUs, setSavedSKUs] = useState<SavedSKU[]>(() => {
 
     // Cache bust to force users to see the new SKUs
-    const APP_VERSION = 'v6_sku187';
+    const APP_VERSION = 'v6_sku188';
     if (localStorage.getItem('app_cache_version') !== APP_VERSION) {
       localStorage.removeItem('savedSKUs');
       localStorage.setItem('app_cache_version', APP_VERSION);
@@ -7567,6 +7670,7 @@ export default function App() {
     const default178: SavedSKU = { name: 'SKU 178', length: 120, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku178' };
                                                                                                                                 const default186: SavedSKU = { name: 'SKU 186', length: 5, height: 0, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku186' };
     const default187: SavedSKU = { name: 'SKU 187', length: 90, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku187' };
+    const default188: SavedSKU = { name: 'SKU 188', length: 120, height: 60, wallDistance: 0, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku188' };
                                 const default184: SavedSKU = { name: 'SKU 184', length: 5, height: 0, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku184' };
         const default183: SavedSKU = { name: 'SKU 183', length: 15, height: 75, wallDistance: 0, hasShelves: false, isFreestanding: true, colorName: 'Black', skuType: 'sku183' };
         const default182: SavedSKU = { name: 'SKU 182', length: 30, height: 30, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku182' };
@@ -9246,7 +9350,7 @@ export default function App() {
                     </div>
                   )}
 
-                  {((skuType as string) === 'standard' || skuType === 'sku000' || skuType === 'sku100' || skuType === 'sku4210' || skuType === 'sku105' || skuType === 'sku114' || skuType === 'sku116' || skuType === 'sku112' || skuType === 'sku111' || skuType === 'sku113' || skuType === 'sku117' || skuType === 'sku118' || skuType === 'sku119' || skuType === 'sku120' || skuType === 'sku121' || skuType === 'sku122' || skuType === 'sku123' || skuType === 'sku126' || skuType === 'sku127' || skuType === 'sku128' || skuType === 'sku130' || skuType === 'sku131' || skuType === 'sku132' || skuType === 'sku133' || skuType === 'sku135' || skuType === 'sku145' || skuType === 'sku150' || skuType === 'sku180' || skuType === 'sku181' || skuType === 'sku182' || skuType === 'sku183' || skuType === 'sku184' || skuType === 'sku186' || skuType === 'sku187') && (
+                  {((skuType as string) === 'standard' || skuType === 'sku000' || skuType === 'sku100' || skuType === 'sku4210' || skuType === 'sku105' || skuType === 'sku114' || skuType === 'sku116' || skuType === 'sku112' || skuType === 'sku111' || skuType === 'sku113' || skuType === 'sku117' || skuType === 'sku118' || skuType === 'sku119' || skuType === 'sku120' || skuType === 'sku121' || skuType === 'sku122' || skuType === 'sku123' || skuType === 'sku126' || skuType === 'sku127' || skuType === 'sku128' || skuType === 'sku130' || skuType === 'sku131' || skuType === 'sku132' || skuType === 'sku133' || skuType === 'sku135' || skuType === 'sku145' || skuType === 'sku150' || skuType === 'sku180' || skuType === 'sku181' || skuType === 'sku182' || skuType === 'sku183' || skuType === 'sku184' || skuType === 'sku186' || skuType === 'sku187' || skuType === 'sku188' || skuType === 'sku188') && (
                     <div>
                       <div className="flex justify-between mb-2">
                         <label className="text-xs font-bold text-gray-700">Height</label>
@@ -9257,7 +9361,7 @@ export default function App() {
                       </div>
                       <input
                         type="range"
-                        min={skuType === 'sku119' || skuType === 'sku180' || skuType === 'sku181' || (skuType === 'sku182' || skuType === 'sku183' || skuType === 'sku184' || skuType === 'sku186' || skuType === 'sku187') ? 5 : skuType === 'sku116' || skuType === 'sku133' ? 5 : skuType === 'sku122' ? 2 : skuType === 'sku128' ? 15 : 20} max={skuType === 'sku122' ? 10 : skuType === 'sku133' ? 30 : skuType === 'sku128' ? 100 : 250} step={skuType === 'sku122' || skuType === 'sku133' ? 1 : 5}
+                        min={skuType === 'sku119' || skuType === 'sku180' || skuType === 'sku181' || (skuType === 'sku182' || skuType === 'sku183' || skuType === 'sku184' || skuType === 'sku186' || skuType === 'sku187' || skuType === 'sku188' || skuType === 'sku188') ? 5 : skuType === 'sku116' || skuType === 'sku133' ? 5 : skuType === 'sku122' ? 2 : skuType === 'sku128' ? 15 : 20} max={skuType === 'sku122' ? 10 : skuType === 'sku133' ? 30 : skuType === 'sku128' ? 100 : 250} step={skuType === 'sku122' || skuType === 'sku133' ? 1 : 5}
                         value={height}
                         onChange={(e) => setHeight(Number(e.target.value))}
                         className="w-full accent-black h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
