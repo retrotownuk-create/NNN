@@ -959,7 +959,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     if (wallDistance === 25) {
       poleLength = 23;
     } else {
-      poleLength = getPipesForLength(Math.max(0, wallDistance - 5)).reduce((a, b) => a + b, 0) || 5;
+      poleLength = Math.max(0, wallDistance - 5);
     }
     
     addPipes(poleLength, 2, 'p-support-arm');
@@ -973,7 +973,13 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-hex-nipples', 'Hex Nipples', quantity * 2);
     addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
     addFitting('f-end-caps', 'End Caps', quantity * 2);
-    addFitting('f-couplings', 'Couplings', quantity * (getExtraCouplings(centerSpan, 1)));
+
+    const poleCouplings = 2 * getExtraCouplings(poleLength, 1);
+    const centerCouplings = getExtraCouplings(centerSpan, 1);
+    const totalCouplings = poleCouplings + centerCouplings;
+    if (totalCouplings > 0) {
+      addFitting('f-couplings', 'Couplings', quantity * totalCouplings);
+    }
   } else if (skuType === 'sku144') {
     // Wall-mounted toilet paper holder (Flange -> Pipe -> T-Fitting -> Cap + Pipe/Cap)
     addPipes(Math.max(0, wallDistance - 2), 1, 'p-wall');

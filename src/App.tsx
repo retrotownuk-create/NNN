@@ -6203,12 +6203,19 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     }
     const bracketZ = -poleLength - 3.4;
 
-    const actualLMount = -(length / 2) + 15 + 1.2 + 2.2;
-    const actualRMount = (length / 2) - 15 - 1.2 - 2.2;
+    const centerPipes = getPipesForLength(Math.max(0, length - 41.2));
+    const actualCenterSpan = centerPipes.reduce((a, b) => a + b, 0);
+    
+    // Half distance of the center span, plus collar (2.2) gives the mount centers
+    const actualRMount = actualCenterSpan / 2 + 2.2;
+    const actualLMount = -(actualCenterSpan / 2 + 2.2);
 
-    const yElbow = 6.4;
-    const yHexNipple = 3.2;
+    const yElbow = 6.1;
+    const yHexNipple = 3.05;
     const yRail = 0;
+
+    // Build the center rail segments
+    let currentX = actualLMount + 2.2;
 
     return (
       <group position={[0, height / 2, -bracketZ / 2]}>
@@ -6266,7 +6273,20 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
         {/* Center Rail */}
         <group position={[0, 0, 0]}>
-          <Pipe start={[actualLMount + 2.2, yRail, 0]} end={[actualRMount - 2.2, yRail, 0]} showLabel={showLabel} colorOption={colorOption} />
+          {centerPipes.map((p, idx) => {
+            const startX = currentX;
+            const endX = currentX + p;
+            currentX = endX;
+
+            return (
+              <React.Fragment key={'cspan' + idx}>
+                <Pipe start={[startX, yRail, 0]} end={[endX, yRail, 0]} showLabel={showLabel} colorOption={colorOption} />
+                {idx < centerPipes.length - 1 && (
+                  <Coupling position={[endX, yRail, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                )}
+              </React.Fragment>
+            );
+          })}
         </group>
       </group>
     );
