@@ -6357,18 +6357,15 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         </group>
 
         {/* 90-Degree Elbow: From -Z directly UP to +Y */}
-        {/* Natively Elbow turns from Y to X. We need it to turn from Z to Y. */}
-        {/* Actually, let's use [Math.PI/2, Math.PI, 0] or similar... wait, standard is easier. */}
+        {/* Natively Elbow turns from Y to X. We need it to turn from -Z to Y. */}
+        {/* Rotation [0, Math.PI/2, 0] shifts X to -Z and leaves Y as +Y. */}
         <group position={[0, 0, 0]}>
-          <Elbow position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Elbow position={[0, 0, 0]} rotation={[0, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
-        {/* The Red Valve sitting on top of the Elbow (+Y direction) */}
+        {/* The Red Valve sitting directly on top of the Elbow (+Y direction) */}
         <group position={[0, e * 2, 0]}>
-          {/* Hex Nipple optional, the image shows a small connector so let's use Hex Nipple */}
-          <HexNipple position={[0, 2.0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          {/* Placed immediately above Hex Nipple */}
-          <RedValve position={[0, 2.5, 0]} rotation={[0, 0, 0]} showLabel={showLabel} />
+          <RedValve position={[0, 1.0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} />
         </group>
       </group>
     );
