@@ -105,7 +105,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
   } else if (skuType === 'sku189') {
     const hCut = height - 5;
     const lCut = length - 10;
-    extra += getExtraCouplings(wallDistance - 6.6, 2);
+    extra += getExtraCouplings(wallDistance - 3.7, 2);
     extra += getExtraCouplings(hCut - 10 - 1.5, 2);
     extra += getExtraCouplings(10, 2);
     if (lCut > 120) {
@@ -290,7 +290,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
   } else if (skuType === 'sku189') {
     const hCut = height - 5;
     const lCut = length - 10;
-    addPipes(wallDistance - 6.6, 2, 'p-wall-conn');
+    addPipes(wallDistance - 3.7, 2, 'p-wall-conn');
     addPipes(hCut - 10 - 1.5, 2, 'p-vert-bot');
     addPipes(10, 2, 'p-vert-top');
     if (lCut > 120) addPipes((lCut - 3) / 2, 2, 'p-horiz-bar');
@@ -424,8 +424,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
     addFitting('f-floor-flanges', 'Floor Flanges', quantity * 2);
     addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
-    addFitting('f-hex-nipples', 'Hex Nipples', quantity * 2);
-    addFitting('f-couplings', 'Couplings', quantity * (2 + (lCut > 120 ? 1 : 0) + getTotalExtraCouplings()));
+    addFitting('f-couplings', 'Couplings', quantity * ((lCut > 120 ? 1 : 0) + getTotalExtraCouplings()));
     addFitting('f-90-elbows', '90° Elbows', quantity * 2);
   } else if (skuType === 'sku300') {
     const numPipes = Math.ceil(length / 120);

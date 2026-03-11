@@ -6740,20 +6740,12 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           </group>
 
           {/* Wall Flange */}
-          <group position={[sideX, e * 2, -e * 2]}>
+          <group position={[sideX, e * 2, -e]}>
             <Flange position={[x, vertCut, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          {/* Hex Nipple from wall */}
-          <group position={[sideX, e * 2, -e * 1.5]}>
-            <HexNipple position={[x, vertCut, wallZ + 2.65]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
-          {/* Coupling after Hex Nipple */}
-          <group position={[sideX, e * 2, -e * 1.25]}>
-            <Coupling position={[x, vertCut, wallZ + 4.35]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
           {/* Wall connector pipe (Depth pipe) */}
-          <group position={[sideX, e * 2, -e]}>
-            <Pipe start={[x, vertCut, wallZ + 4.35]} end={[x, vertCut, -1.5]} showLabel={showLabel} colorOption={colorOption} />
+          <group position={[sideX, e * 2, -e * 0.5]}>
+            <Pipe start={[x, vertCut, wallZ + 1.5]} end={[x, vertCut, -1.5]} showLabel={showLabel} colorOption={colorOption} />
           </group>
         </group>
       );
