@@ -1633,7 +1633,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addWood('w-shelf', 'Console Shelf', quantity, `${length} × ${wallDistance} cm`);
   }
   if (skuType === 'sku189' && hasShelves) {
-    addWood('w-shelf', 'Wood Shelf', quantity, `${length} × ${wallDistance} cm`);
+    addWood('w-shelf', 'Wood Shelf', quantity, `${length} × 23 cm`);
   }
 
   return items;
