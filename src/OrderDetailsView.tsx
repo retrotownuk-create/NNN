@@ -1011,14 +1011,10 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     }
   
   } else if (skuType === 'sku182') {
-    addPipes(wallDistance, 1, 'p-wall');
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
+    addFitting('f-hex-nipples', 'Hex Nipples', quantity * 1);
     addFitting('f-90-elbows', '90° Elbows', quantity * 1);
     addFitting('f-red-valves', 'Red Valve Hook Part', quantity * 1);
-    const wallCouplings = getExtraCouplings(wallDistance, 1);
-    if (wallCouplings > 0) {
-      addFitting('f-couplings', 'Couplings', quantity * wallCouplings);
-    }
   } else if (skuType === 'sku144') {
     // Wall-mounted toilet paper holder (Flange -> Pipe -> T-Fitting -> Cap + Pipe/Cap)
     addPipes(Math.max(0, wallDistance - 2), 1, 'p-wall');

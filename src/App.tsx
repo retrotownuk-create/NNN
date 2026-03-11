@@ -6345,27 +6345,27 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const actualStem = getPipesForLength(Math.max(0, wallDistance)).reduce((a, b) => a + b, 0) || 5;
 
     return (
-      <group position={[0, -5, actualStem/2]}>
+      <group position={[0, -5, 2.9]}>
         {/* Wall Flange at -Z wall */}
-        <group position={[0, 0, -actualStem - 3.4 - e * 2]}>
+        <group position={[0, 0, -5.8 - e * 2]}>
           <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
-        {/* Stem Pipe */}
-        <group position={[0, 0, -e]}>
-          <Pipe start={[0, 0, -actualStem - 2.2]} end={[0, 0, -1.2]} showLabel={showLabel} colorOption={colorOption} />
+        {/* Hex Nipple instead of Stem Pipe */}
+        <group position={[0, 0, -2.8 - e]}>
+          <HexNipple position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* 90-Degree Elbow: From -Z directly UP to +Y */}
-        {/* Natively Elbow turns from Y to X. We need it to turn from -Z to Y. */}
-        {/* Rotation [0, Math.PI/2, 0] shifts X to -Z and leaves Y as +Y. */}
+        {/* Natively Elbow has Collars at -Y and +Z. */}
+        {/* Rotation [Math.PI, 0, 0] flips -Y to +Y, and +Z to -Z. */}
         <group position={[0, 0, 0]}>
-          <Elbow position={[0, 0, 0]} rotation={[0, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Elbow position={[0, 0, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* The Red Valve sitting directly on top of the Elbow (+Y direction) */}
         <group position={[0, e * 2, 0]}>
-          <RedValve position={[0, 1.0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} />
+          <RedValve position={[0, 2.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} />
         </group>
       </group>
     );
