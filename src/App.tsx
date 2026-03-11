@@ -1015,7 +1015,7 @@ const RedValve = ({ position, rotation = [0, 0, 0], showLabel }: { position: [nu
   );
 };
 
-const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFreestanding = false, colorOption = COLORS['Raw grey'], skuType = 'standard', woodColor = 'Natural Oak', tiers = 4, tubeType = 'round' }: { length: number, height: number, wallDistance: number, explode: number, hasShelves?: boolean, isFreestanding?: boolean, colorOption?: ColorOption, skuType?: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku178' | 'sku179' | 'sku180' | 'sku181' | 'sku182' | 'sku183' | 'sku184' | 'sku185' | 'sku888', woodColor?: string, tiers?: number, tubeType?: 'round' | 'square' }) => {
+const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFreestanding = false, colorOption = COLORS['Raw grey'], skuType = 'standard', woodColor = 'Natural Oak', tiers = 4, tubeType = 'round' }: { length: number, height: number, wallDistance: number, explode: number, hasShelves?: boolean, isFreestanding?: boolean, colorOption?: ColorOption, skuType?: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku178' | 'sku179' | 'sku180' | 'sku181' | 'sku182' | 'sku183' | 'sku184' | 'sku888', woodColor?: string, tiers?: number, tubeType?: 'round' | 'square' }) => {
   const leftX = -length / 2;
   const rightX = length / 2;
   const wallZ = -wallDistance;
@@ -6404,37 +6404,14 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const e = explode * 1.5;
 
     return (
-      <group position={[0, 0, 0]}>
-        {/* Wall Flange at -Z wall */}
-        <group position={[0, 0, -e * 2]}>
-          <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-
-        {/* Hex Nipple */}
-        <group position={[0, 0, 2.75 - e]}>
-          <HexNipple position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-
-        {/* End Cap directly on Hex Nipple */}
-        <group position={[0, 0, 4.0]}>
-          <EndCap position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-      </group>
-    );
-  }
-
-  if (skuType === 'sku185') {
-    const e = explode * 1.5;
-
-    return (
       <group position={[0, -2, 2.9]}>
         {/* Wall Flange at -Z wall */}
-        <group position={[0, 0, -5.8 - e * 3]}>
+        <group position={[0, 0, -5.4 - e * 2]}>
           <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Hex Nipple connecting Flange to T-Fitting */}
-        <group position={[0, 0, -2.8 - e * 1.5]}>
+        <group position={[0, 0, -2.4 - e]}>
           <HexNipple position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
@@ -6444,30 +6421,30 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         </group>
 
         {/* --- LEFT SIDE HOOK --- */}
-        <group position={[-2.8 - e, 0, 0]}>
+        <group position={[-3.4 - e, 0, 0]}>
           <HexNipple position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
-        <group position={[-5.6 - e * 2, 0, 0]}>
+        <group position={[-6.8 - e * 2, 0, 0]}>
           <Elbow position={[0, 0, 0]} rotation={[-Math.PI, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
-        <group position={[-5.6 - e * 2, 2.8 + e, 0]}>
+        <group position={[-6.8 - e * 2, 3.4 + e, 0]}>
           <HexNipple position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
-        <group position={[-5.6 - e * 2, 4.4 + e * 2, 0]}>
+        <group position={[-6.8 - e * 2, 5.2 + e * 2, 0]}>
           <EndCap position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* --- RIGHT SIDE HOOK --- */}
-        <group position={[2.8 + e, 0, 0]}>
+        <group position={[3.4 + e, 0, 0]}>
           <HexNipple position={[0, 0, 0]} rotation={[0, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
-        <group position={[5.6 + e * 2, 0, 0]}>
+        <group position={[6.8 + e * 2, 0, 0]}>
           <Elbow position={[0, 0, 0]} rotation={[-Math.PI, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
-        <group position={[5.6 + e * 2, 2.8 + e, 0]}>
+        <group position={[6.8 + e * 2, 3.4 + e, 0]}>
           <HexNipple position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
-        <group position={[5.6 + e * 2, 4.4 + e * 2, 0]}>
+        <group position={[6.8 + e * 2, 5.2 + e * 2, 0]}>
           <EndCap position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
@@ -7037,7 +7014,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   );
 };
 
-const Scene = React.memo(({ length, height, wallDistance, explode, hasShelves, isFreestanding, colorOption, skuType, woodColor, cameraState, tiers = 4, tubeType = 'round' }: { length: number, height: number, wallDistance: number, explode: number, hasShelves: boolean, isFreestanding: boolean, colorOption: ColorOption, skuType: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku178' | 'sku179' | 'sku180' | 'sku181' | 'sku182' | 'sku183' | 'sku184' | 'sku185' | 'sku888', woodColor: string, cameraState?: any, tiers?: number, tubeType?: 'round' | 'square' }) => {
+const Scene = React.memo(({ length, height, wallDistance, explode, hasShelves, isFreestanding, colorOption, skuType, woodColor, cameraState, tiers = 4, tubeType = 'round' }: { length: number, height: number, wallDistance: number, explode: number, hasShelves: boolean, isFreestanding: boolean, colorOption: ColorOption, skuType: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku178' | 'sku179' | 'sku180' | 'sku181' | 'sku182' | 'sku183' | 'sku184' | 'sku888', woodColor: string, cameraState?: any, tiers?: number, tubeType?: 'round' | 'square' }) => {
   return (
     <>
       <PerspectiveCamera makeDefault position={cameraState?.position || [0, 100, 250]} fov={50} />
@@ -7316,7 +7293,7 @@ export default function App() {
   const [isFreestanding, setIsFreestanding] = useState(false);
   const [colorName, setColorName] = useState('Raw grey');
   const [woodColor, setWoodColor] = useState('Natural Oak');
-  const [skuType, setSkuType] = useState<'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku178' | 'sku179' | 'sku180' | 'sku181' | 'sku182' | 'sku183' | 'sku184' | 'sku185' | 'sku888'>('standard');
+  const [skuType, setSkuType] = useState<'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku178' | 'sku179' | 'sku180' | 'sku181' | 'sku182' | 'sku183' | 'sku184' | 'sku888'>('standard');
   const [tiers, setTiers] = useState(4);
   const [tubeType, setTubeType] = useState<'round' | 'square'>('round');
   const [quantity, setQuantity] = useState(1);
@@ -7364,12 +7341,12 @@ export default function App() {
   const [syncStatus, setSyncStatus] = useState<'synced' | 'syncing' | 'error' | 'disconnected'>('syncing');
   const lastSyncRef = useRef<string>('');
 
-  type SavedSKU = { name: string; length: number; height: number; wallDistance: number; hasShelves: boolean; isFreestanding: boolean; colorName: string; woodColor?: string; skuType?: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku178' | 'sku179' | 'sku180' | 'sku181' | 'sku182' | 'sku183' | 'sku184' | 'sku185' | 'sku888'; tiers?: number; tubeType?: 'round' | 'square' };
+  type SavedSKU = { name: string; length: number; height: number; wallDistance: number; hasShelves: boolean; isFreestanding: boolean; colorName: string; woodColor?: string; skuType?: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku178' | 'sku179' | 'sku180' | 'sku181' | 'sku182' | 'sku183' | 'sku184' | 'sku888'; tiers?: number; tubeType?: 'round' | 'square' };
 
   const [savedSKUs, setSavedSKUs] = useState<SavedSKU[]>(() => {
 
     // Cache bust to force users to see the new SKUs
-    const APP_VERSION = 'v6_sku185';;;
+    const APP_VERSION = 'v6_sku184b';;;
     if (localStorage.getItem('app_cache_version') !== APP_VERSION) {
       localStorage.removeItem('savedSKUs');
       localStorage.setItem('app_cache_version', APP_VERSION);
@@ -7445,8 +7422,7 @@ export default function App() {
     const default176: SavedSKU = { name: 'SKU 176', length: 15, height: 0, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku176' };
     const default177: SavedSKU = { name: 'SKU 177', length: 120, height: 160, wallDistance: 15, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku177', tiers: 3 };
     const default178: SavedSKU = { name: 'SKU 178', length: 120, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku178' };
-                                                                const default185: SavedSKU = { name: 'SKU 185 (Double Hook)', length: 5, height: 0, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku185' };
-                                const default184: SavedSKU = { name: 'SKU 184 (Short Peg)', length: 5, height: 0, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku184' };
+                                                                                                const default184: SavedSKU = { name: 'SKU 184 (Short Peg)', length: 5, height: 0, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku184' };
         const default183: SavedSKU = { name: 'SKU 183 (Table Leg)', length: 15, height: 75, wallDistance: 0, hasShelves: false, isFreestanding: true, colorName: 'Black', skuType: 'sku183' };
         const default182: SavedSKU = { name: 'SKU 182', length: 30, height: 30, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku182' };
         const default181: SavedSKU = { name: 'SKU 181', length: 30, height: 30, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku181' };
@@ -7455,7 +7431,7 @@ export default function App() {
 
     const allDefaults = [
       default4210, default300, default103, default105, default106, default107, default108, default109, default110, default111, default112, default113, default114, default115, default116, default117, default118, default119, default120, default121, default122, default123, default124, default125, default126, default127, default128, default129, default130, default131, default132, default133, default134, default135, default136, default137, default138,
-      default140, default141, default142, default143, default144, default145, default146, default147, default148, default149, default150, default152, default155, default156, default157, default161, default162, default163, default164, default165, default166, default167, default168, default169, default170, default171, default172, default173, default174, default175, default176, default177, default178, default179, default180, default181, default182, default183, default184, default185
+      default140, default141, default142, default143, default144, default145, default146, default147, default148, default149, default150, default152, default155, default156, default157, default161, default162, default163, default164, default165, default166, default167, default168, default169, default170, default171, default172, default173, default174, default175, default176, default177, default178, default179, default180, default181, default182, default183, default184
     ];
 
     const saved = localStorage.getItem('savedSKUs');
@@ -9125,7 +9101,7 @@ export default function App() {
                     </div>
                   )}
 
-                  {((skuType as string) === 'standard' || skuType === 'sku000' || skuType === 'sku100' || skuType === 'sku4210' || skuType === 'sku105' || skuType === 'sku114' || skuType === 'sku116' || skuType === 'sku112' || skuType === 'sku111' || skuType === 'sku113' || skuType === 'sku117' || skuType === 'sku118' || skuType === 'sku119' || skuType === 'sku120' || skuType === 'sku121' || skuType === 'sku122' || skuType === 'sku123' || skuType === 'sku126' || skuType === 'sku127' || skuType === 'sku128' || skuType === 'sku130' || skuType === 'sku131' || skuType === 'sku132' || skuType === 'sku133' || skuType === 'sku135' || skuType === 'sku145' || skuType === 'sku150' || skuType === 'sku180' || skuType === 'sku181' || skuType === 'sku182' || skuType === 'sku183' || skuType === 'sku184' || skuType === 'sku185') && (
+                  {((skuType as string) === 'standard' || skuType === 'sku000' || skuType === 'sku100' || skuType === 'sku4210' || skuType === 'sku105' || skuType === 'sku114' || skuType === 'sku116' || skuType === 'sku112' || skuType === 'sku111' || skuType === 'sku113' || skuType === 'sku117' || skuType === 'sku118' || skuType === 'sku119' || skuType === 'sku120' || skuType === 'sku121' || skuType === 'sku122' || skuType === 'sku123' || skuType === 'sku126' || skuType === 'sku127' || skuType === 'sku128' || skuType === 'sku130' || skuType === 'sku131' || skuType === 'sku132' || skuType === 'sku133' || skuType === 'sku135' || skuType === 'sku145' || skuType === 'sku150' || skuType === 'sku180' || skuType === 'sku181' || skuType === 'sku182' || skuType === 'sku183' || skuType === 'sku184') && (
                     <div>
                       <div className="flex justify-between mb-2">
                         <label className="text-xs font-bold text-gray-700">Height</label>
@@ -9136,7 +9112,7 @@ export default function App() {
                       </div>
                       <input
                         type="range"
-                        min={skuType === 'sku119' || skuType === 'sku180' || skuType === 'sku181' || (skuType === 'sku182' || skuType === 'sku183' || skuType === 'sku184' || skuType === 'sku185') ? 5 : skuType === 'sku116' || skuType === 'sku133' ? 5 : skuType === 'sku122' ? 2 : skuType === 'sku128' ? 15 : 20} max={skuType === 'sku122' ? 10 : skuType === 'sku133' ? 30 : skuType === 'sku128' ? 100 : 250} step={skuType === 'sku122' || skuType === 'sku133' ? 1 : 5}
+                        min={skuType === 'sku119' || skuType === 'sku180' || skuType === 'sku181' || (skuType === 'sku182' || skuType === 'sku183' || skuType === 'sku184') ? 5 : skuType === 'sku116' || skuType === 'sku133' ? 5 : skuType === 'sku122' ? 2 : skuType === 'sku128' ? 15 : 20} max={skuType === 'sku122' ? 10 : skuType === 'sku133' ? 30 : skuType === 'sku128' ? 100 : 250} step={skuType === 'sku122' || skuType === 'sku133' ? 1 : 5}
                         value={height}
                         onChange={(e) => setHeight(Number(e.target.value))}
                         className="w-full accent-black h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
