@@ -1040,18 +1040,22 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-end-caps', 'In caps', quantity * 2);
   
   } else if (skuType === 'sku187') {
-    // Floor-to-wall L-Shape: 1x Floor Flange, 1x Wall Flange, 1x Vertical Pipe, 1x Horizontal Pipe, 1x Depth Pipe, 2x 90-degree Elbows
-    addPipes(Math.max(0, wallDistance - 3.4), 1, 'p-depth');
-    addPipes(Math.max(0, height - 3.4), 1, 'p-vert');
-    addPipes(Math.max(0, length - 4.4), 1, 'p-horiz');
+    // Floor-to-wall L-Shape
+    const cutLength = length - 5;
+    const cutHeight = height - 5;
+    const cutDepth = wallDistance - 3.4; // we keep depth based on wallDistance to perfectly reach wall
+
+    addPipes(Math.max(0, cutDepth), 1, 'p-depth');
+    addPipes(Math.max(0, cutHeight), 1, 'p-vert');
+    addPipes(Math.max(0, cutLength), 1, 'p-horiz');
 
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
     addFitting('f-floor-flanges', 'Floor Flanges', quantity * 1);
     addFitting('f-90-elbows', '90° Elbows', quantity * 2);
 
-    const pipeCouplings = getExtraCouplings(Math.max(0, wallDistance - 3.4), 1)
-                        + getExtraCouplings(Math.max(0, height - 3.4), 1)
-                        + getExtraCouplings(Math.max(0, length - 4.4), 1);
+    const pipeCouplings = getExtraCouplings(Math.max(0, cutDepth), 1)
+                        + getExtraCouplings(Math.max(0, cutHeight), 1)
+                        + getExtraCouplings(Math.max(0, cutLength), 1);
     if (pipeCouplings > 0) {
       addFitting('f-couplings', 'Couplings', quantity * pipeCouplings);
     }

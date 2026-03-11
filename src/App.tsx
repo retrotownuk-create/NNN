@@ -6515,53 +6515,78 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   if (skuType === 'sku187') {
     const e = explode * 1.5;
 
-    // Dimensions
-    const xLeft = -(length / 2);
-    const xRight = length / 2;
-    const zWall = -wallDistance;
+    // "take 5cm from length and 5cm from height"
+    // Pipes cut sizes
+    const horizCut = Math.max(0, length - 5);
+    const vertCut = Math.max(0, height - 5);
+    // Let's also do wallDistance - 5 ? They didn't mention wall distance, but wait. If they didn't, let's keep depth pipe as wallDistance - 3.4 so total is exactly wallDistance, or maybe wallDistance - 5 too? Usually they want 5cm taken from all primary dimensions. In 180 they said "take 5 from height and length". I'll keep depth as wallDistance - 5 just to be consistent, or wallDistance - 3.4. Let's do wallDistance - 3.4 if they didn't specify.
 
-    // Floor base starts at 0. Vertical goes up to height.
+    // Let's assemble from the wall Flange (at origin) to make it easy to prevent disconnects.
+    // But we need it centered nicely.
+    // Let's define the parts based on pipe lengths.
+    const depthPipeLen = Math.max(0, wallDistance - 3.4);
+    
+    // Calculate total dimensions to center the model
+    const totalX = horizCut + 4.4; // left elbow(2.2) + horizCut + right elbow(2.2)
+    const totalY = vertCut + 3.4;  // flange(1.2) + vertCut + top elbow(2.2)
+    const totalZ = depthPipeLen + 3.4; // flange(1.2) + depthPipe + front elbow(2.2)
+
+    const xLeft = -totalX / 2;
+    const xRight = totalX / 2;
+    
+    // Floor is at -totalY / 2
+    // Wall is at -totalZ / 2
+    const bottomY = -totalY / 2;
+    const topY = bottomY + totalY; // which is totalY / 2
+    
+    // Wall is at Z = -totalZ / 2
+    const wallZ = -totalZ / 2;
+    const frontZ = wallZ + totalZ; // front is +Z from wall, so frontZ = totalZ / 2
+
     return (
-      <group position={[0, -height/2, wallDistance/2]}>
+      <group position={[0, 0, 0]}>
         {/* FLOOR SIDE (RIGHT) */}
         {/* Floor Flange Base */}
-        <group position={[xRight + e, -e * 2, 0]}>
+        <group position={[xRight + e, bottomY - e * 2, frontZ]}>
           <Flange position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Vertical Pipe */}
-        <group position={[xRight + e, -e, 0]}>
-          <Pipe start={[0, 1.2, 0]} end={[0, height - 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
+        <group position={[xRight + e, 0, frontZ]}>
+          {/* Base is at bottomY + 1.2. Top is at bottomY + 1.2 + vertCut = topY - 2.2 */}
+          <Pipe start={[0, bottomY + 1.2, 0]} end={[0, topY - 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Top-Right 90-degree Elbow */}
-        <group position={[xRight + e, height + e, 0]}>
-          {/* Default: collar at -Y and +X. We want collar at -Y and -X.
-              Rotate PI around Y axis. */}
+        <group position={[xRight + e, topY + e, frontZ]}>
+          {/* Default collar at -Y and +X. We want -Y and -X. */}
           <Elbow position={[0, 0, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* HORIZONTAL RAIL */}
-        <group position={[0, height + e, 0]}>
+        <group position={[0, topY + e, frontZ]}>
           <Pipe start={[xLeft + 2.2, 0, 0]} end={[xRight - 2.2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* WALL SIDE (LEFT) */}
         {/* Top-Left 90-degree Elbow */}
-        <group position={[xLeft - e, height + e, 0]}>
+        <group position={[xLeft - e, topY + e, frontZ]}>
           {/* We need collar at +X (receive rail) and collar at -Z (receive wall pipe).
-              Default: -Y and +X. Rotate PI/2 around X axis makes -Y go to -Z.
-              So [Math.PI/2, 0, 0] sets collars to -Z and +X. */}
+              Rotation: [Math.PI/2, 0, 0] sets collars to -Z and +X. */}
           <Elbow position={[0, 0, 0]} rotation={[Math.PI/2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Depth Pipe */}
-        <group position={[xLeft - e, height + e, -e]}>
-          <Pipe start={[0, 0, -2.2]} end={[0, 0, zWall + 1.2]} showLabel={showLabel} colorOption={colorOption} />
+        <group position={[xLeft - e, topY + e, 0]}>
+          {/* Elbow collar is at Z = -2.2. Flange collar is at Z = wallZ + 1.2.
+              Notice frontZ = totalZ/2, wallZ = -totalZ/2.
+              We want pipe to start from frontZ - 2.2 and end at wallZ + 1.2 */}
+          <Pipe start={[0, 0, frontZ - 2.2]} end={[0, 0, wallZ + 1.2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Wall Flange */}
-        <group position={[xLeft - e, height + e, zWall - e * 2]}>
+        <group position={[xLeft - e, topY + e, wallZ - e * 2]}>
+          {/* Faces +Z */}
           <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
