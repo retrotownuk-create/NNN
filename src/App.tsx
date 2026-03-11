@@ -6273,12 +6273,9 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           <TFitting position={[0, 0, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
-        {/* Bottom Hex Nipple and End Cap */}
-        <group position={[0, -e, 0]}>
-          <HexNipple position={[0, -1.95, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-        <group position={[0, -e * 2, 0]}>
-          <EndCap position={[0, -3.9, 0]} rotation={[Math.PI, 0, 0]} labelText="In cap" showLabel={showLabel} colorOption={colorOption} />
+        {/* Bottom In Cap */}
+        <group position={[0, -2.2, 0]}>
+          <EndCap position={[0, 0, 0]} rotation={[Math.PI, 0, 0]} labelText="In cap" showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Vertical Top Pole */}

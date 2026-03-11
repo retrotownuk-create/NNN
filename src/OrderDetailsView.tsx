@@ -1001,8 +1001,8 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
     addFitting('f-t-fittings', 'T-Fittings', quantity * 1);
-    addFitting('f-hex-nipples', 'Hex Nipples', quantity * 1);
-    addFitting('f-end-caps', 'End Caps', quantity * 2);
+    addFitting('f-end-caps', 'In caps', quantity * 1);
+    addFitting('f-end-caps', 'End Caps', quantity * 1);
     
     const heightCouplings = getExtraCouplings(height, 1);
     const wallCouplings = getExtraCouplings(wallDistance, 1);
