@@ -7551,7 +7551,7 @@ export default function App() {
 
     const allDefaults = [
       default4210, default300, default103, default105, default106, default107, default108, default109, default110, default111, default112, default113, default114, default115, default116, default117, default118, default119, default120, default121, default122, default123, default124, default125, default126, default127, default128, default129, default130, default131, default132, default133, default134, default135, default136, default137, default138,
-      default140, default141, default142, default143, default144, default145, default146, default147, default148, default149, default150, default152, default155, default156, default157, default161, default162, default163, default164, default165, default166, default167, default168, default169, default170, default171, default172, default173, default174, default175, default176, default177, default178, default179, default180, default181, default182, default183, default184, default186
+      default140, default141, default142, default143, default144, default145, default146, default147, default148, default149, default150, default152, default155, default156, default157, default161, default162, default163, default164, default165, default166, default167, default168, default169, default170, default171, default172, default173, default174, default175, default176, default177, default178, default179, default180, default181, default182, default183, default184, default186, default187
     ];
 
     const saved = localStorage.getItem('savedSKUs');
