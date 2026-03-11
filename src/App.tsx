@@ -6793,8 +6793,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
       if (skuType === 'sku190') {
     const e = explode * 1.5;
     const horizCut = Math.max(0, length - 10);
-    // height is the exact drop length.
-    const vertCut = height;
+    const vertCut = Math.max(0, height - 5);
     const zWall = -wallDistance;
     
     const leftX = -horizCut / 2;
@@ -6804,25 +6803,35 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
       const sideX = type === 'left' ? -e : e;
       return (
         <group key={type}>
-          {/* Top Wall Flange */}
-          <group position={[sideX, e * 2, -e]}>
-            <Flange position={[x, vertCut, zWall]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          {/* Wall Flange at Bottom Wall */}
+          <group position={[sideX, 0, -e]}>
+            <Flange position={[x, 0, zWall]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
 
-          {/* Depth Pipe coming OUT from wall */}
-          <group position={[sideX, e * 2, -e * 0.5]}>
-            <Pipe start={[x, vertCut, zWall + 1.5]} end={[x, vertCut, -2.2]} showLabel={showLabel} colorOption={colorOption} />
+          {/* Depth Pipe passing Outwards from Wall */}
+          <group position={[sideX, 0, -e * 0.5]}>
+            <Pipe start={[x, 0, zWall + 1.5]} end={[x, 0, -2.2]} showLabel={showLabel} colorOption={colorOption} />
           </group>
 
-          {/* Top Junction: Wall pipe meets vertical structure */}
+          {/* Bottom 90 Elbow: Connects wall pipe (-Z) and points UP (+Y) */}
+          <group position={[sideX, 0, 0]}>
+            <Elbow position={[x, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+
+          {/* Vertical Height Pipe going UP */}
+          <group position={[sideX, e, 0]}>
+            <Pipe start={[x, 2.2, 0]} end={[x, vertCut - 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+
+          {/* Top Junction: Vertical pipe meets horizontal clothing bar */}
           {hasShelves ? (
             <>
-              {/* T-Fitting */}
+              {/* T-Fitting: Run is vertical (Y), Branch points INWARD to hold the horizontal bar */}
               <group position={[sideX, e * 2, 0]}>
-                <TFitting position={[x, vertCut, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                <TFitting position={[x, vertCut, 0]} rotation={[0, type === 'left' ? -Math.PI / 2 : Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
-              {/* Hex Nipple connecting TFitting to Flange (invisible thread logic) */}
+              {/* Hex Nipple connecting TFitting to Flange */}
               <group position={[sideX, e * 2.5, 0]}>
                  <HexNipple position={[x, vertCut + 2.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
@@ -6834,19 +6843,11 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             </>
           ) : (
              <group position={[sideX, e * 2, 0]}>
-                <Elbow position={[x, vertCut, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+                {/* 90 Elbow connecting pipe from UP (-Y) to INWARD (+X/-X) */}
+                <Elbow position={[x, vertCut, 0]} rotation={[0, type === 'left' ? -Math.PI / 2 : Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
              </group>
           )}
 
-          {/* Vertical Height Pipe going DOWN */}
-          <group position={[sideX, e, 0]}>
-            <Pipe start={[x, vertCut - 2.2, 0]} end={[x, 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
-
-          {/* Bottom 90 Elbow pointing INWARD */}
-          <group position={[sideX, 0, 0]}>
-            <Elbow position={[x, 0, 0]} rotation={[0, type === 'left' ? Math.PI / 2 : -Math.PI / 2, Math.PI]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
         </group>
       );
     };
@@ -6856,22 +6857,22 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         {buildSupport190(leftX, 'left')}
         {buildSupport190(rightX, 'right')}
 
-        {/* Bottom Horizontal Clothing Bar */}
+        {/* Top Horizontal Clothing Bar */}
         {horizCut > 120 ? (
           <>
-            <group position={[-explode * 0.75, 0, 0]}>
-              <Pipe start={[leftX + 2.2, 0, 0]} end={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <group position={[-explode * 0.75, e * 2, 0]}>
+              <Pipe start={[leftX + 2.2, vertCut, 0]} end={[0, vertCut, 0]} showLabel={showLabel} colorOption={colorOption} />
             </group>
-            <group position={[0, 0, 0]}>
-              <Coupling position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+            <group position={[0, e * 2, 0]}>
+              <Coupling position={[0, vertCut, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
             </group>
-            <group position={[explode * 0.75, 0, 0]}>
-              <Pipe start={[0, 0, 0]} end={[rightX - 2.2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <group position={[explode * 0.75, e * 2, 0]}>
+              <Pipe start={[0, vertCut, 0]} end={[rightX - 2.2, vertCut, 0]} showLabel={showLabel} colorOption={colorOption} />
             </group>
           </>
         ) : (
-          <group position={[0, 0, 0]}>
-            <Pipe start={[leftX + 2.2, 0, 0]} end={[rightX - 2.2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <group position={[0, e * 2, 0]}>
+            <Pipe start={[leftX + 2.2, vertCut, 0]} end={[rightX - 2.2, vertCut, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
         )}
 
