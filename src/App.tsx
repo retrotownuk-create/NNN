@@ -6640,12 +6640,12 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         {/* CEILING SIDE */}
         {/* Ceiling Flange 1 (Left - over T-Fitting) */}
         <group position={[tFittingX, ceilingFlangeY + e * 2, zCenter]}>
-          <Flange position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Flange position={[0, 0, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
         
         {/* Ceiling Flange 2 (Right - over Elbow) */}
         <group position={[elbowX + e, ceilingFlangeY + e * 2, zCenter]}>
-          <Flange position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Flange position={[0, 0, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* VERTICAL PIPES */}
