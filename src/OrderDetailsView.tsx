@@ -120,6 +120,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     const dCut = wallDistance === 25 ? 23 : Math.max(0, wallDistance - 5);
     extra += getExtraCouplings(dCut, 2);
     extra += getExtraCouplings(hCut, 2);
+    if (hasShelves) extra += getExtraCouplings(5, 2);
     if (lCut > 120) {
       extra += getExtraCouplings((lCut - 3) / 2, 2);
     } else {
@@ -314,6 +315,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     const dCut = wallDistance === 25 ? 23 : Math.max(0, wallDistance - 5);
     addPipes(dCut, 2, 'p-wall-conn');
     addPipes(hCut, 2, 'p-vert-drop');
+    if (hasShelves) addPipes(5, 2, 'p-vert-top');
     if (lCut > 120) addPipes((lCut - 3) / 2, 2, 'p-horiz-bar');
     else addPipes(lCut - 3, 1, 'p-horiz-bar');
   } else if (skuType === 'sku300') {
@@ -450,7 +452,13 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     } else if (skuType === 'sku190') {
     const lCut = Math.max(0, length - 10);
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
-    addFitting('f-90-elbows', '90° Elbows', quantity * 4);
+    if (hasShelves) {
+      addFitting('f-floor-flanges', 'Floor Flanges (Under Shelf)', quantity * 2);
+      addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
+      addFitting('f-90-elbows', '90° Elbows', quantity * 2);
+    } else {
+      addFitting('f-90-elbows', '90° Elbows', quantity * 4);
+    }
     addFitting('f-couplings', 'Couplings', quantity * ((lCut > 120 ? 1 : 0) + getTotalExtraCouplings()));
   } else if (skuType === 'sku300') {
     const numPipes = Math.ceil(length / 120);
