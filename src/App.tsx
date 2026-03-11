@@ -1031,7 +1031,7 @@ const RedValve = ({ position, rotation = [0, 0, 0], showLabel }: { position: [nu
   );
 };
 
-const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFreestanding = false, colorOption = COLORS['Raw grey'], skuType = 'standard', woodColor = 'Natural Oak', tiers = 4, tubeType = 'round' }: { length: number, height: number, wallDistance: number, explode: number, hasShelves?: boolean, isFreestanding?: boolean, colorOption?: ColorOption, skuType?: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku178' | 'sku179' | 'sku180' | 'sku181' | 'sku182' | 'sku183' | 'sku184' | 'sku186' | 'sku888', woodColor?: string, tiers?: number, tubeType?: 'round' | 'square' }) => {
+const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFreestanding = false, colorOption = COLORS['Raw grey'], skuType = 'standard', woodColor = 'Natural Oak', tiers = 4, tubeType = 'round' }: { length: number, height: number, wallDistance: number, explode: number, hasShelves?: boolean, isFreestanding?: boolean, colorOption?: ColorOption, skuType?: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku178' | 'sku179' | 'sku180' | 'sku181' | 'sku182' | 'sku183' | 'sku184' | 'sku186' | 'sku187' | 'sku188' | 'sku189' | 'sku190' | 'sku888', woodColor?: string, tiers?: number, tubeType?: 'round' | 'square' }) => {
   const leftX = -length / 2;
   const rightX = length / 2;
   const wallZ = -wallDistance;
@@ -3460,7 +3460,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   }
 
   if (skuType === 'sku119') {
-    const e = e * 4;
+    const e = explode * 4;
     const drop = height;
     const zWall = -wallDistance;
 
@@ -7415,18 +7415,18 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
       {length > 120 ? (
         <>
-          <group position={[-explode * 0.75, e * 4.5, 0]}>
+          <group position={[-explode * 0.75, explode * 4.5, 0]}>
             <Pipe start={[leftX + 1.5, height, 0]} end={[0, height, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[0, e * 4.5, 0]}>
+          <group position={[0, explode * 4.5, 0]}>
             <Coupling position={[0, height, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          <group position={[explode * 0.75, e * 4.5, 0]}>
+          <group position={[explode * 0.75, explode * 4.5, 0]}>
             <Pipe start={[0, height, 0]} end={[rightX - 1.5, height, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
         </>
       ) : (
-        <group position={[0, e * 4.5, 0]}>
+        <group position={[0, explode * 4.5, 0]}>
           <Pipe start={[leftX + 1.5, height, 0]} end={[rightX - 1.5, height, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       )}
@@ -7448,7 +7448,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   );
 };
 
-const Scene = React.memo(({ length, height, wallDistance, explode, hasShelves, isFreestanding, colorOption, skuType, woodColor, cameraState, tiers = 4, tubeType = 'round' }: { length: number, height: number, wallDistance: number, explode: number, hasShelves: boolean, isFreestanding: boolean, colorOption: ColorOption, skuType: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku178' | 'sku179' | 'sku180' | 'sku181' | 'sku182' | 'sku183' | 'sku184' | 'sku186' | 'sku888', woodColor: string, cameraState?: any, tiers?: number, tubeType?: 'round' | 'square' }) => {
+const Scene = React.memo(({ length, height, wallDistance, explode, hasShelves, isFreestanding, colorOption, skuType, woodColor, cameraState, tiers = 4, tubeType = 'round' }: { length: number, height: number, wallDistance: number, explode: number, hasShelves: boolean, isFreestanding: boolean, colorOption: ColorOption, skuType: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku178' | 'sku179' | 'sku180' | 'sku181' | 'sku182' | 'sku183' | 'sku184' | 'sku186' | 'sku187' | 'sku188' | 'sku189' | 'sku190' | 'sku888', woodColor: string, cameraState?: any, tiers?: number, tubeType?: 'round' | 'square' }) => {
   return (
     <>
       <PerspectiveCamera makeDefault position={cameraState?.position || [0, 100, 250]} fov={50} />
@@ -7727,7 +7727,7 @@ export default function App() {
   const [isFreestanding, setIsFreestanding] = useState(false);
   const [colorName, setColorName] = useState('Raw grey');
   const [woodColor, setWoodColor] = useState('Natural Oak');
-  const [skuType, setSkuType] = useState<'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku178' | 'sku179' | 'sku180' | 'sku181' | 'sku182' | 'sku183' | 'sku184' | 'sku186' | 'sku188' | 'sku189' | 'sku190' | 'sku888'>('standard');
+  const [skuType, setSkuType] = useState<'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku178' | 'sku179' | 'sku180' | 'sku181' | 'sku182' | 'sku183' | 'sku184' | 'sku186' | 'sku187' | 'sku188' | 'sku189' | 'sku190' | 'sku888'>('standard');
   const [tiers, setTiers] = useState(4);
   const [tubeType, setTubeType] = useState<'round' | 'square'>('round');
   const [quantity, setQuantity] = useState(1);
@@ -7775,7 +7775,7 @@ export default function App() {
   const [syncStatus, setSyncStatus] = useState<'synced' | 'syncing' | 'error' | 'disconnected'>('syncing');
   const lastSyncRef = useRef<string>('');
 
-  type SavedSKU = { name: string; length: number; height: number; wallDistance: number; hasShelves: boolean; isFreestanding: boolean; colorName: string; woodColor?: string; skuType?: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku178' | 'sku179' | 'sku180' | 'sku181' | 'sku182' | 'sku183' | 'sku184' | 'sku186' | 'sku888'; tiers?: number; tubeType?: 'round' | 'square' };
+  type SavedSKU = { name: string; length: number; height: number; wallDistance: number; hasShelves: boolean; isFreestanding: boolean; colorName: string; woodColor?: string; skuType?: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku178' | 'sku179' | 'sku180' | 'sku181' | 'sku182' | 'sku183' | 'sku184' | 'sku186' | 'sku187' | 'sku188' | 'sku189' | 'sku190' | 'sku888'; tiers?: number; tubeType?: 'round' | 'square' };
 
   const [savedSKUs, setSavedSKUs] = useState<SavedSKU[]>(() => {
 
