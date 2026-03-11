@@ -6512,6 +6512,63 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     );
   }
 
+  if (skuType === 'sku187') {
+    const e = explode * 1.5;
+
+    // Dimensions
+    const xLeft = -(length / 2);
+    const xRight = length / 2;
+    const zWall = -wallDistance;
+
+    // Floor base starts at 0. Vertical goes up to height.
+    return (
+      <group position={[0, -height/2, wallDistance/2]}>
+        {/* FLOOR SIDE (RIGHT) */}
+        {/* Floor Flange Base */}
+        <group position={[xRight + e, -e * 2, 0]}>
+          <Flange position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Vertical Pipe */}
+        <group position={[xRight + e, -e, 0]}>
+          <Pipe start={[0, 1.2, 0]} end={[0, height - 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Top-Right 90-degree Elbow */}
+        <group position={[xRight + e, height + e, 0]}>
+          {/* Default: collar at -Y and +X. We want collar at -Y and -X.
+              Rotate PI around Y axis. */}
+          <Elbow position={[0, 0, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* HORIZONTAL RAIL */}
+        <group position={[0, height + e, 0]}>
+          <Pipe start={[xLeft + 2.2, 0, 0]} end={[xRight - 2.2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* WALL SIDE (LEFT) */}
+        {/* Top-Left 90-degree Elbow */}
+        <group position={[xLeft - e, height + e, 0]}>
+          {/* We need collar at +X (receive rail) and collar at -Z (receive wall pipe).
+              Default: -Y and +X. Rotate PI/2 around X axis makes -Y go to -Z.
+              So [Math.PI/2, 0, 0] sets collars to -Z and +X. */}
+          <Elbow position={[0, 0, 0]} rotation={[Math.PI/2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Depth Pipe */}
+        <group position={[xLeft - e, height + e, -e]}>
+          <Pipe start={[0, 0, -2.2]} end={[0, 0, zWall + 1.2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Wall Flange */}
+        <group position={[xLeft - e, height + e, zWall - e * 2]}>
+          <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+      </group>
+    );
+  }
+
+
   if (skuType === 'sku179') {
     // New SKU: Wall mounted straight rail with 2 support arms.
     // The main rail passes through the bottom T-fittings.
@@ -7407,7 +7464,7 @@ export default function App() {
   const [savedSKUs, setSavedSKUs] = useState<SavedSKU[]>(() => {
 
     // Cache bust to force users to see the new SKUs
-    const APP_VERSION = 'v6_sku186';;;;
+    const APP_VERSION = 'v6_sku187';
     if (localStorage.getItem('app_cache_version') !== APP_VERSION) {
       localStorage.removeItem('savedSKUs');
       localStorage.setItem('app_cache_version', APP_VERSION);
@@ -7483,9 +7540,10 @@ export default function App() {
     const default176: SavedSKU = { name: 'SKU 176', length: 15, height: 0, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku176' };
     const default177: SavedSKU = { name: 'SKU 177', length: 120, height: 160, wallDistance: 15, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku177', tiers: 3 };
     const default178: SavedSKU = { name: 'SKU 178', length: 120, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku178' };
-                                                                                                                                const default186: SavedSKU = { name: 'SKU 186 (Double Hook plugged)', length: 5, height: 0, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku186' };
-                                const default184: SavedSKU = { name: 'SKU 184 (Short Peg)', length: 5, height: 0, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku184' };
-        const default183: SavedSKU = { name: 'SKU 183 (Table Leg)', length: 15, height: 75, wallDistance: 0, hasShelves: false, isFreestanding: true, colorName: 'Black', skuType: 'sku183' };
+                                                                                                                                const default186: SavedSKU = { name: 'SKU 186', length: 5, height: 0, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku186' };
+    const default187: SavedSKU = { name: 'SKU 187', length: 90, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku187' };
+                                const default184: SavedSKU = { name: 'SKU 184', length: 5, height: 0, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku184' };
+        const default183: SavedSKU = { name: 'SKU 183', length: 15, height: 75, wallDistance: 0, hasShelves: false, isFreestanding: true, colorName: 'Black', skuType: 'sku183' };
         const default182: SavedSKU = { name: 'SKU 182', length: 30, height: 30, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku182' };
         const default181: SavedSKU = { name: 'SKU 181', length: 30, height: 30, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku181' };
         const default180: SavedSKU = { name: 'SKU 180', length: 60, height: 60, wallDistance: 60, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku180' };
@@ -9163,7 +9221,7 @@ export default function App() {
                     </div>
                   )}
 
-                  {((skuType as string) === 'standard' || skuType === 'sku000' || skuType === 'sku100' || skuType === 'sku4210' || skuType === 'sku105' || skuType === 'sku114' || skuType === 'sku116' || skuType === 'sku112' || skuType === 'sku111' || skuType === 'sku113' || skuType === 'sku117' || skuType === 'sku118' || skuType === 'sku119' || skuType === 'sku120' || skuType === 'sku121' || skuType === 'sku122' || skuType === 'sku123' || skuType === 'sku126' || skuType === 'sku127' || skuType === 'sku128' || skuType === 'sku130' || skuType === 'sku131' || skuType === 'sku132' || skuType === 'sku133' || skuType === 'sku135' || skuType === 'sku145' || skuType === 'sku150' || skuType === 'sku180' || skuType === 'sku181' || skuType === 'sku182' || skuType === 'sku183' || skuType === 'sku184' || skuType === 'sku186' || skuType === 'sku186') && (
+                  {((skuType as string) === 'standard' || skuType === 'sku000' || skuType === 'sku100' || skuType === 'sku4210' || skuType === 'sku105' || skuType === 'sku114' || skuType === 'sku116' || skuType === 'sku112' || skuType === 'sku111' || skuType === 'sku113' || skuType === 'sku117' || skuType === 'sku118' || skuType === 'sku119' || skuType === 'sku120' || skuType === 'sku121' || skuType === 'sku122' || skuType === 'sku123' || skuType === 'sku126' || skuType === 'sku127' || skuType === 'sku128' || skuType === 'sku130' || skuType === 'sku131' || skuType === 'sku132' || skuType === 'sku133' || skuType === 'sku135' || skuType === 'sku145' || skuType === 'sku150' || skuType === 'sku180' || skuType === 'sku181' || skuType === 'sku182' || skuType === 'sku183' || skuType === 'sku184' || skuType === 'sku186' || skuType === 'sku187') && (
                     <div>
                       <div className="flex justify-between mb-2">
                         <label className="text-xs font-bold text-gray-700">Height</label>
@@ -9174,7 +9232,7 @@ export default function App() {
                       </div>
                       <input
                         type="range"
-                        min={skuType === 'sku119' || skuType === 'sku180' || skuType === 'sku181' || (skuType === 'sku182' || skuType === 'sku183' || skuType === 'sku184' || skuType === 'sku186' || skuType === 'sku186') ? 5 : skuType === 'sku116' || skuType === 'sku133' ? 5 : skuType === 'sku122' ? 2 : skuType === 'sku128' ? 15 : 20} max={skuType === 'sku122' ? 10 : skuType === 'sku133' ? 30 : skuType === 'sku128' ? 100 : 250} step={skuType === 'sku122' || skuType === 'sku133' ? 1 : 5}
+                        min={skuType === 'sku119' || skuType === 'sku180' || skuType === 'sku181' || (skuType === 'sku182' || skuType === 'sku183' || skuType === 'sku184' || skuType === 'sku186' || skuType === 'sku187') ? 5 : skuType === 'sku116' || skuType === 'sku133' ? 5 : skuType === 'sku122' ? 2 : skuType === 'sku128' ? 15 : 20} max={skuType === 'sku122' ? 10 : skuType === 'sku133' ? 30 : skuType === 'sku128' ? 100 : 250} step={skuType === 'sku122' || skuType === 'sku133' ? 1 : 5}
                         value={height}
                         onChange={(e) => setHeight(Number(e.target.value))}
                         className="w-full accent-black h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
