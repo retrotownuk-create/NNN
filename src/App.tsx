@@ -6790,7 +6790,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
 
   
-  if (skuType === 'sku190') {
+    if (skuType === 'sku190') {
     const e = explode * 1.5;
     const horizCut = Math.max(0, length - 10);
     const vertCut = Math.max(0, height - 5);
@@ -6803,55 +6803,57 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
       const sideX = type === 'left' ? -e : e;
       return (
         <group key={type}>
-          {/* Wall Flange at Top */}
+          {/* Wall Flange at Top Wall (behind) */}
           <group position={[sideX, e * 2, -e]}>
             <Flange position={[x, vertCut, zWall]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          {/* Depth Pipe */}
+          {/* Depth Pipe passing Outwards */}
           <group position={[sideX, e * 2, -e * 0.5]}>
-            <Pipe start={[x, vertCut, zWall + 1.5]} end={[x, vertCut, -1.8]} showLabel={showLabel} colorOption={colorOption} />
+            <Pipe start={[x, vertCut, zWall + 1.5]} end={[x, vertCut, -2.2]} showLabel={showLabel} colorOption={colorOption} />
           </group>
 
+          {/* Node A: Junction of wall pipe and vertical bar */}
           {hasShelves ? (
             <>
-              {/* T-Fitting at junction */}
+              {/* T-Fitting at junction: natively points +Y, -Y, -Z */}
               <group position={[sideX, e * 2, 0]}>
                 <TFitting position={[x, vertCut, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
               {/* Top tiny pipe supporting shelf */}
-              <group position={[sideX, e * 2.5, 0]}>
-                <Pipe start={[x, vertCut + 2.2, 0]} end={[x, vertCut + 5, 0]} showLabel={showLabel} colorOption={colorOption} />
-              </group>
-              {/* Shelf Flange under the shelf */}
               <group position={[sideX, e * 3, 0]}>
-                <Flange position={[x, vertCut + 5, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                <Pipe start={[x, vertCut + 2.2, 0]} end={[x, vertCut + 4.5, 0]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+              {/* Floor Flange directly under the shelf */}
+              <group position={[sideX, e * 4, 0]}>
+                <Flange position={[x, vertCut + 4.5, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
             </>
           ) : (
              <group position={[sideX, e * 2, 0]}>
-                {/* 90 Elbow connecting pipe from wall to drop down */}
+                {/* 90 Elbow connecting -Z wall pipe to -Y downward drop */}
                 <Elbow position={[x, vertCut, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
              </group>
           )}
 
-          {/* Drop vertical Pipe */}
+          {/* Vertical Drop Pipe */}
           <group position={[sideX, e, 0]}>
             <Pipe start={[x, vertCut - 2.2, 0]} end={[x, 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
-          {/* Bottom 90 Elbow - pointing INWARD (towards center) from UP connection */}
+
+          {/* Node B: Bottom 90 Elbow pointing INWARD */}
           <group position={[sideX, 0, 0]}>
-            <Elbow position={[x, 0, 0]} rotation={[-Math.PI / 2, 0, type === 'left' ? Math.PI / 2 : -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+            <Elbow position={[x, 0, 0]} rotation={[0, type === 'left' ? Math.PI / 2 : -Math.PI / 2, Math.PI]} showLabel={showLabel} colorOption={colorOption} />
           </group>
         </group>
       );
     };
 
     return (
-      <group position={[0, height, 0]}>
+      <group position={[0, height / 2, 0]}>
         {buildSupport190(leftX, 'left')}
         {buildSupport190(rightX, 'right')}
 
-        {/* Bottom Horizontal Bar */}
+        {/* Bottom Horizontal Clothing Bar */}
         {horizCut > 120 ? (
           <>
             <group position={[-explode * 0.75, 0, 0]}>
@@ -6873,14 +6875,14 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         {/* Optional Shelf on Top! */}
         {hasShelves && (
           <group position={[0, explode * 4, 0]}>
-            <Shelf position={[0, vertCut + 5 + 0.5, zWall / 2 + 2]} length={length + 10} depth={23} woodColor={woodColor} />
+            <Shelf position={[0, vertCut + 4.5 + 0.6, zWall / 2 + 2.1]} length={length} depth={23} woodColor={woodColor} />
           </group>
         )}
       </group>
     );
   }
 
-  if (skuType === 'sku179') {
+if (skuType === 'sku179') {
     // New SKU: Wall mounted straight rail with 2 support arms.
     // The main rail passes through the bottom T-fittings.
     // The support arm connects from wall Flange to Elbow, drops via Hex Nipple, into the T-fitting.
