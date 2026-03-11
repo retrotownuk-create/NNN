@@ -6227,7 +6227,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             <HexNipple position={[actualLMount, yHexNipple, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           <group position={[0, 0, 0]}>
-            <TFitting position={[actualLMount, yRail, 0]} rotation={[Math.PI / 2, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <TFitting position={[actualLMount, yRail, 0]} rotation={[Math.PI / 2, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           
           <group position={[-e * 0.5, 0, 0]}>
@@ -6253,7 +6253,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             <HexNipple position={[actualRMount, yHexNipple, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           <group position={[0, 0, 0]}>
-            <TFitting position={[actualRMount, yRail, 0]} rotation={[Math.PI / 2, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <TFitting position={[actualRMount, yRail, 0]} rotation={[Math.PI / 2, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
           </group>
 
           <group position={[e * 0.5, 0, 0]}>
