@@ -680,12 +680,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-couplings', 'Couplings', quantity * 3);
   } else if (skuType === 'sku140') {
     // Wall-mounted triple support rack with Elbows at ends
-    let poleLength = 0;
-    if (wallDistance === 25) {
-      poleLength = 23;
-    } else {
-      poleLength = getPipesForLength(Math.max(0, wallDistance - 5)).reduce((a, b) => a + b, 0) || 5;
-    }
+    const poleLength = getPipesForLength(Math.max(0, wallDistance - 5)).reduce((a, b) => a + b, 0) || 5;
     addPipes(poleLength, 3, 'p-support-arm');
     
     // We take out 15cm from length (total), one side may be 5cm longer/shorter
