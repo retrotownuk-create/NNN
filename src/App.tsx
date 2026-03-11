@@ -6815,7 +6815,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
           {/* Bottom 90 Elbow: Connects wall pipe (-Z) and points UP (+Y) */}
           <group position={[sideX, 0, 0]}>
-            <Elbow position={[x, 0, 0]} rotation={[0, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Elbow position={[x, 0, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
 
           {/* Vertical Height Pipe going UP */}
@@ -6828,23 +6828,23 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             <>
               {/* T-Fitting: Run is vertical (Y), Branch points INWARD to hold the horizontal bar */}
               <group position={[sideX, e * 2, 0]}>
-                <TFitting position={[x, vertCut, 0]} rotation={[0, type === 'left' ? Math.PI / 2 : -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+                <TFitting position={[x, vertCut, 0]} rotation={[0, type === 'left' ? -Math.PI / 2 : Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
               {/* Hex Nipple connecting TFitting to Flange */}
               <group position={[sideX, e * 2.5, 0]}>
-                 <HexNipple position={[x, vertCut + 2.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                 <HexNipple position={[x, vertCut + 3.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
               {/* Floor Flange directly under the shelf */}
               <group position={[sideX, e * 3, 0]}>
-                <Flange position={[x, vertCut + 2.7, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+                <Flange position={[x, vertCut + 4.2, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
             </>
           ) : (
              <group position={[sideX, e * 2, 0]}>
                 {/* 90 Elbow connecting pipe from UP (-Y) to INWARD (+X/-X) */}
-                <Elbow position={[x, vertCut, 0]} rotation={[Math.PI, type === 'left' ? 0 : Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+                <Elbow position={[x, vertCut, 0]} rotation={[0, type === 'left' ? Math.PI / 2 : -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
              </group>
           )}
 
@@ -6879,7 +6879,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         {/* Optional Shelf on Top! (Centered rigidly over the flanges at Z=0) */}
         {hasShelves && (
           <group position={[0, e * 3, 0]}>
-            <Shelf position={[0, vertCut + 2.7 + 0.6, 0]} length={length + 10} depth={23} woodColor={woodColor} />
+            <Shelf position={[0, vertCut + 6.1, 0]} length={length + 10} depth={23} woodColor={woodColor} />
           </group>
         )}
       </group>
