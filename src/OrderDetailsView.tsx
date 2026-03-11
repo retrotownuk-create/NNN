@@ -115,7 +115,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       extra += getExtraCouplings(lCut - 3, 1);
     }
     } else if (skuType === 'sku190') {
-    const hCut = Math.max(0, height - 5);
+    const hCut = height;
     const lCut = Math.max(0, length - 10);
     const dCut = wallDistance === 25 ? 23 : Math.max(0, wallDistance - 5);
     extra += getExtraCouplings(dCut, 2);
@@ -310,7 +310,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     if (lCut > 120) addPipes((lCut - 3) / 2, 2, 'p-horiz-bar');
     else addPipes(lCut - 3, 1, 'p-horiz-bar');
     } else if (skuType === 'sku190') {
-    const hCut = Math.max(0, height - 5);
+    const hCut = height;
     const lCut = Math.max(0, length - 10);
     const dCut = wallDistance === 25 ? 23 : Math.max(0, wallDistance - 5);
     addPipes(dCut, 2, 'p-wall-conn');
