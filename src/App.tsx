@@ -7010,7 +7010,7 @@ export default function App() {
     const default121: SavedSKU = { name: 'SKU 121', length: 100, height: 60, wallDistance: 0, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku121' };
     const default122: SavedSKU = { name: 'SKU 122', length: 10, height: 3, wallDistance: 0, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku122' };
     const default123: SavedSKU = { name: 'SKU 123', length: 200, height: 160, wallDistance: 0, hasShelves: false, isFreestanding: true, colorName: 'Black', skuType: 'sku123' };
-    const default124: SavedSKU = { name: 'SKU 124', length: 200, height: 0, wallDistance: 26.4, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku124' };
+    const default124: SavedSKU = { name: 'SKU 124', length: 200, height: 0, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku124' };
     const default125: SavedSKU = { name: 'SKU 125', length: 15, height: 0, wallDistance: 15, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku125' };
     const default126: SavedSKU = { name: 'SKU 126', length: 120, height: 180, wallDistance: 30, hasShelves: false, isFreestanding: true, colorName: 'Black', skuType: 'sku126' };
     const default127: SavedSKU = { name: 'SKU 127', length: 120, height: 160, wallDistance: 0, hasShelves: true, isFreestanding: true, colorName: 'Black', woodColor: 'Natural Oak', skuType: 'sku127' };
@@ -7025,7 +7025,7 @@ export default function App() {
     const default136: SavedSKU = { name: 'SKU 136', length: 100, height: 0, wallDistance: 10, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku136' };
     const default137: SavedSKU = { name: 'SKU 137', length: 100, height: 0, wallDistance: 10, hasShelves: true, isFreestanding: false, colorName: 'Black', skuType: 'sku137' };
     const default138: SavedSKU = { name: 'SKU 138', length: 12, height: 0, wallDistance: 10, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku138' };
-    const default140: SavedSKU = { name: 'SKU 140', length: 200, height: 0, wallDistance: 26.4, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku140' };
+    const default140: SavedSKU = { name: 'SKU 140', length: 200, height: 0, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku140' };
     const default141: SavedSKU = { name: 'SKU 141', length: 120, height: 80, wallDistance: 40, hasShelves: false, isFreestanding: true, colorName: 'Black', skuType: 'sku141' };
     const default142: SavedSKU = { name: 'SKU 142', length: 100, height: 0, wallDistance: 20, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku142' };
     const default143: SavedSKU = { name: 'SKU 143', length: 200, height: 100, wallDistance: 8, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku143' };
@@ -8763,7 +8763,7 @@ export default function App() {
                           onChange={(e) => setWallDistance(Number(e.target.value))}
                           className="w-full accent-black h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                         />
-                      ) : ((skuType as string) === 'sku300' || (skuType as string) === 'sku103' || (skuType as string) === 'sku114' || (skuType as string) === 'sku115' || (skuType as string) === 'sku112' || (skuType as string) === 'sku117' || (skuType as string) === 'sku118' || (skuType as string) === 'sku119' || (skuType as string) === 'sku124' || (skuType as string) === 'sku125' || (skuType as string) === 'sku144') ? (
+                      ) : ((skuType as string) === 'sku300' || (skuType as string) === 'sku103' || (skuType as string) === 'sku114' || (skuType as string) === 'sku115' || (skuType as string) === 'sku112' || (skuType as string) === 'sku117' || (skuType as string) === 'sku118' || (skuType as string) === 'sku119' || (skuType as string) === 'sku125' || (skuType as string) === 'sku144') ? (
                         <input
                           type="range"
                           min={skuType === 'sku144' ? "5" : "8"} max="60" step="1"
