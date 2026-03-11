@@ -6264,13 +6264,13 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
         {/* Stem pipe from wall to T-Fitting */}
         <group position={[0, 0, -e]}>
-          <Pipe start={[0, 0, -actualStem - 2.2]} end={[0, 0, -2.2]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[0, 0, -actualStem - 2.2]} end={[0, 0, -1.2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* T-Fitting in center */}
-        {/* With rotation [0, Math.PI, 0], branch points to -Z, straight is along Y */}
+        {/* With rotation [0, -Math.PI / 2, 0], branch points to -Z (towards the wall), straight is along Y */}
         <group position={[0, 0, 0]}>
-          <TFitting position={[0, 0, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <TFitting position={[0, 0, 0]} rotation={[0, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Bottom In Cap */}
