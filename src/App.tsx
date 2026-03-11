@@ -6190,7 +6190,9 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
   if (skuType === 'sku179') {
     // New SKU: Wall mounted straight rail with 2 support arms.
-    // The main rail passes through the T-fittings, and ends explicitly have a 15cm pole and end cap.
+    // The main rail passes through the bottom T-fittings.
+    // The support arm connects from wall Flange to Elbow, drops via Hex Nipple, into the T-fitting.
+    // 15cm ends extend outward and are capped.
     const e = explode * 1.5;
 
     let poleLength = 0;
@@ -6204,31 +6206,67 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const actualLMount = -(length / 2) + 15 + 1.2 + 2.2;
     const actualRMount = (length / 2) - 15 - 1.2 - 2.2;
 
+    const yElbow = 5.5;
+    const yHexNipple = 2.75;
+    const yRail = 0;
+
     return (
       <group position={[0, height / 2, -bracketZ / 2]}>
         {/* Left Mount and End */}
         <group position={[-e, 0, 0]}>
-          <Flange position={[actualLMount, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          <Pipe start={[actualLMount, 0, bracketZ + 1.2]} end={[actualLMount, 0, -2.2]} showLabel={showLabel} colorOption={colorOption} />
-          <TFitting position={[actualLMount, 0, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+          <group position={[0, e, -e]}>
+            <Flange position={[actualLMount, yElbow, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[0, e, -e * 0.5]}>
+            <Pipe start={[actualLMount, yElbow, bracketZ + 1.2]} end={[actualLMount, yElbow, -2.2]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[0, e, 0]}>
+            <Elbow position={[actualLMount, yElbow, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[0, e * 0.5, 0]}>
+            <HexNipple position={[actualLMount, yHexNipple, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[0, 0, 0]}>
+            <TFitting position={[actualLMount, yRail, 0]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
           
-          <Pipe start={[actualLMount - 2.2, 0, 0]} end={[actualLMount - 2.2 - 15, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          <EndCap position={[actualLMount - 2.2 - 15, 0, 0]} rotation={[0, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <group position={[-e * 0.5, 0, 0]}>
+            <Pipe start={[actualLMount - 2.2, yRail, 0]} end={[actualLMount - 2.2 - 15, yRail, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[-e, 0, 0]}>
+            <EndCap position={[actualLMount - 2.2 - 15, yRail, 0]} rotation={[0, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
         </group>
 
         {/* Right Mount and End */}
         <group position={[e, 0, 0]}>
-          <Flange position={[actualRMount, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          <Pipe start={[actualRMount, 0, bracketZ + 1.2]} end={[actualRMount, 0, -2.2]} showLabel={showLabel} colorOption={colorOption} />
-          <TFitting position={[actualRMount, 0, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
-          
-          <Pipe start={[actualRMount + 2.2, 0, 0]} end={[actualRMount + 2.2 + 15, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          <EndCap position={[actualRMount + 2.2 + 15, 0, 0]} rotation={[0, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <group position={[0, e, -e]}>
+            <Flange position={[actualRMount, yElbow, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[0, e, -e * 0.5]}>
+            <Pipe start={[actualRMount, yElbow, bracketZ + 1.2]} end={[actualRMount, yElbow, -2.2]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[0, e, 0]}>
+            <Elbow position={[actualRMount, yElbow, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[0, e * 0.5, 0]}>
+            <HexNipple position={[actualRMount, yHexNipple, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[0, 0, 0]}>
+            <TFitting position={[actualRMount, yRail, 0]} rotation={[-Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+
+          <group position={[e * 0.5, 0, 0]}>
+            <Pipe start={[actualRMount + 2.2, yRail, 0]} end={[actualRMount + 2.2 + 15, yRail, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          <group position={[e, 0, 0]}>
+            <EndCap position={[actualRMount + 2.2 + 15, yRail, 0]} rotation={[0, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
         </group>
 
         {/* Center Rail */}
         <group position={[0, 0, 0]}>
-          <Pipe start={[actualLMount + 2.2, 0, 0]} end={[actualRMount - 2.2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[actualLMount + 2.2, yRail, 0]} end={[actualRMount - 2.2, yRail, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );

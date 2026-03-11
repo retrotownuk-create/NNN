@@ -969,6 +969,8 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addPipes(centerSpan, 1, 'p-horizontal-rail');
     
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
+    addFitting('f-90-elbows', '90° Elbows', quantity * 2);
+    addFitting('f-hex-nipples', 'Hex Nipples', quantity * 2);
     addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
     addFitting('f-end-caps', 'End Caps', quantity * 2);
     addFitting('f-couplings', 'Couplings', quantity * (getExtraCouplings(centerSpan, 1)));
