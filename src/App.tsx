@@ -6376,7 +6376,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const e = explode * 1.5;
     
     // Flange at Top -> Vertical Pipe -> Reducer at Bottom
-    const actualHeight = getPipesForLength(Math.max(0, height)).reduce((a, b) => a + b, 0) || 10;
+    const actualHeight = getPipesForLength(Math.max(0, height - 5)).reduce((a, b) => a + b, 0) || 10;
 
     return (
       <group position={[0, -actualHeight / 2, 0]}>
@@ -9017,7 +9017,10 @@ export default function App() {
                     <div>
                       <div className="flex justify-between mb-2">
                         <label className="text-xs font-bold text-gray-700">Length</label>
-                        <span className="text-xs font-mono font-bold text-black">{length} cm</span>
+                        <div className="flex items-center">
+                          <input type="number" value={length} onChange={(e) => setLength(Number(e.target.value))} className="w-14 px-1 py-0.5 text-xs font-mono font-bold text-right text-black border border-gray-300 rounded focus:outline-none" />
+                          <span className="text-xs font-mono font-bold text-black ml-1">cm</span>
+                        </div>
                       </div>
                       <input
                         type="range"
@@ -9033,7 +9036,7 @@ export default function App() {
                     <div>
                       <div className="flex justify-between mb-2">
                         <label className="text-xs font-bold text-gray-700">Tiers</label>
-                        <span className="text-xs font-mono font-bold text-black">{tiers}</span>
+                        <input type="number" value={tiers} onChange={(e) => setTiers(Number(e.target.value))} className="w-14 px-1 py-0.5 text-xs font-mono font-bold text-right text-black border border-gray-300 rounded focus:outline-none" />
                       </div>
                       <input
                         type="range"
@@ -9049,7 +9052,10 @@ export default function App() {
                     <div>
                       <div className="flex justify-between mb-2">
                         <label className="text-xs font-bold text-gray-700">Height</label>
-                        <span className="text-xs font-mono font-bold text-black">{height} cm</span>
+                        <div className="flex items-center">
+                          <input type="number" value={height} onChange={(e) => setHeight(Number(e.target.value))} className="w-14 px-1 py-0.5 text-xs font-mono font-bold text-right text-black border border-gray-300 rounded focus:outline-none" />
+                          <span className="text-xs font-mono font-bold text-black ml-1">cm</span>
+                        </div>
                       </div>
                       <input
                         type="range"
@@ -9065,7 +9071,10 @@ export default function App() {
                     <div>
                       <div className="flex justify-between mb-2">
                         <label className="text-xs font-bold text-gray-700">{((skuType as string) === 'sku000' || (skuType as string) === 'sku106' || (skuType as string) === 'sku107' || (skuType as string) === 'sku129') ? 'Shelf Depth' : ((skuType as string) === 'sku111' || (skuType as string) === 'sku113' || (skuType as string) === 'sku116' || (skuType as string) === 'sku119' || (skuType as string) === 'sku124' || (skuType as string) === 'sku125') ? 'Drop Depth' : 'Depth'}</label>
-                        <span className="text-xs font-mono font-bold text-black">{wallDistance} cm</span>
+                        <div className="flex items-center">
+                          <input type="number" value={wallDistance} onChange={(e) => setWallDistance(Number(e.target.value))} className="w-14 px-1 py-0.5 text-xs font-mono font-bold text-right text-black border border-gray-300 rounded focus:outline-none" />
+                          <span className="text-xs font-mono font-bold text-black ml-1">cm</span>
+                        </div>
                       </div>
                       {skuType === 'sku000' || skuType === 'sku129' || skuType === 'sku162' ? (
                         <input
@@ -9268,7 +9277,15 @@ export default function App() {
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
                       className="w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors text-gray-700 font-bold text-xs"
                     >-</button>
-                    <span className="font-mono text-sm font-bold w-6 text-center">{quantity}</span>
+                    <input
+                      type="number"
+                      value={quantity}
+                      onChange={(e) => {
+                        const val = parseInt(e.target.value);
+                        if (!isNaN(val)) setQuantity(Math.max(1, val));
+                      }}
+                      className="w-12 text-center text-sm font-mono font-bold border border-gray-300 rounded px-1 outline-none"
+                    />
                     <button
                       onClick={() => setQuantity(quantity + 1)}
                       className="w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors text-gray-700 font-bold text-xs"

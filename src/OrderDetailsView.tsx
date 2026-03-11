@@ -1017,10 +1017,11 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-red-valves', 'Red Valve Hook Part', quantity * 1);
   
   } else if (skuType === 'sku183') {
-    addPipes(height, 1, 'p-vert');
+    const pipeCutLen = Math.max(0, height - 5);
+    addPipes(pipeCutLen, 1, 'p-vert');
     addFitting('f-wall-flanges', 'Flange', quantity * 1);
     addFitting('f-reducers', 'Reducers', quantity * 1);
-    const pipeCouplings = getExtraCouplings(height, 1);
+    const pipeCouplings = getExtraCouplings(pipeCutLen, 1);
     if (pipeCouplings > 0) {
       addFitting('f-couplings', 'Couplings', quantity * pipeCouplings);
     }
