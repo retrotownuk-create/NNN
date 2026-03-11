@@ -1,0 +1,19 @@
+node_modules/@react-three/fiber/dist/declarations/src/core/renderer.d.ts(3,8): error TS1259: Module '"/Users/abdulbarinoori/Downloads/sdd/node_modules/@types/react-reconciler/index"' can only be default-imported using the 'esModuleInterop' flag
+src/App.tsx(6,8): error TS1259: Module '"/Users/abdulbarinoori/Downloads/sdd/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+src/App.tsx(2367,73): error TS2322: Type '{ start: [number, number, number]; end: [number, number, number]; id: string; showLabel: boolean; colorOption: ColorOption; }' is not assignable to type 'IntrinsicAttributes & { start: [number, number, number]; end: [number, number, number]; radius?: number; showLabel?: boolean; colorOption?: ColorOption; overrideLabel?: string; }'.
+  Property 'id' does not exist on type 'IntrinsicAttributes & { start: [number, number, number]; end: [number, number, number]; radius?: number; showLabel?: boolean; colorOption?: ColorOption; overrideLabel?: string; }'.
+src/App.tsx(2383,73): error TS2322: Type '{ start: [number, number, number]; end: [number, number, number]; id: string; showLabel: boolean; colorOption: ColorOption; }' is not assignable to type 'IntrinsicAttributes & { start: [number, number, number]; end: [number, number, number]; radius?: number; showLabel?: boolean; colorOption?: ColorOption; overrideLabel?: string; }'.
+  Property 'id' does not exist on type 'IntrinsicAttributes & { start: [number, number, number]; end: [number, number, number]; radius?: number; showLabel?: boolean; colorOption?: ColorOption; overrideLabel?: string; }'.
+src/App.tsx(5862,40): error TS2304: Cannot find name 'ex'.
+src/App.tsx(5862,44): error TS2304: Cannot find name 'ey'.
+src/App.tsx(5865,43): error TS2304: Cannot find name 'ex'.
+src/App.tsx(5865,47): error TS2304: Cannot find name 'ey'.
+src/App.tsx(5868,39): error TS2304: Cannot find name 'ex'.
+src/App.tsx(5868,43): error TS2304: Cannot find name 'ey'.
+src/App.tsx(5873,39): error TS2304: Cannot find name 'nx'.
+src/App.tsx(5873,43): error TS2304: Cannot find name 'ny'.
+src/App.tsx(5878,22): error TS2304: Cannot find name 'isFirst'.
+src/App.tsx(5882,25): error TS2304: Cannot find name 'isLast'.
+src/App.tsx(5899,82): error TS2322: Type '{ start: [number, number, number]; end: [number, number, number]; id: string; showLabel: boolean; colorOption: ColorOption; }' is not assignable to type 'IntrinsicAttributes & { start: [number, number, number]; end: [number, number, number]; radius?: number; showLabel?: boolean; colorOption?: ColorOption; overrideLabel?: string; }'.
+  Property 'id' does not exist on type 'IntrinsicAttributes & { start: [number, number, number]; end: [number, number, number]; radius?: number; showLabel?: boolean; colorOption?: ColorOption; overrideLabel?: string; }'.
+src/OrderDetailsView.tsx(1,8): error TS1259: Module '"/Users/abdulbarinoori/Downloads/sdd/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
