@@ -6268,9 +6268,9 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         </group>
 
         {/* T-Fitting in center */}
-        {/* With rotation [0, -Math.PI / 2, 0], branch points to -Z (towards the wall), straight is along Y */}
+        {/* With rotation [-Math.PI / 2, -Math.PI / 2, 0], straight is along Y (vertical), branch points to -Z (towards the wall) */}
         <group position={[0, 0, 0]}>
-          <TFitting position={[0, 0, 0]} rotation={[0, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <TFitting position={[0, 0, 0]} rotation={[-Math.PI / 2, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Bottom In Cap */}
