@@ -6416,7 +6416,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   }
 
   
-  if (skuType === 'sku184' || skuType === 'sku186') {
+  if (skuType === 'sku184') {
     const e = explode * 1.5;
 
     return (
