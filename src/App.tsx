@@ -6697,10 +6697,17 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
   if (skuType === 'sku189') {
     const e = explode * 1.5;
+    // Dimensions: take 10cm from length and 5cm from height
+    const horizCut = Math.max(0, length - 10);
+    const vertCut = Math.max(0, height - 5);
+    
     // tHeight is where the T-Fitting connects. The shelf is on the very top of the elbows facing the wall.
-    // The horizontal depth pipe is at y = height.
-    const tHeight = height - 10;
+    // The horizontal depth pipe is at y = vertCut.
+    const tHeight = vertCut - 10;
     const wallZ = -wallDistance;
+    
+    const leftX = -horizCut / 2;
+    const rightX = horizCut / 2;
 
     const buildSupport189 = (x: number, type: 'left' | 'right') => {
       const sideX = type === 'left' ? -e : e;
@@ -6724,29 +6731,29 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
           {/* Upper Vertical Pipe */}
           <group position={[sideX, e * 1.5, 0]}>
-            <Pipe start={[x, tHeight, 0]} end={[x, height, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Pipe start={[x, tHeight, 0]} end={[x, vertCut, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
 
           {/* Top Elbow */}
           <group position={[sideX, e * 2, 0]}>
-            <Elbow position={[x, height, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Elbow position={[x, vertCut, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
 
           {/* Wall Flange */}
           <group position={[sideX, e * 2, -e * 2]}>
-            <Flange position={[x, height, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Flange position={[x, vertCut, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           {/* Hex Nipple from wall */}
           <group position={[sideX, e * 2, -e * 1.5]}>
-            <HexNipple position={[x, height, wallZ + 2.65]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <HexNipple position={[x, vertCut, wallZ + 2.65]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           {/* Coupling after Hex Nipple */}
           <group position={[sideX, e * 2, -e * 1.25]}>
-            <Coupling position={[x, height, wallZ + 4.35]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Coupling position={[x, vertCut, wallZ + 4.35]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           {/* Wall connector pipe (Depth pipe) */}
           <group position={[sideX, e * 2, -e]}>
-            <Pipe start={[x, height, wallZ + 4.35]} end={[x, height, -1.5]} showLabel={showLabel} colorOption={colorOption} />
+            <Pipe start={[x, vertCut, wallZ + 4.35]} end={[x, vertCut, -1.5]} showLabel={showLabel} colorOption={colorOption} />
           </group>
         </group>
       );
@@ -6758,7 +6765,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         {buildSupport189(rightX, 'right')}
 
         {/* Top Horizontal Bar */}
-        {length > 120 ? (
+        {horizCut > 120 ? (
           <>
             <group position={[-explode * 0.75, e, 0]}>
               <Pipe start={[leftX + 1.5, tHeight, 0]} end={[0, tHeight, 0]} showLabel={showLabel} colorOption={colorOption} />
@@ -6779,8 +6786,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         {/* Optional Shelf on Top! */}
         {hasShelves && (
           <group position={[0, explode * 2.5, 0]}>
-            {/* Shelf sits ON the wall connector pipes. Pipes are at y=height. Radius is 1.65 roughly. So y=height+1.5 */}
-            <Shelf position={[0, height + 1.6, wallZ / 2 + 2.1]} length={length} depth={wallDistance} woodColor={woodColor} />
+            {/* Shelf sits ON the wall connector pipes. Pipes are at y=vertCut. Radius is 1.65 roughly. So y=vertCut+1.6 */}
+            <Shelf position={[0, vertCut + 1.6, wallZ / 2 + 2.1]} length={length} depth={wallDistance} woodColor={woodColor} />
           </group>
         )}
       </group>

@@ -103,12 +103,16 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       }
     
   } else if (skuType === 'sku189') {
-    // Floor-to-Wall with Shelf Option (Identical pipes to 4210 but 4210 misses T-Fittings in cutlist lol)
-    addPipes(wallDistance - 6.6, 2, 'p-wall-conn');
-    addPipes(height - 10 - 1.5, 2, 'p-vert-bot');
-    addPipes(10, 2, 'p-vert-top');
-    if (length > 120) addPipes((length - 3) / 2, 2, 'p-horiz-bar');
-    else addPipes(length - 3, 1, 'p-horiz-bar');
+    const hCut = height - 5;
+    const lCut = length - 10;
+    extra += getExtraCouplings(wallDistance - 6.6, 2);
+    extra += getExtraCouplings(hCut - 10 - 1.5, 2);
+    extra += getExtraCouplings(10, 2);
+    if (lCut > 120) {
+      extra += getExtraCouplings((lCut - 3) / 2, 2);
+    } else {
+      extra += getExtraCouplings(lCut - 3, 1);
+    }
   } else if (skuType === 'sku300') {
       const numPipes = Math.ceil(length / 120);
       const numMounts = numPipes + 1;
@@ -284,17 +288,13 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     else addPipes(length - 3, 1, 'p-horiz-bar');
   
   } else if (skuType === 'sku189') {
-    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
-    addFitting('f-floor-flanges', 'Floor Flanges', quantity * 2);
-    addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
-    addFitting('f-hex-nipples', 'Hex Nipples', quantity * 2);
-    addFitting('f-couplings', 'Couplings', quantity * (2 + (length > 120 ? 1 : 0) + getTotalExtraCouplings()));
-    addFitting('f-90-elbows', '90° Elbows', quantity * 2);
-    
-    if (hasShelves) {
-        addShelves(length, wallDistance, 1);
-        addScrews(quantity * 4);
-    }
+    const hCut = height - 5;
+    const lCut = length - 10;
+    addPipes(wallDistance - 6.6, 2, 'p-wall-conn');
+    addPipes(hCut - 10 - 1.5, 2, 'p-vert-bot');
+    addPipes(10, 2, 'p-vert-top');
+    if (lCut > 120) addPipes((lCut - 3) / 2, 2, 'p-horiz-bar');
+    else addPipes(lCut - 3, 1, 'p-horiz-bar');
   } else if (skuType === 'sku300') {
     const numPipes = Math.ceil(length / 120);
     const numMounts = numPipes + 1;
@@ -418,6 +418,14 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-floor-flanges', 'Floor Flanges', quantity * 2);
     addFitting('f-hex-nipples', 'Hex Nipples', quantity * 2);
     addFitting('f-couplings', 'Couplings', quantity * (2 + (length > 120 ? 1 : 0) + getTotalExtraCouplings()));
+    addFitting('f-90-elbows', '90° Elbows', quantity * 2);
+  } else if (skuType === 'sku189') {
+    const lCut = length - 10;
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
+    addFitting('f-floor-flanges', 'Floor Flanges', quantity * 2);
+    addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
+    addFitting('f-hex-nipples', 'Hex Nipples', quantity * 2);
+    addFitting('f-couplings', 'Couplings', quantity * (2 + (lCut > 120 ? 1 : 0) + getTotalExtraCouplings()));
     addFitting('f-90-elbows', '90° Elbows', quantity * 2);
   } else if (skuType === 'sku300') {
     const numPipes = Math.ceil(length / 120);
@@ -1623,6 +1631,9 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
   }
   if (skuType === 'sku163' || skuType === 'sku164') {
     addWood('w-shelf', 'Console Shelf', quantity, `${length} × ${wallDistance} cm`);
+  }
+  if (skuType === 'sku189' && hasShelves) {
+    addWood('w-shelf', 'Wood Shelf', quantity, `${length} × ${wallDistance} cm`);
   }
 
   return items;
