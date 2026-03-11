@@ -6695,6 +6695,99 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     );
   }
 
+  if (skuType === 'sku189') {
+    const e = explode * 1.5;
+    // tHeight is where the T-Fitting connects. The shelf is on the very top of the elbows facing the wall.
+    // The horizontal depth pipe is at y = height.
+    const tHeight = height - 10;
+    const wallZ = -wallDistance;
+
+    const buildSupport189 = (x: number, type: 'left' | 'right') => {
+      const sideX = type === 'left' ? -e : e;
+
+      return (
+        <group key={type}>
+          {/* Floor Flange */}
+          <group position={[sideX, -e, 0]}>
+            <Flange position={[x, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+
+          {/* Lower Vertical Pipe */}
+          <group position={[sideX, 0, 0]}>
+            <Pipe start={[x, 0, 0]} end={[x, tHeight, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+
+          {/* T-Fitting */}
+          <group position={[sideX, e, 0]}>
+            <TFitting position={[x, tHeight, 0]} rotation={[0, type === 'left' ? -Math.PI / 2 : Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+
+          {/* Upper Vertical Pipe */}
+          <group position={[sideX, e * 1.5, 0]}>
+            <Pipe start={[x, tHeight, 0]} end={[x, height, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+
+          {/* Top Elbow */}
+          <group position={[sideX, e * 2, 0]}>
+            <Elbow position={[x, height, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+
+          {/* Wall Flange */}
+          <group position={[sideX, e * 2, -e * 2]}>
+            <Flange position={[x, height, wallZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          {/* Hex Nipple from wall */}
+          <group position={[sideX, e * 2, -e * 1.5]}>
+            <HexNipple position={[x, height, wallZ + 2.65]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          {/* Coupling after Hex Nipple */}
+          <group position={[sideX, e * 2, -e * 1.25]}>
+            <Coupling position={[x, height, wallZ + 4.35]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+          {/* Wall connector pipe (Depth pipe) */}
+          <group position={[sideX, e * 2, -e]}>
+            <Pipe start={[x, height, wallZ + 4.35]} end={[x, height, -1.5]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+        </group>
+      );
+    };
+
+    return (
+      <group position={[0, 0, 0]}>
+        {buildSupport189(leftX, 'left')}
+        {buildSupport189(rightX, 'right')}
+
+        {/* Top Horizontal Bar */}
+        {length > 120 ? (
+          <>
+            <group position={[-explode * 0.75, e, 0]}>
+              <Pipe start={[leftX + 1.5, tHeight, 0]} end={[0, tHeight, 0]} showLabel={showLabel} colorOption={colorOption} />
+            </group>
+            <group position={[0, e, 0]}>
+              <Coupling position={[0, tHeight, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+            </group>
+            <group position={[explode * 0.75, e, 0]}>
+              <Pipe start={[0, tHeight, 0]} end={[rightX - 1.5, tHeight, 0]} showLabel={showLabel} colorOption={colorOption} />
+            </group>
+          </>
+        ) : (
+          <group position={[0, e, 0]}>
+            <Pipe start={[leftX + 1.5, tHeight, 0]} end={[rightX - 1.5, tHeight, 0]} showLabel={showLabel} colorOption={colorOption} />
+          </group>
+        )}
+
+        {/* Optional Shelf on Top! */}
+        {hasShelves && (
+          <group position={[0, explode * 2.5, 0]}>
+            {/* Shelf sits ON the wall connector pipes. Pipes are at y=height. Radius is 1.65 roughly. So y=height+1.5 */}
+            <Shelf position={[0, height + 1.6, wallZ / 2 + 2.1]} length={length} depth={wallDistance} woodColor={woodColor} />
+          </group>
+        )}
+      </group>
+    );
+  }
+
+
 
 
   if (skuType === 'sku179') {
@@ -7592,7 +7685,7 @@ export default function App() {
   const [savedSKUs, setSavedSKUs] = useState<SavedSKU[]>(() => {
 
     // Cache bust to force users to see the new SKUs
-    const APP_VERSION = 'v6_sku188';
+    const APP_VERSION = 'v6_sku189';
     if (localStorage.getItem('app_cache_version') !== APP_VERSION) {
       localStorage.removeItem('savedSKUs');
       localStorage.setItem('app_cache_version', APP_VERSION);
@@ -7671,6 +7764,7 @@ export default function App() {
                                                                                                                                 const default186: SavedSKU = { name: 'SKU 186', length: 5, height: 0, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku186' };
     const default187: SavedSKU = { name: 'SKU 187', length: 90, height: 160, wallDistance: 30, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku187' };
     const default188: SavedSKU = { name: 'SKU 188', length: 120, height: 60, wallDistance: 0, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku188' };
+    const default189: SavedSKU = { name: 'SKU 189', length: 120, height: 160, wallDistance: 30, hasShelves: true, isFreestanding: false, colorName: 'Black', skuType: 'sku189' };
                                 const default184: SavedSKU = { name: 'SKU 184', length: 5, height: 0, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku184' };
         const default183: SavedSKU = { name: 'SKU 183', length: 15, height: 75, wallDistance: 0, hasShelves: false, isFreestanding: true, colorName: 'Black', skuType: 'sku183' };
         const default182: SavedSKU = { name: 'SKU 182', length: 30, height: 30, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku182' };
@@ -9334,7 +9428,7 @@ export default function App() {
                     </div>
                   )}
 
-                  {(skuType === 'sku106' || skuType === 'sku107' || skuType === 'sku129' || skuType === 'sku156' || skuType === 'sku157' || skuType === 'sku177') && (
+                  {(skuType === 'sku106' || skuType === 'sku107' || skuType === 'sku129' || skuType === 'sku156' || skuType === 'sku157' || skuType === 'sku177' || skuType === 'sku189') && (
                     <div>
                       <div className="flex justify-between mb-2">
                         <label className="text-xs font-bold text-gray-700">Tiers</label>
@@ -9350,7 +9444,7 @@ export default function App() {
                     </div>
                   )}
 
-                  {((skuType as string) === 'standard' || skuType === 'sku000' || skuType === 'sku100' || skuType === 'sku4210' || skuType === 'sku105' || skuType === 'sku114' || skuType === 'sku116' || skuType === 'sku112' || skuType === 'sku111' || skuType === 'sku113' || skuType === 'sku117' || skuType === 'sku118' || skuType === 'sku119' || skuType === 'sku120' || skuType === 'sku121' || skuType === 'sku122' || skuType === 'sku123' || skuType === 'sku126' || skuType === 'sku127' || skuType === 'sku128' || skuType === 'sku130' || skuType === 'sku131' || skuType === 'sku132' || skuType === 'sku133' || skuType === 'sku135' || skuType === 'sku145' || skuType === 'sku150' || skuType === 'sku180' || skuType === 'sku181' || skuType === 'sku182' || skuType === 'sku183' || skuType === 'sku184' || skuType === 'sku186' || skuType === 'sku187' || skuType === 'sku188' || skuType === 'sku188') && (
+                  {((skuType as string) === 'standard' || skuType === 'sku000' || skuType === 'sku100' || skuType === 'sku4210' || skuType === 'sku105' || skuType === 'sku114' || skuType === 'sku116' || skuType === 'sku112' || skuType === 'sku111' || skuType === 'sku113' || skuType === 'sku117' || skuType === 'sku118' || skuType === 'sku119' || skuType === 'sku120' || skuType === 'sku121' || skuType === 'sku122' || skuType === 'sku123' || skuType === 'sku126' || skuType === 'sku127' || skuType === 'sku128' || skuType === 'sku130' || skuType === 'sku131' || skuType === 'sku132' || skuType === 'sku133' || skuType === 'sku135' || skuType === 'sku145' || skuType === 'sku150' || skuType === 'sku180' || skuType === 'sku181' || skuType === 'sku182' || skuType === 'sku183' || skuType === 'sku184' || skuType === 'sku186' || skuType === 'sku187' || skuType === 'sku188' || skuType === 'sku189' || skuType === 'sku189') && (
                     <div>
                       <div className="flex justify-between mb-2">
                         <label className="text-xs font-bold text-gray-700">Height</label>
@@ -9361,7 +9455,7 @@ export default function App() {
                       </div>
                       <input
                         type="range"
-                        min={skuType === 'sku119' || skuType === 'sku180' || skuType === 'sku181' || (skuType === 'sku182' || skuType === 'sku183' || skuType === 'sku184' || skuType === 'sku186' || skuType === 'sku187' || skuType === 'sku188' || skuType === 'sku188') ? 5 : skuType === 'sku116' || skuType === 'sku133' ? 5 : skuType === 'sku122' ? 2 : skuType === 'sku128' ? 15 : 20} max={skuType === 'sku122' ? 10 : skuType === 'sku133' ? 30 : skuType === 'sku128' ? 100 : 250} step={skuType === 'sku122' || skuType === 'sku133' ? 1 : 5}
+                        min={skuType === 'sku119' || skuType === 'sku180' || skuType === 'sku181' || (skuType === 'sku182' || skuType === 'sku183' || skuType === 'sku184' || skuType === 'sku186' || skuType === 'sku187' || skuType === 'sku188' || skuType === 'sku189' || skuType === 'sku189') ? 5 : skuType === 'sku116' || skuType === 'sku133' ? 5 : skuType === 'sku122' ? 2 : skuType === 'sku128' ? 15 : 20} max={skuType === 'sku122' ? 10 : skuType === 'sku133' ? 30 : skuType === 'sku128' ? 100 : 250} step={skuType === 'sku122' || skuType === 'sku133' ? 1 : 5}
                         value={height}
                         onChange={(e) => setHeight(Number(e.target.value))}
                         className="w-full accent-black h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
