@@ -1,16 +1,17 @@
-import * as THREE from 'three';
-const eulerLeft = new THREE.Euler(Math.PI, 0, Math.PI / 2, 'XYZ');
-const vLeft1 = new THREE.Vector3(0, -1, 0).applyEuler(eulerLeft);
-const vLeft2 = new THREE.Vector3(0, 0, 1).applyEuler(eulerLeft);
+function rotate(x,y,z, rx,ry,rz) {
+  let x1=x, y1=y*Math.cos(rx)-z*Math.sin(rx), z1=y*Math.sin(rx)+z*Math.cos(rx);
+  let x2=x1*Math.cos(ry)+z1*Math.sin(ry), y2=y1, z2=-x1*Math.sin(ry)+z1*Math.cos(ry);
+  let x3=x2*Math.cos(rz)-y2*Math.sin(rz), y3=x2*Math.sin(rz)+y2*Math.cos(rz), z3=z2;
+  return [parseFloat(x3.toFixed(3)), parseFloat(y3.toFixed(3)), parseFloat(z3.toFixed(3))];
+}
+console.log("FortyFiveElbow: [Math.PI/2, 0, 0]");
+console.log("  Downward branch (0,-1,0):", rotate(0,-1,0, Math.PI/2, 0, 0));
+console.log("  45 Deg Branch (0,0.707,0.707):", rotate(0,0.707,0.707, Math.PI/2, 0, 0));
 
-const eulerRight = new THREE.Euler(Math.PI, Math.PI, Math.PI / 2, 'XYZ');
-const vRight1 = new THREE.Vector3(0, -1, 0).applyEuler(eulerRight);
-const vRight2 = new THREE.Vector3(0, 0, 1).applyEuler(eulerRight);
+console.log("\nFortyFiveElbow: [-Math.PI/2, 0, 0]");
+console.log("  Downward branch (0,-1,0):", rotate(0,-1,0, -Math.PI/2, 0, 0));
+console.log("  45 Deg Branch (0,0.707,0.707):", rotate(0,0.707,0.707, -Math.PI/2, 0, 0));
 
-console.log('Left Side:');
-console.log('v1 (-Y):', Math.round(vLeft1.x), Math.round(vLeft1.y), Math.round(vLeft1.z)); // vertical connection? TFitting branches are -Y, +Y (ends) and +Z (branch). Wait, TFitting has ends along Y (+Y and -Y) and branch along Z (+Z). Wait, no...
-// Wait, in App.tsx TFitting is:
-// args:[1.65,1.65,2.4] at [0, -1.2, 0] (-Y side)
-// args:[1.65... ] at [0,0,1.2] rot [PI/2,0,0] (+Z branch side)
-// Actually App.tsx TFitting has: +Y is open, -Y is open, +Z is branch? No!
-// Let's check App.tsx TFitting.
+console.log("\nFortyFiveElbow: [-Math.PI/2, Math.PI, 0]");
+console.log("  Downward branch (0,-1,0):", rotate(0,-1,0, -Math.PI/2, Math.PI, 0));
+console.log("  45 Deg Branch (0,0.707,0.707):", rotate(0,0.707,0.707, -Math.PI/2, Math.PI, 0));

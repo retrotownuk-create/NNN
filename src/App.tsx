@@ -2780,7 +2780,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     );
   }
 
-  if (skuType === 'sku150' || skuType === 'sku181') {
+  if (skuType === 'sku150') {
     const e = explode * 1.5;
 
     // Explicit subtractive dimensions requested by user
@@ -6235,6 +6235,62 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         <group position={[0, 0, -actualDepth - 4.4 - e * 2]}>
           <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
+      </group>
+    );
+  }
+
+  if (skuType === 'sku181') {
+    const e = explode * 1.5;
+
+    // Use height for vertical pole (default 30), wallDistance for stem (default 5)
+    // We want the long pole to be 30cm (height), and wall gap to be 5cm (wallDistance).
+    // Let's use actual pipe math. A 30cm request with 5cm fitting loss = 25cm pole, but normally cutlist takes care of the fitting sizes.
+    // If user sets 30cm Height and 5cm Depth: 
+    // Usually the cutlist gets "30" and "5", and the UI draws pipes that sum to that. 
+    // They want exactly a 30cm pole for the long pole, 5cm from wall.
+    // We will just draw a 30cm pipe and a 5cm pipe.
+    const actualHeight = getPipesForLength(Math.max(0, height)).reduce((a, b) => a + b, 0) || 5;
+    const actualStem = getPipesForLength(Math.max(0, wallDistance)).reduce((a, b) => a + b, 0) || 5;
+
+    // Shift group down a bit to center it
+    const groupY = 0;
+
+    return (
+      <group position={[0, groupY, actualStem / 2]}>
+        {/* Wall Flange at -Z */}
+        <group position={[0, 0, -actualStem - 4.4 - e * 2]}>
+          <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Stem pipe from wall to T-Fitting */}
+        <group position={[0, 0, -e]}>
+          <Pipe start={[0, 0, -actualStem - 2.2]} end={[0, 0, -2.2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* T-Fitting in center */}
+        {/* With rotation [0, Math.PI, 0], branch points to -Z, straight is along Y */}
+        <group position={[0, 0, 0]}>
+          <TFitting position={[0, 0, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Bottom Hex Nipple and End Cap */}
+        <group position={[0, -e, 0]}>
+          <HexNipple position={[0, -1.95, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+        <group position={[0, -e * 2, 0]}>
+          <EndCap position={[0, -3.9, 0]} rotation={[Math.PI, 0, 0]} labelText="In cap" showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Vertical Top Pole */}
+        <group position={[0, e, 0]}>
+          <Pipe start={[0, 2.2, 0]} end={[0, actualHeight + 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Top End Cap */}
+        <group position={[0, e * 2, 0]}>
+          <EndCap position={[0, actualHeight + 4.4, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
       </group>
     );
   }
