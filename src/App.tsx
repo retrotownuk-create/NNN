@@ -6206,8 +6206,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const actualLMount = -(length / 2) + 15 + 1.2 + 2.2;
     const actualRMount = (length / 2) - 15 - 1.2 - 2.2;
 
-    const yElbow = 6.1;
-    const yHexNipple = 3.05;
+    const yElbow = 6.4;
+    const yHexNipple = 3.2;
     const yRail = 0;
 
     return (
