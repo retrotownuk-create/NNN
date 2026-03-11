@@ -6258,19 +6258,19 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     return (
       <group position={[0, groupY, actualStem / 2]}>
         {/* Wall Flange at -Z */}
-        <group position={[0, 0, -actualStem - 3.4 - e * 2]}>
+        <group position={[0, 0, -actualStem - 4.4 - e * 2]}>
           <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Stem pipe from wall to T-Fitting */}
         <group position={[0, 0, -e]}>
-          <Pipe start={[0, 0, -actualStem - 2.2]} end={[0, 0, -1.2]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[0, 0, -actualStem - 2.2]} end={[0, 0, -2.2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* T-Fitting in center */}
-        {/* With rotation [-Math.PI / 2, -Math.PI / 2, 0], straight is along Y (vertical), branch points to -Z (towards the wall) */}
+        {/* With rotation [0, 0, 0], straight is along Y (vertical), branch points to -Z (towards the wall) */}
         <group position={[0, 0, 0]}>
-          <TFitting position={[0, 0, 0]} rotation={[-Math.PI / 2, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <TFitting position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Bottom In Cap */}
