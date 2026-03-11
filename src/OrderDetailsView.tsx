@@ -672,17 +672,14 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-floor-flanges', 'Floor Flanges', quantity * 6); // 6 feet total (3 per side)
   } else if (skuType === 'sku124') {
     // Wall-mounted triple support rack: 3 depth pipes, 2 rail pipes
-    addPipes(wallDistance - 6.6, 3, 'p-support-arm');
-    addPipes(length / 2 - 4.4, 2, 'p-horizontal-rail');
-    addFitting('f-floor-flanges', 'Floor Flanges', quantity * 3);
-    addFitting('f-t-fittings', 'T-Fittings', quantity * 3);
-    addFitting('f-hex-nipples', 'Hex Nipples', quantity * 3);
-    addFitting('f-couplings', 'Couplings', quantity * 3);
-  } else if (skuType === 'sku140') {
-    // Wall-mounted triple support rack with Elbows at ends
-    const poleLength = getPipesForLength(Math.max(0, wallDistance - 5)).reduce((a, b) => a + b, 0) || 5;
+    let poleLength = 0;
+    if (wallDistance === 25) {
+      poleLength = 23;
+    } else {
+      poleLength = getPipesForLength(Math.max(0, wallDistance - 5)).reduce((a, b) => a + b, 0) || 5;
+    }
     addPipes(poleLength, 3, 'p-support-arm');
-    
+
     // We take out 15cm from length (total), one side may be 5cm longer/shorter
     const totalRailLength = Math.max(0, length - 15);
     const cut1 = Math.ceil(totalRailLength / 2 / 5) * 5;
@@ -694,11 +691,22 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       addPipes(cut1, 1, 'p-horizontal-rail-left');
       addPipes(cut2, 1, 'p-horizontal-rail-right');
     }
+
+    addFitting('f-floor-flanges', 'Floor Flanges', quantity * 3);
+    addFitting('f-t-fittings', 'T-Fittings', quantity * 3);
+    addFitting('f-couplings', 'Couplings', quantity * (getExtraCouplings(cut1, 1) + getExtraCouplings(cut2, 1)));
+  } else if (skuType === 'sku140') {
+    // Wall-mounted triple support rack with Elbows at ends
+    const poleLength = getPipesForLength(Math.max(0, wallDistance - 5)).reduce((a, b) => a + b, 0) || 5;
+    addPipes(poleLength, 3, 'p-support-arm');
+    
+    // Exact pipe length from Elbow (1.5 inner offset) to Tee (2.2 offset)
+    addPipes(length / 2 - 3.7, 2, 'p-horizontal-rail');
     
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 3);
     addFitting('f-t-fittings', 'T-Fittings', quantity * 1);
     addFitting('f-90-elbows', '90° Elbows', quantity * 2);
-    addFitting('f-couplings', 'Couplings', quantity * (getExtraCouplings(cut1, 1) + getExtraCouplings(cut2, 1)));
+    addFitting('f-couplings', 'Couplings', quantity * getExtraCouplings(length / 2 - 3.7, 2));
   } else if (skuType === 'sku141') {
     const yTFitting = height - 3.4;
     const yBottomPipeStart = yTFitting - 2.2;

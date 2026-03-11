@@ -3804,44 +3804,63 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   if (skuType === 'sku124') {
     // Wall-mounted triple support rack
     const e = explode * 1.5;
-    const zWall = -wallDistance;
+    let poleLength = 0;
+    if (wallDistance === 25) {
+      poleLength = 23;
+    } else {
+      poleLength = getPipesForLength(Math.max(0, wallDistance - 5)).reduce((a, b) => a + b, 0) || 5;
+    }
+    // Exactly 5cm taken off depth (via stock). Flange takes ~1.2, T-Fitting back outlet takes ~2.2. Total = 3.4
+    const bracketZ = -poleLength - 3.4;
+    const railZ = 0;
 
-    const buildSupport = (x: number) => {
-      // For SKU124, the horizontal rail is at Y=0 (centered visually)
-      return (
-        <group position={[0, 0, 0]}>
-          {/* Wall Flange */}
-          <group position={[0, 0, -e * 1.5]}>
-            <Flange position={[x, 0, zWall]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
-          {/* Hex Nipple from wall */}
-          <group position={[0, 0, -e * 1.1]}>
-            <HexNipple position={[x, 0, zWall + 2.65]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
-          {/* Coupling after Hex Nipple */}
-          <group position={[0, 0, -e * 0.8]}>
-            <Coupling position={[x, 0, zWall + 4.35]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
-          {/* Depth Pipe (23cm pole) */}
-          <group position={[0, 0, -e * 0.5]}>
-            <Pipe start={[x, 0, zWall + 4.35]} end={[x, 0, -2.2]} showLabel={showLabel} colorOption={colorOption} />
-          </group>
-          {/* T-Fitting at each support arm connection */}
-          <TFitting position={[x, 0, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
-        </group>
-      );
-    };
+    // Outer T-Fittings have their center exactly 2.2cm inside from the pure outer edge,
+    // so the entire visual rail's outermost width exactly aligns with `length`.
+    const tOffset = 2.2;
+    const lX = -(length / 2) + tOffset;
+    const rX =  (length / 2) - tOffset;
+    
+    // We take out 15cm from length (total)
+    const totalRailLength = Math.max(0, length - 15);
+    const cut1 = Math.ceil(totalRailLength / 2 / 5) * 5;
+    const cut2 = Math.max(0, totalRailLength - cut1);
+
+    // The midpoint must proportionally shift to accommodate unequal pipe sides
+    let midX = 0;
+    if (cut1 + cut2 > 0) {
+      const totalWidth = rX - lX;
+      const leftRatio = cut1 / (cut1 + cut2);
+      midX = lX + totalWidth * leftRatio;
+    }
 
     return (
-      <group position={[0, height / 4, 0]}>
-        {buildSupport(leftX)}
-        {buildSupport(0)}
-        {buildSupport(rightX)}
+      <group position={[0, height / 4, -bracketZ / 2]}>
+        {/* Left Leg Group */}
+        <group position={[-e, 0, 0]}>
+          <Flange position={[lX, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[lX, 0, bracketZ + 1.2]} end={[lX, 0, railZ - 2.2]} showLabel={showLabel} colorOption={colorOption} />
+          {/* T-Fitting at each support arm connection */}
+          <TFitting position={[lX, 0, railZ]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
 
-        {/* Railing Pipes */}
-        <group position={[0, 0, e]}>
-          <Pipe start={[leftX + 2.2, 0, 0]} end={[-2.2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
-          <Pipe start={[2.2, 0, 0]} end={[rightX - 2.2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        {/* Middle Leg Group */}
+        <group position={[0, 0, 0]}>
+          <Flange position={[midX, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[midX, 0, bracketZ + 1.2]} end={[midX, 0, railZ - 2.2]} showLabel={showLabel} colorOption={colorOption} />
+          <TFitting position={[midX, 0, railZ]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Right Leg Group */}
+        <group position={[e, 0, 0]}>
+          <Flange position={[rX, 0, bracketZ]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[rX, 0, bracketZ + 1.2]} end={[rX, 0, railZ - 2.2]} showLabel={showLabel} colorOption={colorOption} />
+          <TFitting position={[rX, 0, railZ]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+        </group>
+
+        {/* Horizontal Rail Pipes (These stay anchored and show the gaps visually) */}
+        <group position={[0, 0, 0]}>
+          <Pipe start={[lX - e + 2.2 + e * 0.2, 0, railZ]} end={[midX - 2.2 - e * 0.2, 0, railZ]} showLabel={showLabel} colorOption={colorOption} />
+          <Pipe start={[midX + 2.2 + e * 0.2, 0, railZ]} end={[rX + e - 2.2 - e * 0.2, 0, railZ]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );
@@ -4973,19 +4992,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const elbowOffset = 1.5;
     const lX = -(length / 2) + elbowOffset;
     const rX =  (length / 2) - elbowOffset;
-    
-    // We take out 15cm from length (total)
-    const totalRailLength = Math.max(0, length - 15);
-    const cut1 = Math.ceil(totalRailLength / 2 / 5) * 5;
-    const cut2 = Math.max(0, totalRailLength - cut1);
-    
-    // The midpoint must proportionally shift to accommodate unequal pipe sides
-    let midX = 0;
-    if (cut1 + cut2 > 0) {
-      const totalWidth = rX - lX;
-      const leftRatio = cut1 / (cut1 + cut2);
-      midX = lX + totalWidth * leftRatio;
-    }
+    const midX = 0;
 
     return (
       <group position={[0, height / 2, -bracketZ / 2]}>
