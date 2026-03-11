@@ -6787,7 +6787,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         {hasShelves && (
           <group position={[0, explode * 2.5, 0]}>
             {/* Shelf sits ON the wall connector pipes. Pipes are at y=vertCut. Radius is 1.65 roughly. So y=vertCut+1.6 */}
-            <Shelf position={[0, vertCut + 1.6, wallZ / 2 + 2.1]} length={length} depth={wallDistance} woodColor={woodColor} />
+            <Shelf position={[0, vertCut + 1.6, wallZ / 2 + 2.1]} length={length} depth={23} woodColor={woodColor} />
           </group>
         )}
       </group>
@@ -9435,7 +9435,7 @@ export default function App() {
                     </div>
                   )}
 
-                  {(skuType === 'sku106' || skuType === 'sku107' || skuType === 'sku129' || skuType === 'sku156' || skuType === 'sku157' || skuType === 'sku177' || skuType === 'sku189') && (
+                  {(skuType === 'sku106' || skuType === 'sku107' || skuType === 'sku129' || skuType === 'sku156' || skuType === 'sku157' || skuType === 'sku177') && (
                     <div>
                       <div className="flex justify-between mb-2">
                         <label className="text-xs font-bold text-gray-700">Tiers</label>
@@ -9587,7 +9587,7 @@ export default function App() {
                   </div>
                 </div>
 
-                {(skuType === 'standard' || skuType === 'sku107' || skuType === 'sku108' || skuType === 'sku109' || skuType === 'sku110' || skuType === 'sku115' || skuType === 'sku127' || skuType === 'sku128' || skuType === 'sku131' || skuType === 'sku133' || skuType === 'sku137' || skuType === 'sku146' || skuType === 'sku156' || skuType === 'sku157' || skuType === 'sku158' || skuType === 'sku177') && (
+                {(skuType === 'standard' || skuType === 'sku107' || skuType === 'sku108' || skuType === 'sku109' || skuType === 'sku110' || skuType === 'sku115' || skuType === 'sku127' || skuType === 'sku128' || skuType === 'sku131' || skuType === 'sku133' || skuType === 'sku137' || skuType === 'sku146' || skuType === 'sku156' || skuType === 'sku157' || skuType === 'sku158' || skuType === 'sku177' || skuType === 'sku189') && (
                   <>
                     <div className="flex items-center justify-between p-3 bg-gray-50 rounded-2xl border border-gray-100">
                       <div className="flex items-center gap-2">
