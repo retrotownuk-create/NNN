@@ -125,6 +125,12 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       } else {
         extra += getExtraCouplings(lCut, 1);
       }
+    } else if (skuType === 'sku192') {
+      const lCut = Math.max(0, length - 10);
+      const hCut = Math.max(0, height - 5);
+      extra += getExtraCouplings(hCut / 2, 2);
+      if (lCut > 120) extra += getExtraCouplings((lCut - 3) / 2, 4);
+      else extra += getExtraCouplings(lCut, 2);
     } else if (skuType === 'sku191') {
       const lCut = Math.max(0, length - 10);
       const hCut = height;
@@ -290,7 +296,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     } else {
       addPipes(length - 3, 2, 'p-horiz-rail');
     }
-  } else if (hasShelves && skuType !== 'sku108' && skuType !== 'sku109' && skuType !== 'sku110' && skuType !== 'sku111' && skuType !== 'sku112' && skuType !== 'sku113' && skuType !== 'sku114' && skuType !== 'sku115' && skuType !== 'sku116' && skuType !== 'sku117' && skuType !== 'sku118' && skuType !== 'sku119' && skuType !== 'sku120' && skuType !== 'sku121' && skuType !== 'sku122' && skuType !== 'sku123' && skuType !== 'sku124' && skuType !== 'sku125' && skuType !== 'sku126' && skuType !== 'sku127' && skuType !== 'sku128' && skuType !== 'sku129' && skuType !== 'sku130' && skuType !== 'sku131' && skuType !== 'sku132' && skuType !== 'sku133' && skuType !== 'sku134' && skuType !== 'sku135' && skuType !== 'sku136' && skuType !== 'sku137' && skuType !== 'sku138' && skuType !== 'sku140' && skuType !== 'sku141' && skuType !== 'sku142' && skuType !== 'sku143' && skuType !== 'sku144' && skuType !== 'sku145' && skuType !== 'sku146' && skuType !== 'sku147' && skuType !== 'sku148' && skuType !== 'sku149' && skuType !== 'sku150' && skuType !== 'sku151' && skuType !== 'sku152' && skuType !== 'sku153' && skuType !== 'sku154' && skuType !== 'sku155' && skuType !== 'sku156' && skuType !== 'sku157' && skuType !== 'sku158' && skuType !== 'sku159' && skuType !== 'sku160' && skuType !== 'sku161' && skuType !== 'sku162' && skuType !== 'sku163' && skuType !== 'sku164' && skuType !== 'sku165' && skuType !== 'sku166' && skuType !== 'sku167' && skuType !== 'sku168' && skuType !== 'sku169' && skuType !== 'sku170' && skuType !== 'sku171' && skuType !== 'sku172' && skuType !== 'sku173' && skuType !== 'sku174' && skuType !== 'sku175' && skuType !== 'sku176' && skuType !== 'sku177' && skuType !== 'sku178' && skuType !== 'sku179' && skuType !== 'sku180' && skuType !== 'sku181' && skuType !== 'sku182' && skuType !== 'sku183' && skuType !== 'sku184' && skuType !== 'sku186' && skuType !== 'sku187' && skuType !== 'sku188' && skuType !== 'sku189' && skuType !== 'sku190' && skuType !== 'sku191') {
+  } else if (hasShelves && skuType !== 'sku108' && skuType !== 'sku109' && skuType !== 'sku110' && skuType !== 'sku111' && skuType !== 'sku112' && skuType !== 'sku113' && skuType !== 'sku114' && skuType !== 'sku115' && skuType !== 'sku116' && skuType !== 'sku117' && skuType !== 'sku118' && skuType !== 'sku119' && skuType !== 'sku120' && skuType !== 'sku121' && skuType !== 'sku122' && skuType !== 'sku123' && skuType !== 'sku124' && skuType !== 'sku125' && skuType !== 'sku126' && skuType !== 'sku127' && skuType !== 'sku128' && skuType !== 'sku129' && skuType !== 'sku130' && skuType !== 'sku131' && skuType !== 'sku132' && skuType !== 'sku133' && skuType !== 'sku134' && skuType !== 'sku135' && skuType !== 'sku136' && skuType !== 'sku137' && skuType !== 'sku138' && skuType !== 'sku140' && skuType !== 'sku141' && skuType !== 'sku142' && skuType !== 'sku143' && skuType !== 'sku144' && skuType !== 'sku145' && skuType !== 'sku146' && skuType !== 'sku147' && skuType !== 'sku148' && skuType !== 'sku149' && skuType !== 'sku150' && skuType !== 'sku151' && skuType !== 'sku152' && skuType !== 'sku153' && skuType !== 'sku154' && skuType !== 'sku155' && skuType !== 'sku156' && skuType !== 'sku157' && skuType !== 'sku158' && skuType !== 'sku159' && skuType !== 'sku160' && skuType !== 'sku161' && skuType !== 'sku162' && skuType !== 'sku163' && skuType !== 'sku164' && skuType !== 'sku165' && skuType !== 'sku166' && skuType !== 'sku167' && skuType !== 'sku168' && skuType !== 'sku169' && skuType !== 'sku170' && skuType !== 'sku171' && skuType !== 'sku172' && skuType !== 'sku173' && skuType !== 'sku174' && skuType !== 'sku175' && skuType !== 'sku176' && skuType !== 'sku177' && skuType !== 'sku178' && skuType !== 'sku179' && skuType !== 'sku180' && skuType !== 'sku181' && skuType !== 'sku182' && skuType !== 'sku183' && skuType !== 'sku184' && skuType !== 'sku186' && skuType !== 'sku187' && skuType !== 'sku188' && skuType !== 'sku189' && skuType !== 'sku190' && skuType !== 'sku191' && skuType !== 'sku192') {
     addPipes(40.0, 2, 'p-vert-mid');
     addPipes((height - 75) / 2, 2, 'p-vert-top1');
     addPipes((height - 75) / 2, 2, 'p-vert-top2');
@@ -333,6 +339,12 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addPipes(hCut, 2, 'p-vert-up');
     if (lCut > 120) addPipes((lCut - 3) / 2, 2, 'p-horiz-bar');
     else addPipes(lCut, 1, 'p-horiz-bar');
+  } else if (skuType === 'sku192') {
+    const lCut = Math.max(0, length - 10);
+    const hCut = Math.max(0, height - 5);
+    addPipes(hCut / 2, 2, 'p-vert-pole');
+    if (lCut > 120) addPipes((lCut - 3) / 2, 4, 'p-horiz-arms');
+    else addPipes(lCut, 2, 'p-horiz-arms');
   } else if (skuType === 'sku191') {
     const lCut = Math.max(0, length - 10);
     const hCut = height;
@@ -409,7 +421,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     if (length > 120) addPipes((length - 4.4) / 2, 2, 'p-horiz-bar');
     else addPipes(length - 4.4, 1, 'p-horiz-bar');
 
-  } else if (skuType !== 'sku108' && skuType !== 'sku109' && skuType !== 'sku110' && skuType !== 'sku111' && skuType !== 'sku112' && skuType !== 'sku113' && skuType !== 'sku114' && skuType !== 'sku115' && skuType !== 'sku116' && skuType !== 'sku117' && skuType !== 'sku118' && skuType !== 'sku119' && skuType !== 'sku120' && skuType !== 'sku121' && skuType !== 'sku122' && skuType !== 'sku123' && skuType !== 'sku124' && skuType !== 'sku125' && skuType !== 'sku126' && skuType !== 'sku127' && skuType !== 'sku128' && skuType !== 'sku129' && skuType !== 'sku130' && skuType !== 'sku131' && skuType !== 'sku132' && skuType !== 'sku133' && skuType !== 'sku134' && skuType !== 'sku135' && skuType !== 'sku136' && skuType !== 'sku137' && skuType !== 'sku138' && skuType !== 'sku140' && skuType !== 'sku141' && skuType !== 'sku142' && skuType !== 'sku143' && skuType !== 'sku144' && skuType !== 'sku145' && skuType !== 'sku146' && skuType !== 'sku147' && skuType !== 'sku148' && skuType !== 'sku149' && skuType !== 'sku150' && skuType !== 'sku151' && skuType !== 'sku152' && skuType !== 'sku153' && skuType !== 'sku154' && skuType !== 'sku155' && skuType !== 'sku156' && skuType !== 'sku157' && skuType !== 'sku158' && skuType !== 'sku159' && skuType !== 'sku160' && skuType !== 'sku161' && skuType !== 'sku162' && skuType !== 'sku163' && skuType !== 'sku164' && skuType !== 'sku165' && skuType !== 'sku166' && skuType !== 'sku167' && skuType !== 'sku168' && skuType !== 'sku169' && skuType !== 'sku170' && skuType !== 'sku171' && skuType !== 'sku172' && skuType !== 'sku173' && skuType !== 'sku174' && skuType !== 'sku175' && skuType !== 'sku176' && skuType !== 'sku177' && skuType !== 'sku178' && skuType !== 'sku179' && skuType !== 'sku180' && skuType !== 'sku181' && skuType !== 'sku182' && skuType !== 'sku183' && skuType !== 'sku184' && skuType !== 'sku186' && skuType !== 'sku187' && skuType !== 'sku188' && skuType !== 'sku189' && skuType !== 'sku190' && skuType !== 'sku191') {
+  } else if (skuType !== 'sku108' && skuType !== 'sku109' && skuType !== 'sku110' && skuType !== 'sku111' && skuType !== 'sku112' && skuType !== 'sku113' && skuType !== 'sku114' && skuType !== 'sku115' && skuType !== 'sku116' && skuType !== 'sku117' && skuType !== 'sku118' && skuType !== 'sku119' && skuType !== 'sku120' && skuType !== 'sku121' && skuType !== 'sku122' && skuType !== 'sku123' && skuType !== 'sku124' && skuType !== 'sku125' && skuType !== 'sku126' && skuType !== 'sku127' && skuType !== 'sku128' && skuType !== 'sku129' && skuType !== 'sku130' && skuType !== 'sku131' && skuType !== 'sku132' && skuType !== 'sku133' && skuType !== 'sku134' && skuType !== 'sku135' && skuType !== 'sku136' && skuType !== 'sku137' && skuType !== 'sku138' && skuType !== 'sku140' && skuType !== 'sku141' && skuType !== 'sku142' && skuType !== 'sku143' && skuType !== 'sku144' && skuType !== 'sku145' && skuType !== 'sku146' && skuType !== 'sku147' && skuType !== 'sku148' && skuType !== 'sku149' && skuType !== 'sku150' && skuType !== 'sku151' && skuType !== 'sku152' && skuType !== 'sku153' && skuType !== 'sku154' && skuType !== 'sku155' && skuType !== 'sku156' && skuType !== 'sku157' && skuType !== 'sku158' && skuType !== 'sku159' && skuType !== 'sku160' && skuType !== 'sku161' && skuType !== 'sku162' && skuType !== 'sku163' && skuType !== 'sku164' && skuType !== 'sku165' && skuType !== 'sku166' && skuType !== 'sku167' && skuType !== 'sku168' && skuType !== 'sku169' && skuType !== 'sku170' && skuType !== 'sku171' && skuType !== 'sku172' && skuType !== 'sku173' && skuType !== 'sku174' && skuType !== 'sku175' && skuType !== 'sku176' && skuType !== 'sku177' && skuType !== 'sku178' && skuType !== 'sku179' && skuType !== 'sku180' && skuType !== 'sku181' && skuType !== 'sku182' && skuType !== 'sku183' && skuType !== 'sku184' && skuType !== 'sku186' && skuType !== 'sku187' && skuType !== 'sku188' && skuType !== 'sku189' && skuType !== 'sku190' && skuType !== 'sku191' && skuType !== 'sku192') {
     addPipes(height - (isFreestanding ? 7 : 1.5), 2, 'p-vert');
     addPipes(wallDistance - 6.6, 2, 'p-wall-conn');
     if (length > 120) addPipes((length - 3) / 2, 2, 'p-horiz-bar');
@@ -485,6 +497,13 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       addFitting('f-90-elbows', '90° Elbows', quantity * 4);
     }
     addFitting('f-couplings', 'Couplings', quantity * ((lCut > 120 ? 1 : 0) + getTotalExtraCouplings()));
+  } else if (skuType === 'sku192') {
+    const lCut = Math.max(0, length - 10);
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
+    addFitting('f-floor-flanges', 'Floor Flanges', quantity * 1);
+    addFitting('f-t-fittings', 'T-Fittings', quantity * 1);
+    addFitting('f-90-elbows', '90° Elbows', quantity * 1);
+    addFitting('f-couplings', 'Couplings', quantity * ((lCut > 120 ? 2 : 0) + getTotalExtraCouplings()));
   } else if (skuType === 'sku191') {
     const lCut = Math.max(0, length - 10);
     if (hasShelves) {
