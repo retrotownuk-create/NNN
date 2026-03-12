@@ -125,7 +125,18 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       } else {
         extra += getExtraCouplings(lCut, 1);
       }
-    } else if (skuType === 'sku192') {
+    } else if (skuType === 'sku193') {
+      const lCut = Math.max(0, length - 5);
+      const armLen = lCut / 2;
+      if (armLen > 120) {
+        extra += getExtraCouplings((Math.max(0, armLen - 3) / 2), 4);
+      } else {
+        extra += getExtraCouplings(armLen, 2);
+      }
+      extra += getExtraCouplings(23, 1);
+      extra += getExtraCouplings(12, 1);
+
+} else if (skuType === 'sku192') {
       const lCut = Math.max(0, length - 5);
       const hCut = Math.max(0, height - 5);
       extra += getExtraCouplings(hCut / 2, 2);
@@ -339,7 +350,14 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addPipes(hCut, 2, 'p-vert-up');
     if (lCut > 120) addPipes((lCut - 3) / 2, 2, 'p-horiz-bar');
     else addPipes(lCut, 1, 'p-horiz-bar');
-  } else if (skuType === 'sku192') {
+  } else if (skuType === 'sku193') {
+    const lCut = Math.max(0, length - 5);
+    const armLen = lCut / 2;
+    addPipes(23, 1, 'p-wall-conn');
+    addPipes(12, 1, 'p-drop-down');
+    if (armLen > 120) addPipes((armLen - 3) / 2, 4, 'p-horiz-arms');
+    else addPipes(armLen, 2, 'p-horiz-arms');
+    } else if (skuType === 'sku192') {
     const lCut = Math.max(0, length - 5);
     const hCut = Math.max(0, height - 5);
     addPipes(hCut / 2, 2, 'p-vert-pole');
@@ -497,7 +515,15 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       addFitting('f-90-elbows', '90° Elbows', quantity * 4);
     }
     addFitting('f-couplings', 'Couplings', quantity * ((lCut > 120 ? 1 : 0) + getTotalExtraCouplings()));
-  } else if (skuType === 'sku192') {
+  } else if (skuType === 'sku193') {
+    const lCut = Math.max(0, length - 5);
+    const armLen = lCut / 2;
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
+    addFitting('f-90-elbows', '90° Elbows', quantity * 1);
+    addFitting('f-t-fittings', 'T-Fittings', quantity * 1);
+    addFitting('f-plugs', 'Plugs/Caps', quantity * 2);
+    addFitting('f-couplings', 'Couplings', quantity * ((armLen > 120 ? 2 : 0) + getTotalExtraCouplings()));
+    } else if (skuType === 'sku192') {
     const lCut = Math.max(0, length - 5);
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
     addFitting('f-floor-flanges', 'Floor Flanges', quantity * 1);
