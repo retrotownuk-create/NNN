@@ -126,7 +126,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
         extra += getExtraCouplings(lCut, 1);
       }
     } else if (skuType === 'sku192') {
-      const lCut = Math.max(0, length - 10);
+      const lCut = Math.max(0, length - 5);
       const hCut = Math.max(0, height - 5);
       extra += getExtraCouplings(hCut / 2, 2);
       if (lCut > 120) extra += getExtraCouplings((lCut - 3) / 2, 4);
@@ -340,7 +340,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     if (lCut > 120) addPipes((lCut - 3) / 2, 2, 'p-horiz-bar');
     else addPipes(lCut, 1, 'p-horiz-bar');
   } else if (skuType === 'sku192') {
-    const lCut = Math.max(0, length - 10);
+    const lCut = Math.max(0, length - 5);
     const hCut = Math.max(0, height - 5);
     addPipes(hCut / 2, 2, 'p-vert-pole');
     if (lCut > 120) addPipes((lCut - 3) / 2, 4, 'p-horiz-arms');
@@ -498,7 +498,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     }
     addFitting('f-couplings', 'Couplings', quantity * ((lCut > 120 ? 1 : 0) + getTotalExtraCouplings()));
   } else if (skuType === 'sku192') {
-    const lCut = Math.max(0, length - 10);
+    const lCut = Math.max(0, length - 5);
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
     addFitting('f-floor-flanges', 'Floor Flanges', quantity * 1);
     addFitting('f-t-fittings', 'T-Fittings', quantity * 1);

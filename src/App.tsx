@@ -6888,8 +6888,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
   if (skuType === 'sku192') {
     const e = explode * 1.5;
-    const lCut = Math.max(0, length - 10);
-    const hCut = height - 5;
+    const lCut = Math.max(0, length - 5);
+    const hCut = Math.max(0, height - 5);
     
     // Geometric definitions based on wall placement
     const localPoleX = 0;
