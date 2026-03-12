@@ -8172,7 +8172,7 @@ export default function App() {
     localStorage.setItem('helpdesk_tickets', JSON.stringify(tickets));
   }, [tickets]);
 
-  const handleAddTicket = (title: string, description: string) => {
+  const handleAddTicket = (title: string, description: string, imageUrl?: string) => {
     const newTicket: Ticket = {
       id: Math.random().toString(36).substr(2, 9),
       buyerName: 'Current User', // Mocked active user
@@ -8180,17 +8180,23 @@ export default function App() {
       description,
       status: 'Open',
       createdAt: new Date().toISOString(),
-      messages: []
+      messages: imageUrl ? [{
+        id: Math.random().toString(),
+        sender: 'buyer',
+        text: 'Attached image with the ticket.',
+        timestamp: new Date().toISOString(),
+        imageUrl
+      }] : []
     };
     setTickets([newTicket, ...tickets]);
   };
 
-  const handleAddMessage = (ticketId: string, text: string, sender: 'buyer' | 'admin') => {
+  const handleAddMessage = (ticketId: string, text: string, sender: 'buyer' | 'admin' | 'system', imageUrl?: string) => {
     setTickets(prev => prev.map(t => {
       if (t.id === ticketId) {
         return {
           ...t,
-          messages: [...t.messages, { id: Math.random().toString(), sender, text, timestamp: new Date().toISOString() }]
+          messages: [...t.messages, { id: Math.random().toString(), sender, text, timestamp: new Date().toISOString(), imageUrl }]
         };
       }
       return t;
@@ -8198,7 +8204,16 @@ export default function App() {
   };
 
   const handleUpdateTicketStatus = (ticketId: string, status: TicketStatus) => {
-    setTickets(prev => prev.map(t => t.id === ticketId ? { ...t, status } : t));
+    setTickets(prev => prev.map(t => {
+      if (t.id === ticketId && t.status !== status) {
+        return { 
+          ...t, 
+          status,
+          messages: [...t.messages, { id: Math.random().toString(), sender: 'system', text: `Status updated to ${status}`, timestamp: new Date().toISOString() }]
+        };
+      }
+      return t;
+    }));
   };
 
   type SavedSKU = { name: string; length: number; height: number; wallDistance: number; hasShelves: boolean; isFreestanding: boolean; colorName: string; woodColor?: string; skuType?: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku178' | 'sku179' | 'sku180' | 'sku181' | 'sku182' | 'sku183' | 'sku184' | 'sku186' | 'sku187' | 'sku188' | 'sku189' | 'sku190' | 'sku191' | 'sku192' | 'sku193' | 'sku194' | 'sku888'; tiers?: number; tubeType?: 'round' | 'square' };
