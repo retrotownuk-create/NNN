@@ -6892,59 +6892,59 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const hCut = height - 5;
     
     // Geometric definitions based on wall placement
-    const localPoleZ = 0;
-    const localWallZ = -lCut - 4.4; // Wall is backward (negative Z)
+    const localPoleX = 0;
+    const localWallX = -lCut - 4.4; // Wall is to the left (-X)
     
     // Group bounds for camera centering
-    const zCenter = localWallZ / 2;
+    const xCenter = localWallX / 2;
     const halfHeight = height / 2;
     
     return (
-      <group position={[0, halfHeight, -zCenter]}>
+      <group position={[-xCenter, halfHeight, 0]}>
         
         {/* FLOOR MOUNT */}
-        <group position={[0, -halfHeight - e, localPoleZ]}>
+        <group position={[localPoleX, -halfHeight - e, 0]}>
             <Flange position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
         
         {/* VERTICAL POLE BOTTOM HALF */}
-        <group position={[0, -halfHeight / 2 - e * 0.5, localPoleZ]}>
+        <group position={[localPoleX, -halfHeight / 2 - e * 0.5, 0]}>
             <Pipe start={[0, -halfHeight + 1.2, 0]} end={[0, -2.2, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${(hCut/2).toFixed(1)} cm`} />
         </group>
         
         {/* MIDDLE T-FITTING */}
-        <group position={[0, 0, localPoleZ]}>
-            <TFitting position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        <group position={[localPoleX, 0, 0]}>
+            <TFitting position={[0, 0, 0]} rotation={[0, 0.5 * Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
         
         {/* MIDDLE HORIZONTAL ARM (goes from Pole -> Wall) */}
-        <group position={[0, 0, -e * 0.5]}>
-            <Pipe start={[0, 0, localPoleZ - 2.2]} end={[0, 0, localWallZ + 1.2]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${lCut} cm`} />
+        <group position={[-e * 0.5, 0, 0]}>
+            <Pipe start={[localPoleX - 2.2, 0, 0]} end={[localWallX + 1.2, 0, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${lCut} cm`} />
         </group>
         
         {/* MIDDLE WALL FLANGE */}
-        <group position={[0, 0, localWallZ - e]}>
-            <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        <group position={[localWallX - e, 0, 0]}>
+            <Flange position={[0, 0, 0]} rotation={[0, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* VERTICAL POLE TOP HALF */}
-        <group position={[0, halfHeight / 2 + e * 0.5, localPoleZ]}>
+        <group position={[localPoleX, halfHeight / 2 + e * 0.5, 0]}>
             <Pipe start={[0, 2.2, 0]} end={[0, halfHeight - 2.2, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${(hCut/2).toFixed(1)} cm`} />
         </group>
 
         {/* TOP ELBOW */}
-        <group position={[0, halfHeight + e, localPoleZ]}>
-            <Elbow position={[0, 0, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+        <group position={[localPoleX, halfHeight + e, 0]}>
+            <Elbow position={[0, 0, 0]} rotation={[0, -0.5 * Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* TOP HORIZONTAL ARM (goes from Pole -> Wall) */}
-        <group position={[0, halfHeight + e, -e * 0.5]}>
-            <Pipe start={[0, 0, localPoleZ - 2.2]} end={[0, 0, localWallZ + 1.2]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${lCut} cm`} />
+        <group position={[-e * 0.5, halfHeight + e, 0]}>
+            <Pipe start={[localPoleX - 2.2, 0, 0]} end={[localWallX + 1.2, 0, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${lCut} cm`} />
         </group>
         
         {/* TOP WALL FLANGE */}
-        <group position={[0, halfHeight + e, localWallZ - e]}>
-            <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        <group position={[localWallX - e, halfHeight + e, 0]}>
+            <Flange position={[0, 0, 0]} rotation={[0, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );
