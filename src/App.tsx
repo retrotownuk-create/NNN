@@ -6888,10 +6888,10 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
   if (skuType === 'sku193') {
     const e = explode * 1.5;
-    const lCut = Math.max(0, length - 5);
-    const halfL = lCut / 2;
+    const armRight = length / 2;
+    const armLeft = Math.max(0, (length / 2) - 5);
     const dCut = 23;      // 23cm from wall
-    const hCut = Math.max(0, height - 5);      // using height slider for drop down? wait, user said "drop down pole is 12cm"!
+    const hCut = Math.max(0, height - 5);      
     const dropCut = 12;
     
     // Geometry logic
@@ -6929,21 +6929,21 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         
         {/* Left Arm Pipe */}
         <group position={[-e * 0.5, yTee - e, 0]}>
-            <Pipe start={[-2.2, 0, 0]} end={[-halfL - 2.2, 0, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${(lCut / 2).toFixed(1)} cm`} />
+            <Pipe start={[-2.2, 0, 0]} end={[-armLeft - 2.2, 0, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${armLeft} cm`} />
         </group>
         
         {/* Right Arm Pipe */}
         <group position={[e * 0.5, yTee - e, 0]}>
-            <Pipe start={[2.2, 0, 0]} end={[halfL + 2.2, 0, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${(lCut / 2).toFixed(1)} cm`} />
+            <Pipe start={[2.2, 0, 0]} end={[armRight + 2.2, 0, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${armRight} cm`} />
         </group>
 
         {/* Left End Cap */}
-        <group position={[-halfL - 4.4 - e, yTee - e, 0]}>
+        <group position={[-armLeft - 2.2 - e, yTee - e, 0]}>
             <EndCap position={[0, 0, 0]} rotation={[0, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Right End Cap */}
-        <group position={[halfL + 4.4 + e, yTee - e, 0]}>
+        <group position={[armRight + 2.2 + e, yTee - e, 0]}>
             <EndCap position={[0, 0, 0]} rotation={[0, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
