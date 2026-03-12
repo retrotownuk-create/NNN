@@ -6891,60 +6891,65 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     const lCut = Math.max(0, length - 10);
     const hCut = height - 5;
     
-    // Total geometric offsets
-    const zWall = -(lCut + 4.4); // Wall is behind the structure
+    // Geometric definitions based on wall placement
+    const localPoleZ = 0;
+    const localWallZ = -lCut - 4.4; // Wall is backward (negative Z)
+    
+    // Group bounds for camera centering
+    const zCenter = localWallZ / 2;
     const halfHeight = height / 2;
     
     return (
-      <group position={[0, halfHeight, -zWall / 2]}>
+      <group position={[0, halfHeight, -zCenter]}>
         
         {/* FLOOR MOUNT */}
-        <group position={[0, -halfHeight - e, -zWall/2]}>
+        <group position={[0, -halfHeight - e, localPoleZ]}>
             <Flange position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
         
         {/* VERTICAL POLE BOTTOM HALF */}
-        <group position={[0, -halfHeight / 2 - e * 0.5, -zWall/2]}>
+        <group position={[0, -halfHeight / 2 - e * 0.5, localPoleZ]}>
             <Pipe start={[0, -halfHeight + 1.2, 0]} end={[0, -2.2, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${(hCut/2).toFixed(1)} cm`} />
         </group>
         
         {/* MIDDLE T-FITTING */}
-        <group position={[0, 0, -zWall/2]}>
-            <TFitting position={[0, 0, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
+        <group position={[0, 0, localPoleZ]}>
+            <TFitting position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
         
-        {/* MIDDLE HORIZONTAL ARM */}
+        {/* MIDDLE HORIZONTAL ARM (goes from Pole -> Wall) */}
         <group position={[0, 0, -e * 0.5]}>
-            <Pipe start={[0, 0, -zWall/2 + 2.2]} end={[0, 0, zWall/2 - 2.2]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${lCut} cm`} />
+            <Pipe start={[0, 0, localPoleZ - 2.2]} end={[0, 0, localWallZ + 1.2]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${lCut} cm`} />
         </group>
         
         {/* MIDDLE WALL FLANGE */}
-        <group position={[0, 0, zWall/2 + e]}>
+        <group position={[0, 0, localWallZ - e]}>
             <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* VERTICAL POLE TOP HALF */}
-        <group position={[0, halfHeight / 2 + e * 0.5, -zWall/2]}>
+        <group position={[0, halfHeight / 2 + e * 0.5, localPoleZ]}>
             <Pipe start={[0, 2.2, 0]} end={[0, halfHeight - 2.2, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${(hCut/2).toFixed(1)} cm`} />
         </group>
 
         {/* TOP ELBOW */}
-        <group position={[0, halfHeight + e, -zWall/2]}>
-            <Elbow position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+        <group position={[0, halfHeight + e, localPoleZ]}>
+            <Elbow position={[0, 0, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
-        {/* TOP HORIZONTAL ARM */}
+        {/* TOP HORIZONTAL ARM (goes from Pole -> Wall) */}
         <group position={[0, halfHeight + e, -e * 0.5]}>
-            <Pipe start={[0, 0, -zWall/2 + 2.2]} end={[0, 0, zWall/2 - 2.2]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${lCut} cm`} />
+            <Pipe start={[0, 0, localPoleZ - 2.2]} end={[0, 0, localWallZ + 1.2]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${lCut} cm`} />
         </group>
         
         {/* TOP WALL FLANGE */}
-        <group position={[0, halfHeight + e, zWall/2 + e]}>
+        <group position={[0, halfHeight + e, localWallZ - e]}>
             <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );
   }
+
 
   if (skuType === 'sku191') {
     const e = explode * 1.5;
