@@ -6894,6 +6894,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
     // Geometry logic
     const zWall = -dCut - 4.4; // the wall is at negative Z
     const yRail = 0;
+    const yElbow = 5.9; // 2.2 + 1.5 + 2.2
     
     // Number of mounts based on length
     const isLong = lCut > 120;
@@ -6919,25 +6920,35 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
           return (
             <group key={index} position={[localE, 0, 0]}>
               {/* Wall Flange */}
-              <group position={[mount.x, yRail, zWall - e]}>
+              <group position={[mount.x, yElbow, zWall - e]}>
                   <Flange position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
               
-              {/* Wall to Tee Pipe (Depth) */}
-              <group position={[mount.x, yRail, -e * 0.5]}>
+              {/* Wall to Elbow Pipe (Depth) */}
+              <group position={[mount.x, yElbow, -e * 0.5]}>
                   <Pipe start={[0, 0, zWall + 2.2]} end={[0, 0, -2.2]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${dCut} cm`} />
               </group>
+
+              {/* Elbow pointing down */}
+              <group position={[mount.x, yElbow, 0]}>
+                  <Elbow position={[0, 0, 0]} rotation={[0, Math.PI, Math.PI]} showLabel={showLabel} colorOption={colorOption} />
+              </group>
+
+              {/* Hex Nipple connecting Elbow to TFitting */}
+              <group position={[mount.x, 2.95, 0]}>
+                  <HexNipple position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={false} colorOption={colorOption} />
+              </group>
               
-              {/* Tee Fitting */}
+              {/* Tee Fitting (Branch upwards) */}
               <group position={[mount.x, yRail, 0]}>
-                  <TFitting position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                  <TFitting position={[0, 0, 0]} rotation={[0.5 * Math.PI, 0, 0.5 * Math.PI]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
               {/* End parts if this is an end mount */}
               {mount.type === 'end' && (
                 <group position={[mount.x, yRail, 0]}>
-                  {/* Hex Nipple */}
-                  <HexNipple position={[signX * 3.2 + localE*0.2, 0, 0]} rotation={[0, 0, -Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+                  {/* Hex Nipple joining TFitting to EndCap */}
+                  <HexNipple position={[signX * 3.2 + localE*0.2, 0, 0]} rotation={[0, 0, -Math.PI / 2]} showLabel={false} colorOption={colorOption} />
                   
                   {/* End Cap */}
                   <EndCap position={[signX * (3.2 + 0.6 + 1.2) + localE*0.4, 0, 0]} rotation={[0, signX > 0 ? Math.PI / 2 : -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />

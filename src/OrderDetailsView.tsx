@@ -540,8 +540,9 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     const lCut = Math.max(0, length - 5);
     const numMounts = lCut > 120 ? 3 : 2;
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * numMounts);
+    addFitting('f-90-elbows', '90° Elbows', quantity * numMounts);
     addFitting('f-t-fittings', 'T-Fittings', quantity * numMounts);
-    addFitting('f-hex-nipples', 'Hex Nipples', quantity * 2);
+    addFitting('f-hex-nipples', 'Hex Nipples', quantity * (numMounts + 2));
     addFitting('f-end-caps', 'End Caps', quantity * 2);
     addFitting('f-couplings', 'Couplings', quantity * ((lCut > 120 ? 1 : 0) + getTotalExtraCouplings()));
   } else if (skuType === 'sku193') {
