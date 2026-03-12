@@ -128,13 +128,13 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     } else if (skuType === 'sku191') {
       const lCut = Math.max(0, length - 10);
       const hCut = height;
-      const topDrop = hasShelves ? 40 : 0; // 40cm fixed drop from top bracket
-      extra += getExtraCouplings(8, hasShelves ? 4 : 2); // wall pipes (8cm fixed)
+      const dCut = wallDistance === 25 ? 23 : Math.max(0, wallDistance - 5);
+      extra += getExtraCouplings(dCut, hasShelves ? 4 : 2); // wall pipes
       extra += getExtraCouplings(hCut, 2); // vertical drop
-      if(hasShelves) extra += getExtraCouplings(topDrop, 2);
+      if(hasShelves) extra += getExtraCouplings(5, 2); // 5cm pipe for top bracket
       if (lCut > 120) extra += getExtraCouplings((lCut - 3) / 2, 2);
       else extra += getExtraCouplings(lCut, 1);
-  } else if (skuType === 'sku300') {
+    } else if (skuType === 'sku300') {
       const numPipes = Math.ceil(length / 120);
       const numMounts = numPipes + 1;
       extra += getExtraCouplings(wallDistance - 6.6, numMounts);
@@ -336,8 +336,9 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
   } else if (skuType === 'sku191') {
     const lCut = Math.max(0, length - 10);
     const hCut = height;
-    addPipes(8, hasShelves ? 4 : 2, 'p-wall-conn'); // Fixed 8cm wall distance
-    if(hasShelves) addPipes(40, 2, 'p-top-drop'); // Fixed 40cm drop from top
+    const dCut = wallDistance === 25 ? 23 : Math.max(0, wallDistance - 5);
+    addPipes(dCut, hasShelves ? 4 : 2, 'p-wall-conn');
+    if(hasShelves) addPipes(5, 2, 'p-top-drop');
     addPipes(hCut, 2, 'p-vert-drop');
     if (lCut > 120) addPipes((lCut - 3) / 2, 2, 'p-horiz-bar');
     else addPipes(lCut, 1, 'p-horiz-bar');

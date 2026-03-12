@@ -6889,11 +6889,12 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   if (skuType === 'sku191') {
     const e = explode * 1.5;
     const lCut = Math.max(0, length - 10);
-    const topDrop = hasShelves ? 40 : 0;
+    const topDrop = hasShelves ? 20 : 0;
     const bottomDrop = height;
     
     // Total geometric offsets
-    const zWall = -11.7; // Fixed 8cm wall distance (8 + 3.7 flange depth)
+    const dCut = wallDistance === 25 ? 23 : Math.max(0, wallDistance - 5);
+    const zWall = -(dCut + 3.7);
     const horizCut = lCut + 4.4;
     
     const leftX = -horizCut / 2;
@@ -6912,7 +6913,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
                 <Flange position={[x, topDrop, zWall]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
               <group position={[sideX, e*6, -e * 0.5]}>
-                <Pipe start={[x, topDrop, zWall + 1.5]} end={[x, topDrop, -2.2]} showLabel={showLabel} colorOption={colorOption} overrideLabel="8 cm" />
+                <Pipe start={[x, topDrop, zWall + 1.5]} end={[x, topDrop, -2.2]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`\${dCut} cm`} />
               </group>
               
               {/* TOP ELBOW */}
@@ -6922,7 +6923,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
               
               {/* VERTICAL PIPE TO SHELF */}
               <group position={[sideX, e*4, 0]}>
-                <Pipe start={[x, topDrop - 2.2, 0]} end={[x, 2.2, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel="40 cm" />
+                <Pipe start={[x, topDrop - 2.2, 0]} end={[x, 2.2, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel="5 cm" />
               </group>
               
               {/* FLANGE ON TOP OF SHELF */}
@@ -6937,7 +6938,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
             <Flange position={[x, -2.5, zWall]} rotation={[Math.PI / 2, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           <group position={[sideX, 0, -e * 0.5]}>
-            <Pipe start={[x, -2.5, zWall + 1.5]} end={[x, -2.5, -2.2]} showLabel={showLabel} colorOption={colorOption} overrideLabel="8 cm" />
+            <Pipe start={[x, -2.5, zWall + 1.5]} end={[x, -2.5, -2.2]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`\${dCut} cm`} />
           </group>
           
           {hasShelves ? (
@@ -7989,7 +7990,7 @@ export default function App() {
     const default188: SavedSKU = { name: 'SKU 188', length: 120, height: 60, wallDistance: 0, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku188' };
     const default189: SavedSKU = { name: 'SKU 189', length: 120, height: 160, wallDistance: 30, hasShelves: true, isFreestanding: false, colorName: 'Black', skuType: 'sku189' };
     const default190: SavedSKU = { name: 'SKU 190', length: 100, height: 18, wallDistance: 25, hasShelves: true, isFreestanding: false, colorName: 'Black', skuType: 'sku190' };
-    const default191: SavedSKU = { name: 'SKU 191', length: 100, height: 40, wallDistance: 20, hasShelves: true, isFreestanding: false, colorName: 'Black', skuType: 'sku191' };
+    const default191: SavedSKU = { name: 'SKU 191', length: 100, height: 20, wallDistance: 23, hasShelves: true, isFreestanding: false, colorName: 'Black', skuType: 'sku191' };
 
                                 const default184: SavedSKU = { name: 'SKU 184', length: 5, height: 0, wallDistance: 5, hasShelves: false, isFreestanding: false, colorName: 'Black', skuType: 'sku184' };
         const default183: SavedSKU = { name: 'SKU 183', length: 15, height: 75, wallDistance: 0, hasShelves: false, isFreestanding: true, colorName: 'Black', skuType: 'sku183' };
