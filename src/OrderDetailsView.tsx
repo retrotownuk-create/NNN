@@ -115,30 +115,25 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       extra += getExtraCouplings(lCut - 3, 1);
     }
     } else if (skuType === 'sku190') {
-    const lCut = Math.max(0, length - 10);
-    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
-    if (hasShelves) {
-      addFitting('f-floor-flanges', 'Floor Flanges', quantity * 2);
-      addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
-      addFitting('f-90-elbows', '90° Elbows', quantity * 2);
-      addFitting('f-hex-nipples', 'Hex Nipples', quantity * 2);
-    } else {
-      addFitting('f-90-elbows', '90° Elbows', quantity * 4);
-    }
-    addFitting('f-couplings', 'Couplings', quantity * ((lCut > 120 ? 1 : 0) + getTotalExtraCouplings()));
-  } else if (skuType === 'sku191') {
-    const lCut = Math.max(0, length - 10);
-    if (hasShelves) {
-      addFitting('f-wall-flanges', 'Wall Flanges', quantity * 4);
-      addFitting('f-floor-flanges', 'Floor Flanges', quantity * 4);
-      addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
-      addFitting('f-90-elbows', '90° Elbows', quantity * 4);
-      addFitting('f-hex-nipples', 'Hex Nipples', quantity * 2);
-    } else {
-      addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
-      addFitting('f-90-elbows', '90° Elbows', quantity * 4);
-    }
-    addFitting('f-couplings', 'Couplings', quantity * ((lCut > 120 ? 1 : 0) + getTotalExtraCouplings()));
+      const hCut = height;
+      const lCut = Math.max(0, length - 10);
+      const dCut = wallDistance === 25 ? 23 : Math.max(0, wallDistance - 5);
+      extra += getExtraCouplings(dCut, 2);
+      extra += getExtraCouplings(hCut, 2);
+      if (lCut > 120) {
+        extra += getExtraCouplings((lCut - 3) / 2, 2);
+      } else {
+        extra += getExtraCouplings(lCut, 1);
+      }
+    } else if (skuType === 'sku191') {
+      const lCut = Math.max(0, length - 10);
+      const hCut = height;
+      const topDrop = hasShelves ? 40 : 0; // 40cm fixed drop from top bracket
+      extra += getExtraCouplings(8, hasShelves ? 4 : 2); // wall pipes (8cm fixed)
+      extra += getExtraCouplings(hCut, 2); // vertical drop
+      if(hasShelves) extra += getExtraCouplings(topDrop, 2);
+      if (lCut > 120) extra += getExtraCouplings((lCut - 3) / 2, 2);
+      else extra += getExtraCouplings(lCut, 1);
   } else if (skuType === 'sku300') {
       const numPipes = Math.ceil(length / 120);
       const numMounts = numPipes + 1;
@@ -338,6 +333,14 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addPipes(hCut, 2, 'p-vert-up');
     if (lCut > 120) addPipes((lCut - 3) / 2, 2, 'p-horiz-bar');
     else addPipes(lCut, 1, 'p-horiz-bar');
+  } else if (skuType === 'sku191') {
+    const lCut = Math.max(0, length - 10);
+    const hCut = height;
+    addPipes(8, hasShelves ? 4 : 2, 'p-wall-conn'); // Fixed 8cm wall distance
+    if(hasShelves) addPipes(40, 2, 'p-top-drop'); // Fixed 40cm drop from top
+    addPipes(hCut, 2, 'p-vert-drop');
+    if (lCut > 120) addPipes((lCut - 3) / 2, 2, 'p-horiz-bar');
+    else addPipes(lCut, 1, 'p-horiz-bar');
   } else if (skuType === 'sku300') {
     const numPipes = Math.ceil(length / 120);
     const numMounts = numPipes + 1;
@@ -478,6 +481,19 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       addFitting('f-90-elbows', '90° Elbows', quantity * 2);
       addFitting('f-hex-nipples', 'Hex Nipples', quantity * 2);
     } else {
+      addFitting('f-90-elbows', '90° Elbows', quantity * 4);
+    }
+    addFitting('f-couplings', 'Couplings', quantity * ((lCut > 120 ? 1 : 0) + getTotalExtraCouplings()));
+  } else if (skuType === 'sku191') {
+    const lCut = Math.max(0, length - 10);
+    if (hasShelves) {
+      addFitting('f-wall-flanges', 'Wall Flanges', quantity * 4);
+      addFitting('f-floor-flanges', 'Floor Flanges', quantity * 4);
+      addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
+      addFitting('f-90-elbows', '90° Elbows', quantity * 4);
+      addFitting('f-hex-nipples', 'Hex Nipples', quantity * 2);
+    } else {
+      addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
       addFitting('f-90-elbows', '90° Elbows', quantity * 4);
     }
     addFitting('f-couplings', 'Couplings', quantity * ((lCut > 120 ? 1 : 0) + getTotalExtraCouplings()));
