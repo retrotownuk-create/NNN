@@ -6793,7 +6793,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
       if (skuType === 'sku190') {
     const e = explode * 1.5;
     const horizCut = Math.max(0, length - 10);
-    const vertCut = Math.max(0, height - 5);
+    const vertCut = height;
     const zWall = -wallDistance;
     
     const leftX = -horizCut / 2;
