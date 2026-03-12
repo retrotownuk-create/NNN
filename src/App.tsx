@@ -104,41 +104,17 @@ const Navbar = ({ view, setView, ordersCount, currentSku, skuType, configSearch,
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /><path d="M12 11h4" /><path d="M12 16h4" /><path d="M8 11h.01" /><path d="M8 16h.01" /><rect width="8" height="4" x="8" y="2" rx="1" ry="1" /></svg>
             Preparation
           </button>
+          <button
+            onClick={() => setView('admin')}
+            className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${view === 'admin' ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
+            Help Desk
+          </button>
         </nav>
       </div>
 
       <div className="w-full md:w-auto flex justify-between md:justify-end items-center gap-3">
-        {/* Support Buttons */}
-        <div className="flex items-center gap-2 border-r border-gray-200 pr-4 mr-1">
-          <button 
-            onClick={() => setView('helpdesk')}
-            className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-all ${view === 'helpdesk' ? 'bg-blue-600 text-white' : 'bg-blue-50 text-blue-700 hover:bg-blue-100'}`}
-          >
-            Help & Support
-          </button>
-          
-          <select 
-            value={(window as any).currentUserRole || 'buyer'}
-            onChange={(e) => {
-              (window as any).currentUserRole = e.target.value;
-              // Force render hack if needed, or just let state handle it in parent
-              setView(view); 
-            }}
-            className="text-xs bg-gray-100 border-none rounded px-2 py-1 font-semibold cursor-pointer outline-none"
-          >
-            <option value="buyer">Buyer View</option>
-            <option value="admin">Admin View</option>
-          </select>
-
-          {(window as any).currentUserRole === 'admin' && (
-             <button 
-              onClick={() => setView('admin')}
-              className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-all ${view === 'admin' ? 'bg-purple-600 text-white' : 'bg-purple-50 text-purple-700 hover:bg-purple-100'}`}
-             >
-               Admin Portal
-             </button>
-          )}
-        </div>
 
         {syncStatus && (
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-50 border border-gray-100 shadow-sm hidden md:flex">
@@ -10430,23 +10406,13 @@ export default function App() {
         </div>
       )}
 
-      {/* --- Overlay Views --- */}
-      {view === 'helpdesk' && (
-        <HelpdeskView 
-          onClose={() => setView('configurator')}
-          buyerName={(window as any).currentUserRole === 'buyer' ? 'Current User' : 'Admin Preview'}
-          tickets={tickets}
-          onAddTicket={handleAddTicket}
-          onAddMessage={handleAddMessage}
-        />
-      )}
-
       {view === 'admin' && (
         <AdminView
           onClose={() => setView('configurator')}
           tickets={tickets}
           onUpdateStatus={handleUpdateTicketStatus}
           onAddMessage={handleAddMessage}
+          onAddTicket={handleAddTicket}
         />
       )}
     </div>
