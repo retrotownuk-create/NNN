@@ -125,6 +125,13 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       } else {
         extra += getExtraCouplings(lCut, 1);
       }
+    } else if (skuType === 'sku194') {
+      const lCut = Math.max(0, length - 5);
+      const dCut = Math.max(0, wallDistance - 5);
+      const numMounts = lCut > 120 ? 3 : 2;
+      extra += getExtraCouplings(dCut, numMounts);
+      if (lCut > 120) extra += getExtraCouplings((lCut - 3) / 2, 2);
+      else extra += getExtraCouplings(lCut, 1);
     } else if (skuType === 'sku193') {
       const arm1 = length / 2;
       const arm2 = Math.max(0, (length / 2) - 5);
@@ -351,6 +358,13 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addPipes(hCut, 2, 'p-vert-up');
     if (lCut > 120) addPipes((lCut - 3) / 2, 2, 'p-horiz-bar');
     else addPipes(lCut, 1, 'p-horiz-bar');
+  } else if (skuType === 'sku194') {
+    const lCut = Math.max(0, length - 5);
+    const dCut = Math.max(0, wallDistance - 5);
+    const numMounts = lCut > 120 ? 3 : 2;
+    addPipes(dCut, numMounts, 'p-wall-conn');
+    if (lCut > 120) addPipes((lCut - 3) / 2, 2, 'p-horiz-bar');
+    else addPipes(lCut, 1, 'p-horiz-bar');
   } else if (skuType === 'sku193') {
     const arm1 = length / 2;
     const arm2 = Math.max(0, (length / 2) - 5);
@@ -521,6 +535,14 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     } else {
       addFitting('f-90-elbows', '90° Elbows', quantity * 4);
     }
+    addFitting('f-couplings', 'Couplings', quantity * ((lCut > 120 ? 1 : 0) + getTotalExtraCouplings()));
+  } else if (skuType === 'sku194') {
+    const lCut = Math.max(0, length - 5);
+    const numMounts = lCut > 120 ? 3 : 2;
+    addFitting('f-wall-flanges', 'Wall Flanges', quantity * numMounts);
+    addFitting('f-t-fittings', 'T-Fittings', quantity * numMounts);
+    addFitting('f-hex-nipples', 'Hex Nipples', quantity * 2);
+    addFitting('f-end-caps', 'End Caps', quantity * 2);
     addFitting('f-couplings', 'Couplings', quantity * ((lCut > 120 ? 1 : 0) + getTotalExtraCouplings()));
   } else if (skuType === 'sku193') {
     const arm1 = length / 2;
