@@ -6792,9 +6792,14 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
   
       if (skuType === 'sku190') {
     const e = explode * 1.5;
-    const horizCut = Math.max(0, length - 10);
+    const lCut = Math.max(0, length - 10);
+    const dCut = wallDistance === 25 ? 23 : Math.max(0, wallDistance - 5);
+    const hCut = height;
+    
+    // Spread the brackets exactly so the horizontal pipe gets drawn at lCut span
+    const horizCut = lCut + 4.4;
     const vertCut = height;
-    const zWall = -wallDistance;
+    const zWall = -(dCut + 3.7); // adjust visually so it renders closer to its true length
     
     const leftX = -horizCut / 2;
     const rightX = horizCut / 2;
@@ -6810,7 +6815,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
           {/* Depth Pipe passing Outwards from Wall */}
           <group position={[sideX, 0, -e * 0.5]}>
-            <Pipe start={[x, 0, zWall + 1.5]} end={[x, 0, -2.2]} showLabel={showLabel} colorOption={colorOption} />
+            <Pipe start={[x, 0, zWall + 1.5]} end={[x, 0, -2.2]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${dCut} cm`} />
           </group>
 
           {/* Bottom 90 Elbow: Connects wall pipe (-Z) and points UP (+Y) */}
@@ -6820,7 +6825,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
           {/* Vertical Height Pipe going UP */}
           <group position={[sideX, e, 0]}>
-            <Pipe start={[x, 2.2, 0]} end={[x, vertCut - 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Pipe start={[x, 2.2, 0]} end={[x, vertCut - 2.2, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${hCut} cm`} />
           </group>
 
           {/* Top Junction: Vertical pipe meets horizontal clothing bar */}
@@ -6861,18 +6866,18 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         {horizCut > 120 ? (
           <>
             <group position={[-explode * 0.75, e * 2, 0]}>
-              <Pipe start={[leftX + 2.2, vertCut, 0]} end={[0, vertCut, 0]} showLabel={showLabel} colorOption={colorOption} />
+              <Pipe start={[leftX + 2.2, vertCut, 0]} end={[0, vertCut, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${(lCut/2).toFixed(1)} cm`} />
             </group>
             <group position={[0, e * 2, 0]}>
               <Coupling position={[0, vertCut, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
             </group>
             <group position={[explode * 0.75, e * 2, 0]}>
-              <Pipe start={[0, vertCut, 0]} end={[rightX - 2.2, vertCut, 0]} showLabel={showLabel} colorOption={colorOption} />
+              <Pipe start={[0, vertCut, 0]} end={[rightX - 2.2, vertCut, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${(lCut/2).toFixed(1)} cm`} />
             </group>
           </>
         ) : (
           <group position={[0, e * 2, 0]}>
-            <Pipe start={[leftX + 2.2, vertCut, 0]} end={[rightX - 2.2, vertCut, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Pipe start={[leftX + 2.2, vertCut, 0]} end={[rightX - 2.2, vertCut, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${lCut} cm`} />
           </group>
         )}
 
