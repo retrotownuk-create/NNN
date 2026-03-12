@@ -6914,7 +6914,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         
         {/* Top Elbow connecting to Drop */}
         <group position={[0, yElbow, 0]}>
-            <Elbow position={[0, 0, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Elbow position={[0, 0, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
         
         {/* Drop Down Pipe (12cm) */}
@@ -6939,12 +6939,12 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
         {/* Left End Cap */}
         <group position={[-halfL - 4.4 - e, yTee - e, 0]}>
-            <Plug position={[0, 0, 0]} rotation={[0, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <EndCap position={[0, 0, 0]} rotation={[0, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
 
         {/* Right End Cap */}
         <group position={[halfL + 4.4 + e, yTee - e, 0]}>
-            <Plug position={[0, 0, 0]} rotation={[0, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <EndCap position={[0, 0, 0]} rotation={[0, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
       </group>
     );

@@ -521,7 +521,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
     addFitting('f-90-elbows', '90° Elbows', quantity * 1);
     addFitting('f-t-fittings', 'T-Fittings', quantity * 1);
-    addFitting('f-plugs', 'Plugs/Caps', quantity * 2);
+    addFitting('f-end-caps', 'End Caps', quantity * 2);
     addFitting('f-couplings', 'Couplings', quantity * ((armLen > 120 ? 2 : 0) + getTotalExtraCouplings()));
     } else if (skuType === 'sku192') {
     const lCut = Math.max(0, length - 5);
