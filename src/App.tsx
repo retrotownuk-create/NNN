@@ -13,6 +13,8 @@ import autoTable from 'jspdf-autotable';
 import html2canvas from 'html2canvas';
 import { COLORS, WOOD_COLORS, ColorOption, getPipesForLength, getExtraCouplings, getEqualSplitPipes } from './utils';
 import { fetchOrders, saveOrders } from './api';
+import { HelpdeskView, Ticket, TicketStatus } from './HelpdeskView';
+import { AdminView } from './AdminView';
 
 // --- Components ---
 
@@ -106,8 +108,40 @@ const Navbar = ({ view, setView, ordersCount, currentSku, skuType, configSearch,
       </div>
 
       <div className="w-full md:w-auto flex justify-between md:justify-end items-center gap-3">
+        {/* Support Buttons */}
+        <div className="flex items-center gap-2 border-r border-gray-200 pr-4 mr-1">
+          <button 
+            onClick={() => setView('helpdesk')}
+            className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-all ${view === 'helpdesk' ? 'bg-blue-600 text-white' : 'bg-blue-50 text-blue-700 hover:bg-blue-100'}`}
+          >
+            Help & Support
+          </button>
+          
+          <select 
+            value={(window as any).currentUserRole || 'buyer'}
+            onChange={(e) => {
+              (window as any).currentUserRole = e.target.value;
+              // Force render hack if needed, or just let state handle it in parent
+              setView(view); 
+            }}
+            className="text-xs bg-gray-100 border-none rounded px-2 py-1 font-semibold cursor-pointer outline-none"
+          >
+            <option value="buyer">Buyer View</option>
+            <option value="admin">Admin View</option>
+          </select>
+
+          {(window as any).currentUserRole === 'admin' && (
+             <button 
+              onClick={() => setView('admin')}
+              className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-all ${view === 'admin' ? 'bg-purple-600 text-white' : 'bg-purple-50 text-purple-700 hover:bg-purple-100'}`}
+             >
+               Admin Portal
+             </button>
+          )}
+        </div>
+
         {syncStatus && (
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-50 border border-gray-100 shadow-sm">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-50 border border-gray-100 shadow-sm hidden md:flex">
             <div className={`w-2 h-2 rounded-full ${syncStatus === 'synced' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' :
               syncStatus === 'syncing' ? 'bg-blue-500 animate-pulse' :
                 syncStatus === 'error' ? 'bg-red-500' : 'bg-gray-300'
@@ -8066,7 +8100,7 @@ const InfoIcon = () => (
 
 export default function App() {
   const appRef = useRef<HTMLDivElement>(null);
-  const [view, setView] = useState<'configurator' | 'library' | 'orders' | 'inventory' | 'preparation'>('library');
+  const [view, setView] = useState<'configurator' | 'library' | 'orders' | 'inventory' | 'preparation' | 'helpdesk' | 'admin'>('library');
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
   const [length, setLength] = useState(100);
   const [height, setHeight] = useState(180);
@@ -8123,6 +8157,49 @@ export default function App() {
   const [prepTab, setPrepTab] = useState<'active' | 'prepared'>('active');
   const [syncStatus, setSyncStatus] = useState<'synced' | 'syncing' | 'error' | 'disconnected'>('syncing');
   const lastSyncRef = useRef<string>('');
+
+  // --- Helpdesk State ---
+  // In a real app this comes from a database.
+  if (!(window as any).currentUserRole) {
+    (window as any).currentUserRole = 'buyer';
+  }
+  const [tickets, setTickets] = useState<Ticket[]>(() => {
+    const saved = localStorage.getItem('helpdesk_tickets');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('helpdesk_tickets', JSON.stringify(tickets));
+  }, [tickets]);
+
+  const handleAddTicket = (title: string, description: string) => {
+    const newTicket: Ticket = {
+      id: Math.random().toString(36).substr(2, 9),
+      buyerName: 'Current User', // Mocked active user
+      title,
+      description,
+      status: 'Open',
+      createdAt: new Date().toISOString(),
+      messages: []
+    };
+    setTickets([newTicket, ...tickets]);
+  };
+
+  const handleAddMessage = (ticketId: string, text: string, sender: 'buyer' | 'admin') => {
+    setTickets(prev => prev.map(t => {
+      if (t.id === ticketId) {
+        return {
+          ...t,
+          messages: [...t.messages, { id: Math.random().toString(), sender, text, timestamp: new Date().toISOString() }]
+        };
+      }
+      return t;
+    }));
+  };
+
+  const handleUpdateTicketStatus = (ticketId: string, status: TicketStatus) => {
+    setTickets(prev => prev.map(t => t.id === ticketId ? { ...t, status } : t));
+  };
 
   type SavedSKU = { name: string; length: number; height: number; wallDistance: number; hasShelves: boolean; isFreestanding: boolean; colorName: string; woodColor?: string; skuType?: 'standard' | 'sku777' | 'sku000' | 'sku100' | 'sku200' | 'sku102' | 'sku103' | 'sku104' | 'sku4210' | 'sku300' | 'sku105' | 'sku106' | 'sku107' | 'sku108' | 'sku109' | 'sku110' | 'sku111' | 'sku112' | 'sku113' | 'sku114' | 'sku115' | 'sku116' | 'sku117' | 'sku118' | 'sku119' | 'sku120' | 'sku121' | 'sku122' | 'sku123' | 'sku124' | 'sku125' | 'sku126' | 'sku127' | 'sku128' | 'sku129' | 'sku130' | 'sku131' | 'sku132' | 'sku133' | 'sku134' | 'sku135' | 'sku136' | 'sku137' | 'sku138' | 'sku140' | 'sku141' | 'sku142' | 'sku143' | 'sku144' | 'sku145' | 'sku146' | 'sku147' | 'sku148' | 'sku149' | 'sku150' | 'sku151' | 'sku152' | 'sku153' | 'sku154' | 'sku155' | 'sku156' | 'sku157' | 'sku158' | 'sku159' | 'sku160' | 'sku161' | 'sku162' | 'sku163' | 'sku164' | 'sku165' | 'sku166' | 'sku167' | 'sku168' | 'sku169' | 'sku170' | 'sku171' | 'sku172' | 'sku173' | 'sku174' | 'sku175' | 'sku176' | 'sku177' | 'sku178' | 'sku179' | 'sku180' | 'sku181' | 'sku182' | 'sku183' | 'sku184' | 'sku186' | 'sku187' | 'sku188' | 'sku189' | 'sku190' | 'sku191' | 'sku192' | 'sku193' | 'sku194' | 'sku888'; tiers?: number; tubeType?: 'round' | 'square' };
 
@@ -10336,6 +10413,26 @@ export default function App() {
             </Canvas>
           </div>
         </div>
+      )}
+
+      {/* --- Overlay Views --- */}
+      {view === 'helpdesk' && (
+        <HelpdeskView 
+          onClose={() => setView('configurator')}
+          buyerName={(window as any).currentUserRole === 'buyer' ? 'Current User' : 'Admin Preview'}
+          tickets={tickets}
+          onAddTicket={handleAddTicket}
+          onAddMessage={handleAddMessage}
+        />
+      )}
+
+      {view === 'admin' && (
+        <AdminView
+          onClose={() => setView('configurator')}
+          tickets={tickets}
+          onUpdateStatus={handleUpdateTicketStatus}
+          onAddMessage={handleAddMessage}
+        />
       )}
     </div>
   );
