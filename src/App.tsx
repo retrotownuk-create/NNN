@@ -6903,12 +6903,12 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
       <group position={[-xCenter, halfHeight, 0]}>
         
         {/* FLOOR MOUNT */}
-        <group position={[localPoleX, -halfHeight - e, 0]}>
+        <group position={[localPoleX + e, -halfHeight - e, 0]}>
             <Flange position={[0, 0, 0]} rotation={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
         </group>
         
         {/* VERTICAL POLE BOTTOM HALF */}
-        <group position={[localPoleX, -halfHeight / 2 - e * 0.5, 0]}>
+        <group position={[localPoleX + e, 0, 0]}>
             <Pipe start={[0, -halfHeight + 1.2, 0]} end={[0, -2.2, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${(hCut/2).toFixed(1)} cm`} />
         </group>
         
@@ -6918,7 +6918,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         </group>
         
         {/* MIDDLE HORIZONTAL ARM (goes from Pole -> Wall) */}
-        <group position={[-e * 0.5, 0, 0]}>
+        <group position={[0, 0, 0]}>
             <Pipe start={[localPoleX - 2.2, 0, 0]} end={[localWallX + 1.2, 0, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${lCut} cm`} />
         </group>
         
@@ -6928,7 +6928,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         </group>
 
         {/* VERTICAL POLE TOP HALF */}
-        <group position={[localPoleX, halfHeight / 2 + e * 0.5, 0]}>
+        <group position={[localPoleX + e, 0, 0]}>
             <Pipe start={[0, 2.2, 0]} end={[0, halfHeight - 2.2, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${(hCut/2).toFixed(1)} cm`} />
         </group>
 
@@ -6938,7 +6938,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
         </group>
 
         {/* TOP HORIZONTAL ARM (goes from Pole -> Wall) */}
-        <group position={[-e * 0.5, halfHeight + e, 0]}>
+        <group position={[0, halfHeight + e, 0]}>
             <Pipe start={[localPoleX - 2.2, 0, 0]} end={[localWallX + 1.2, 0, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${lCut} cm`} />
         </group>
         
