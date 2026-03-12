@@ -3461,70 +3461,65 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
   if (skuType === 'sku119') {
     const e = explode * 4;
+    
+    // Explicit 10cm deduction from length, 5cm deduction from height based on logic
+    const lCut = Math.max(0, length - 10);
+    const hCut = Math.max(0, height - 5);
+    
     const drop = height;
     const zWall = -wallDistance;
+    
+    // Position arms exactly at lCut span
+    const leftX_n = -(lCut + 4.4) / 2;
+    const rightX_n = (lCut + 4.4) / 2;
 
     return (
       <group position={[0, -drop / 2, zWall]}>
         {/* Left Side Support */}
         <group position={[-e, 0, 0]}>
           <group position={[0, e * 2, zWall]}>
-            <Flange position={[leftX, drop, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Flange position={[leftX_n, drop, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           <group position={[0, e, zWall]}>
-            <Pipe start={[leftX, drop - 2.2, 0]} end={[leftX, 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Pipe start={[leftX_n, drop - 2.2, 0]} end={[leftX_n, 2.2, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${hCut} cm`} />
           </group>
           <group position={[0, 0, zWall]}>
-            <Elbow position={[leftX, 0, 0]} rotation={[Math.PI, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Elbow position={[leftX_n, 0, 0]} rotation={[Math.PI, Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
         </group>
 
         {/* Right Side Support */}
         <group position={[e, 0, 0]}>
           <group position={[0, e * 2, zWall]}>
-            <Flange position={[rightX, drop, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Flange position={[rightX_n, drop, 0]} rotation={[Math.PI, 0, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
           <group position={[0, e, zWall]}>
-            <Pipe start={[rightX, drop - 2.2, 0]} end={[rightX, 2.2, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Pipe start={[rightX_n, drop - 2.2, 0]} end={[rightX_n, 2.2, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${hCut} cm`} />
           </group>
           <group position={[0, 0, zWall]}>
-            <Elbow position={[rightX, 0, 0]} rotation={[Math.PI, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+            <Elbow position={[rightX_n, 0, 0]} rotation={[Math.PI, -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
           </group>
         </group>
 
         {/* Horizontal Rail Assembly */}
         <group position={[0, -e, zWall]}>
-          {(() => {
-            const hPipes = getPipesForLength(length);
-            const railL = leftX + 2.2;
-            const railR = rightX - 2.2;
-            const totalW = railR - railL;
-
-            const pipeGap = hPipes.length > 1 ? e * 2 : 0;
-            const segW = totalW / hPipes.length;
-
-            return (
-              <group>
-                {hPipes.map((p, idx) => {
-                  const startX_n = railL + (idx * segW);
-                  const endX_n = railL + ((idx + 1) * segW);
-
-                  const centerSep = (idx - (hPipes.length - 1) / 2) * pipeGap;
-                  const startX = startX_n + centerSep + (idx === 0 ? -e : idx === hPipes.length - 1 ? e : 0);
-                  const endX = endX_n + centerSep + (idx === 0 ? -e : idx === hPipes.length - 1 ? e : 0);
-
-                  return (
-                    <group key={idx}>
-                      <Pipe start={[startX, 0, 0]} end={[endX, 0, 0]} colorOption={colorOption} showLabel={showLabel} />
-                      {idx < hPipes.length - 1 && (
-                        <Coupling position={[endX + pipeGap / 2, 0, 0]} rotation={[0, 0, Math.PI / 2]} colorOption={colorOption} showLabel={showLabel} />
-                      )}
-                    </group>
-                  );
-                })}
-              </group>
-            );
-          })()}
+          {lCut > 120 ? (
+            <group>
+               <group position={[-explode * 0.75, 0, 0]}>
+                 <Pipe start={[leftX_n + 2.2, 0, 0]} end={[0, 0, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${(lCut/2).toFixed(1)} cm`} />
+               </group>
+               <group position={[0, 0, 0]}>
+                 <Coupling position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]} showLabel={showLabel} colorOption={colorOption} />
+               </group>
+               <group position={[explode * 0.75, 0, 0]}>
+                 <Pipe start={[0, 0, 0]} end={[rightX_n - 2.2, 0, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${(lCut/2).toFixed(1)} cm`} />
+               </group>
+            </group>
+          ) : (
+            <group>
+               <Pipe start={[leftX_n + 2.2, 0, 0]} end={[rightX_n - 2.2, 0, 0]} showLabel={showLabel} colorOption={colorOption} overrideLabel={`${lCut} cm`} />
+            </group>
+          )}
         </group>
       </group>
     );

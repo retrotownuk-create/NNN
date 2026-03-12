@@ -159,13 +159,18 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       extra += getExtraCouplings(wallDistance - 6.6, numLegs + 2); // all wall pipes
       extra += getExtraCouplings(height - 3, numLegs); // vertical legs
       extra += getExtraCouplings(segmentLength - 3, numSegments); // 4 horizontal segments
-    } else if (skuType === 'sku117' || skuType === 'sku118' || skuType === 'sku119') {
-      extra += getExtraCouplings(skuType === 'sku119' ? height - 4.4 : wallDistance - 3.7, 2);
+    } else if (skuType === 'sku117' || skuType === 'sku118') {
+      extra += getExtraCouplings(wallDistance - 3.7, 2);
       if (length > 120) {
         extra += getExtraCouplings((length - 4.4) / 2, 2);
       } else {
         extra += getExtraCouplings(length - 4.4, 1);
       }
+    } else if (skuType === 'sku119') {
+      const lCut = Math.max(0, length - 10);
+      const hCut = Math.max(0, height - 5);
+      extra += getExtraCouplings(hCut, 2);
+      extra += getExtraCouplings(lCut, 1);
     } else if (skuType === 'sku153' || skuType === 'sku154' || skuType === 'sku155') {
       // Couplings calculation handled directly inside the SKU block
     } else if (skuType === 'sku158') {
@@ -288,11 +293,14 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     if (length > 120) addPipes((length - 4.4) / 2, 2, 'p-horiz-bar');
     else addPipes(length - 4.4, 1, 'p-horiz-bar');
   } else if (skuType === 'sku119') {
-    const numPipes = Math.ceil(length / 120);
-    const numMounts = numPipes + 1;
-    addPipes(wallDistance - 6.6, numMounts, 'p-wall-conn');
-    const pipes = getPipesForLength(length);
-    pipes.forEach((p, i) => addPipes(p, 1, `p-horiz-${i}`));
+    const lCut = Math.max(0, length - 10);
+    const hCut = Math.max(0, height - 5);
+    addPipes(hCut, 2, 'p-vert-drop');
+    if (lCut > 120) {
+      addPipes(lCut / 2, 2, 'p-horiz-bar');
+    } else {
+      addPipes(lCut, 1, 'p-horiz-bar');
+    }
   } else if (skuType === 'sku4210') {
     addPipes(wallDistance - 6.6, 2, 'p-wall-conn');
     addPipes(height - 10 - 1.5, 2, 'p-vert-bot');
@@ -374,8 +382,8 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addPipes(wallDistance - 6.6, numLegs + 2, 'p-wall-conn');
     // 4 horizontal rail segments
     addPipes(segmentLength - 3, numSegments, 'p-horiz-rail');
-  } else if (skuType === 'sku111' || skuType === 'sku113' || skuType === 'sku117' || skuType === 'sku118' || skuType === 'sku119') {
-    if (skuType === 'sku111' || skuType === 'sku113' || skuType === 'sku119') {
+  } else if (skuType === 'sku111' || skuType === 'sku113' || skuType === 'sku117' || skuType === 'sku118') {
+    if (skuType === 'sku111' || skuType === 'sku113') {
       addPipes(height - 4.4, (skuType === 'sku113' ? 1 : 2), 'p-vert-drop');
     } else {
       // SKU 117, 118: Wall-mounted rails
@@ -681,9 +689,10 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       addFitting('f-90-elbows', '90° Elbows', quantity * 2);
     }
   } else if (skuType === 'sku119') {
+    const lCut = Math.max(0, length - 10);
     addFitting('f-ceil-flanges', 'Ceiling Flanges', quantity * 2);
     addFitting('f-90-elbows', '90° Elbows', quantity * 2);
-    addFitting('f-couplings', 'Couplings', quantity * getTotalExtraCouplings());
+    addFitting('f-couplings', 'Couplings', quantity * ((lCut > 120 ? 1 : 0) + getTotalExtraCouplings()));
   } else if (skuType === 'sku120') {
     // Acrylic rod: floor flange + top flange
     items.push({ id: 'acrylic-rod', partName: `Acrylic Rod 33mm ×${height}cm`, qty: quantity, type: 'fitting', color: colorName });
