@@ -6888,8 +6888,8 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
   if (skuType === 'sku194') {
     const e = explode * 1.5;
-    const lCut = Math.max(0, length - 5);
-    const dCut = Math.max(0, wallDistance - 5);
+    const lCut = Math.max(0, length - 10);
+    const dCut = wallDistance === 25 ? 23 : Math.max(0, wallDistance - 5);
     
     // Geometry logic
     const zWall = -dCut - 4.4; // the wall is at negative Z
@@ -6931,7 +6931,7 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
 
               {/* Elbow pointing down */}
               <group position={[mount.x, yElbow, 0]}>
-                  <Elbow position={[0, 0, 0]} rotation={[0, Math.PI, Math.PI]} showLabel={showLabel} colorOption={colorOption} />
+                  <Elbow position={[0, 0, 0]} rotation={[0, Math.PI, 0]} showLabel={showLabel} colorOption={colorOption} />
               </group>
 
               {/* Hex Nipple connecting Elbow to TFitting */}
@@ -6948,10 +6948,10 @@ const Rack = ({ length, height, wallDistance, explode, hasShelves = true, isFree
               {mount.type === 'end' && (
                 <group position={[mount.x, yRail, 0]}>
                   {/* Hex Nipple joining TFitting to EndCap */}
-                  <HexNipple position={[signX * 3.2 + localE*0.2, 0, 0]} rotation={[0, 0, -Math.PI / 2]} showLabel={false} colorOption={colorOption} />
+                  <HexNipple position={[signX * 2.95 + localE*0.2, 0, 0]} rotation={[0, 0, -Math.PI / 2]} showLabel={false} colorOption={colorOption} />
                   
                   {/* End Cap */}
-                  <EndCap position={[signX * (3.2 + 0.6 + 1.2) + localE*0.4, 0, 0]} rotation={[0, signX > 0 ? Math.PI / 2 : -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
+                  <EndCap position={[signX * 4.15 + localE*0.4, 0, 0]} rotation={[0, signX > 0 ? Math.PI / 2 : -Math.PI / 2, 0]} showLabel={showLabel} colorOption={colorOption} />
                 </group>
               )}
             </group>
