@@ -1675,25 +1675,74 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
   return items;
 };
 
+export const getDefaultPricing = () => ({
+  pipePerMeter: 10.00,
+  woodPerMeter: 15.00, // per shelf roughly
+  hairpinLegs: 12.00,
+  lBrackets: 8.50,
+  baseFitting: 2.50,
+  acrylic: 5.00,
+});
+
+export const getPricingConfig = () => {
+  try {
+    const saved = localStorage.getItem('rackbuilder_pricing');
+    if (saved) return { ...getDefaultPricing(), ...JSON.parse(saved) };
+  } catch (e) {}
+  return getDefaultPricing();
+};
+
 export const calculatePrice = (items: CutlistItem[]) => {
+  const config = getPricingConfig() as any;
   let total = 0;
   items.forEach(item => {
     if (item.type === 'pipe') {
       const match = item.partName.match(/(\d+(\.\d+)?) cm/);
       if (match) {
         const length = parseFloat(match[1]);
-        total += length * 0.10 * item.qty;
+        const id = `pipe${length}`;
+        if (config[id] !== undefined && config[id] !== '') {
+          total += parseFloat(config[id]) * item.qty;
+        } else {
+          const meter = config.pipePerMeter ?? 10.0;
+          total += length * (meter / 100) * item.qty;
+        }
       }
     } else if (item.type === 'fitting') {
       if (item.partName.includes('Hairpin Legs')) {
-        total += 12.00 * item.qty;
+        total += (config.hairpinLegs ?? 12.00) * item.qty;
       } else if (item.partName.includes('L Brackets')) {
-        total += 8.50 * item.qty;
+        total += (config.lBrackets ?? 8.50) * item.qty;
       } else {
-        total += 2.50 * item.qty;
+        // Find specific fitting if available
+        const nameMap: Record<string, string> = {
+          'Flange': 'flange',
+          'Tee': 'tee',
+          '90°': 'elbow90',
+          '45°': 'elbow45',
+          '3-way corner': 'cornerElbow3way',
+          'Cross': 'cross',
+          'reduction': 'reducer',
+          'Union': 'union',
+          'Coupling': 'coupling',
+          'Hex Nipple': 'hexNipple',
+          'Cap': 'pipeEndCap',
+        };
+        let matchedId = '';
+        for (const [k, v] of Object.entries(nameMap)) {
+          if (item.partName.includes(k)) {
+            matchedId = v;
+            break;
+          }
+        }
+        if (matchedId && config[matchedId] !== undefined && config[matchedId] !== '') {
+          total += parseFloat(config[matchedId]) * item.qty;
+        } else {
+          total += (config.baseFitting ?? 2.50) * item.qty;
+        }
       }
     } else if (item.type === 'wood') {
-      total += 15.00 * item.qty;
+      total += (config.woodPerMeter ?? 15.00) * item.qty;
     }
   });
   return total;
