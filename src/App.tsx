@@ -13,6 +13,8 @@ import autoTable from 'jspdf-autotable';
 import html2canvas from 'html2canvas';
 import { COLORS, WOOD_COLORS, ColorOption, getPipesForLength, getExtraCouplings, getEqualSplitPipes } from './utils';
 import { fetchOrders, saveOrders } from './api';
+import { AuthView } from './AuthView';
+import { AdminView } from './AdminView';
 
 // --- Components ---
 
@@ -101,6 +103,13 @@ const Navbar = ({ view, setView, ordersCount, currentSku, skuType, configSearch,
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /><path d="M12 11h4" /><path d="M12 16h4" /><path d="M8 11h.01" /><path d="M8 16h.01" /><rect width="8" height="4" x="8" y="2" rx="1" ry="1" /></svg>
             Preparation
+          </button>
+          <button
+            onClick={() => setView('helpdesk')}
+            className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${view === 'helpdesk' ? 'bg-emerald-600 text-white shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4c0-1.1.9-2 2-2h16c1.1 0 2 .9 2 2v15.59z"/><path d="M18 9h.01"/><path d="M14 15h.01"/></svg>
+            Help Desk
           </button>
         </nav>
       </div>
@@ -7911,7 +7920,10 @@ const InfoIcon = () => (
 
 export default function App() {
   const appRef = useRef<HTMLDivElement>(null);
-  const [view, setView] = useState<'configurator' | 'library' | 'orders' | 'inventory' | 'preparation'>('library');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [loginTimeline, setLoginTimeline] = useState<any[]>([]);
+  const [view, setView] = useState<'configurator' | 'library' | 'orders' | 'inventory' | 'preparation' | 'helpdesk'>('library');
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
   const [length, setLength] = useState(100);
   const [height, setHeight] = useState(180);
@@ -8778,6 +8790,44 @@ export default function App() {
       </Canvas>
     </div>
   ) : null;
+
+  if (!isAuthenticated) {
+    return (
+      <AuthView
+        onLogin={(user) => {
+          setIsAuthenticated(true);
+          setCurrentUser(user);
+          setLoginTimeline(prev => [
+            { id: Date.now().toString(), username: user.username, role: user.role, timestamp: new Date().toISOString(), status: 'success' },
+            ...prev
+          ]);
+        }}
+      />
+    );
+  }
+
+  if (view === 'helpdesk') {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col font-sans" ref={appRef}>
+        <Navbar
+          view={view}
+          setView={setView}
+          ordersCount={orders.filter(o => o.status !== 'Archived').length}
+          currentSku={currentSku}
+          skuType={skuType}
+          configSearch={configSearch}
+          setConfigSearch={setConfigSearch}
+          onSearchSKU={handleSearchSKU}
+          syncStatus={syncStatus}
+        />
+        <AdminView
+          onClose={() => setView('library')}
+          currentUser={currentUser}
+          loginTimeline={loginTimeline}
+        />
+      </div>
+    );
+  }
 
   if (view === 'orders') {
     const activeOrders = orders.filter(o => o.status !== 'Archived');
