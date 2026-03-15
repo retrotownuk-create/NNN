@@ -25,9 +25,21 @@ async function connect() {
 }
 
 export const handler: Handler = async (event) => {
+    // Add CORS headers
+    const headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
+    };
+
+    if (event.httpMethod === 'OPTIONS') {
+        return { statusCode: 200, headers, body: '' };
+    }
+
     if (!process.env.DATABASE_URL) {
         return {
             statusCode: 500,
+            headers,
             body: JSON.stringify({ error: 'DATABASE_URL not set' }),
         };
     }
@@ -39,6 +51,7 @@ export const handler: Handler = async (event) => {
             const res = await client.query('SELECT value FROM site_data WHERE key = $1', ['orders']);
             return {
                 statusCode: 200,
+                headers,
                 body: JSON.stringify(res.rows[0]?.value || []),
             };
         }
@@ -53,15 +66,17 @@ export const handler: Handler = async (event) => {
 
             return {
                 statusCode: 200,
+                headers,
                 body: JSON.stringify({ success: true }),
             };
         }
 
-        return { statusCode: 405, body: 'Method Not Allowed' };
+        return { statusCode: 405, headers, body: 'Method Not Allowed' };
     } catch (err: any) {
         console.error('DATABASE_ERROR:', err);
         return {
             statusCode: 500,
+            headers,
             body: JSON.stringify({ error: err.message, stack: err.stack }),
         };
     }

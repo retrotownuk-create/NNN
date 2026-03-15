@@ -115,51 +115,18 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       extra += getExtraCouplings(lCut - 3, 1);
     }
     } else if (skuType === 'sku190') {
-      const hCut = height;
-      const lCut = Math.max(0, length - 10);
-      const dCut = wallDistance === 25 ? 23 : Math.max(0, wallDistance - 5);
-      extra += getExtraCouplings(dCut, 2);
-      extra += getExtraCouplings(hCut, 2);
-      if (lCut > 120) {
-        extra += getExtraCouplings((lCut - 3) / 2, 2);
-      } else {
-        extra += getExtraCouplings(lCut, 1);
-      }
-    } else if (skuType === 'sku194') {
-      const lCut = Math.max(0, length - 10);
-      const dCut = wallDistance === 25 ? 23 : Math.max(0, wallDistance - 5);
-      const numMounts = lCut > 120 ? 3 : 2;
-      extra += getExtraCouplings(dCut, numMounts);
-      if (lCut > 120) extra += getExtraCouplings((lCut - 3) / 2, 2);
-      else extra += getExtraCouplings(lCut, 1);
-    } else if (skuType === 'sku193') {
-      const arm1 = length / 2;
-      const arm2 = Math.max(0, (length / 2) - 5);
-      
-      if (arm1 > 120) extra += getExtraCouplings((Math.max(0, arm1 - 3) / 2), 2);
-      else extra += getExtraCouplings(arm1, 1);
-      
-      if (arm2 > 120) extra += getExtraCouplings((Math.max(0, arm2 - 3) / 2), 2);
-      else extra += getExtraCouplings(arm2, 1);
-      extra += getExtraCouplings(23, 1);
-      extra += getExtraCouplings(12, 1);
-
-} else if (skuType === 'sku192') {
-      const lCut = Math.max(0, length - 5);
-      const hCut = Math.max(0, height - 5);
-      extra += getExtraCouplings(hCut / 2, 2);
-      if (lCut > 120) extra += getExtraCouplings((lCut - 3) / 2, 4);
-      else extra += getExtraCouplings(lCut, 2);
-    } else if (skuType === 'sku191') {
-      const lCut = Math.max(0, length - 10);
-      const hCut = height;
-      const dCut = wallDistance === 25 ? 23 : Math.max(0, wallDistance - 5);
-      extra += getExtraCouplings(dCut, hasShelves ? 4 : 2); // wall pipes
-      extra += getExtraCouplings(hCut, 2); // vertical drop
-      if(hasShelves) extra += getExtraCouplings(5, 2); // 5cm pipe for top bracket
-      if (lCut > 120) extra += getExtraCouplings((lCut - 3) / 2, 2);
-      else extra += getExtraCouplings(lCut, 1);
-    } else if (skuType === 'sku300') {
+    const hCut = height;
+    const lCut = Math.max(0, length - 10);
+    const dCut = wallDistance === 25 ? 23 : Math.max(0, wallDistance - 5);
+    extra += getExtraCouplings(dCut, 2);
+    extra += getExtraCouplings(hCut, 2);
+    // no top pipe extra couplings
+    if (lCut > 120) {
+      extra += getExtraCouplings((lCut - 3) / 2, 2);
+    } else {
+      extra += getExtraCouplings(lCut - 3, 1);
+    }
+  } else if (skuType === 'sku300') {
       const numPipes = Math.ceil(length / 120);
       const numMounts = numPipes + 1;
       extra += getExtraCouplings(wallDistance - 6.6, numMounts);
@@ -192,18 +159,13 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       extra += getExtraCouplings(wallDistance - 6.6, numLegs + 2); // all wall pipes
       extra += getExtraCouplings(height - 3, numLegs); // vertical legs
       extra += getExtraCouplings(segmentLength - 3, numSegments); // 4 horizontal segments
-    } else if (skuType === 'sku117' || skuType === 'sku118') {
-      extra += getExtraCouplings(wallDistance - 3.7, 2);
+    } else if (skuType === 'sku117' || skuType === 'sku118' || skuType === 'sku119') {
+      extra += getExtraCouplings(skuType === 'sku119' ? height - 4.4 : wallDistance - 3.7, 2);
       if (length > 120) {
         extra += getExtraCouplings((length - 4.4) / 2, 2);
       } else {
         extra += getExtraCouplings(length - 4.4, 1);
       }
-    } else if (skuType === 'sku119') {
-      const lCut = Math.max(0, length - 10);
-      const hCut = Math.max(0, height - 5);
-      extra += getExtraCouplings(hCut, 2);
-      extra += getExtraCouplings(lCut, 1);
     } else if (skuType === 'sku153' || skuType === 'sku154' || skuType === 'sku155') {
       // Couplings calculation handled directly inside the SKU block
     } else if (skuType === 'sku158') {
@@ -315,7 +277,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     } else {
       addPipes(length - 3, 2, 'p-horiz-rail');
     }
-  } else if (hasShelves && skuType !== 'sku108' && skuType !== 'sku109' && skuType !== 'sku110' && skuType !== 'sku111' && skuType !== 'sku112' && skuType !== 'sku113' && skuType !== 'sku114' && skuType !== 'sku115' && skuType !== 'sku116' && skuType !== 'sku117' && skuType !== 'sku118' && skuType !== 'sku119' && skuType !== 'sku120' && skuType !== 'sku121' && skuType !== 'sku122' && skuType !== 'sku123' && skuType !== 'sku124' && skuType !== 'sku125' && skuType !== 'sku126' && skuType !== 'sku127' && skuType !== 'sku128' && skuType !== 'sku129' && skuType !== 'sku130' && skuType !== 'sku131' && skuType !== 'sku132' && skuType !== 'sku133' && skuType !== 'sku134' && skuType !== 'sku135' && skuType !== 'sku136' && skuType !== 'sku137' && skuType !== 'sku138' && skuType !== 'sku140' && skuType !== 'sku141' && skuType !== 'sku142' && skuType !== 'sku143' && skuType !== 'sku144' && skuType !== 'sku145' && skuType !== 'sku146' && skuType !== 'sku147' && skuType !== 'sku148' && skuType !== 'sku149' && skuType !== 'sku150' && skuType !== 'sku151' && skuType !== 'sku152' && skuType !== 'sku153' && skuType !== 'sku154' && skuType !== 'sku155' && skuType !== 'sku156' && skuType !== 'sku157' && skuType !== 'sku158' && skuType !== 'sku159' && skuType !== 'sku160' && skuType !== 'sku161' && skuType !== 'sku162' && skuType !== 'sku163' && skuType !== 'sku164' && skuType !== 'sku165' && skuType !== 'sku166' && skuType !== 'sku167' && skuType !== 'sku168' && skuType !== 'sku169' && skuType !== 'sku170' && skuType !== 'sku171' && skuType !== 'sku172' && skuType !== 'sku173' && skuType !== 'sku174' && skuType !== 'sku175' && skuType !== 'sku176' && skuType !== 'sku177' && skuType !== 'sku178' && skuType !== 'sku179' && skuType !== 'sku180' && skuType !== 'sku181' && skuType !== 'sku182' && skuType !== 'sku183' && skuType !== 'sku184' && skuType !== 'sku186' && skuType !== 'sku187' && skuType !== 'sku188' && skuType !== 'sku189' && skuType !== 'sku190' && skuType !== 'sku191' && skuType !== 'sku192') {
+  } else if (hasShelves && skuType !== 'sku108' && skuType !== 'sku109' && skuType !== 'sku110' && skuType !== 'sku111' && skuType !== 'sku112' && skuType !== 'sku113' && skuType !== 'sku114' && skuType !== 'sku115' && skuType !== 'sku116' && skuType !== 'sku117' && skuType !== 'sku118' && skuType !== 'sku119' && skuType !== 'sku120' && skuType !== 'sku121' && skuType !== 'sku122' && skuType !== 'sku123' && skuType !== 'sku124' && skuType !== 'sku125' && skuType !== 'sku126' && skuType !== 'sku127' && skuType !== 'sku128' && skuType !== 'sku129' && skuType !== 'sku130' && skuType !== 'sku131' && skuType !== 'sku132' && skuType !== 'sku133' && skuType !== 'sku134' && skuType !== 'sku135' && skuType !== 'sku136' && skuType !== 'sku137' && skuType !== 'sku138' && skuType !== 'sku140' && skuType !== 'sku141' && skuType !== 'sku142' && skuType !== 'sku143' && skuType !== 'sku144' && skuType !== 'sku145' && skuType !== 'sku146' && skuType !== 'sku147' && skuType !== 'sku148' && skuType !== 'sku149' && skuType !== 'sku150' && skuType !== 'sku151' && skuType !== 'sku152' && skuType !== 'sku153' && skuType !== 'sku154' && skuType !== 'sku155' && skuType !== 'sku156' && skuType !== 'sku157' && skuType !== 'sku158' && skuType !== 'sku159' && skuType !== 'sku160' && skuType !== 'sku161' && skuType !== 'sku162' && skuType !== 'sku163' && skuType !== 'sku164' && skuType !== 'sku165' && skuType !== 'sku166' && skuType !== 'sku167' && skuType !== 'sku168' && skuType !== 'sku169' && skuType !== 'sku170' && skuType !== 'sku171' && skuType !== 'sku172' && skuType !== 'sku173' && skuType !== 'sku174' && skuType !== 'sku175' && skuType !== 'sku176' && skuType !== 'sku177' && skuType !== 'sku178' && skuType !== 'sku177' && skuType !== 'sku178') {
     addPipes(40.0, 2, 'p-vert-mid');
     addPipes((height - 75) / 2, 2, 'p-vert-top1');
     addPipes((height - 75) / 2, 2, 'p-vert-top2');
@@ -326,14 +288,11 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     if (length > 120) addPipes((length - 4.4) / 2, 2, 'p-horiz-bar');
     else addPipes(length - 4.4, 1, 'p-horiz-bar');
   } else if (skuType === 'sku119') {
-    const lCut = Math.max(0, length - 10);
-    const hCut = Math.max(0, height - 5);
-    addPipes(hCut, 2, 'p-vert-drop');
-    if (lCut > 120) {
-      addPipes(lCut / 2, 2, 'p-horiz-bar');
-    } else {
-      addPipes(lCut, 1, 'p-horiz-bar');
-    }
+    const numPipes = Math.ceil(length / 120);
+    const numMounts = numPipes + 1;
+    addPipes(wallDistance - 6.6, numMounts, 'p-wall-conn');
+    const pipes = getPipesForLength(length);
+    pipes.forEach((p, i) => addPipes(p, 1, `p-horiz-${i}`));
   } else if (skuType === 'sku4210') {
     addPipes(wallDistance - 6.6, 2, 'p-wall-conn');
     addPipes(height - 10 - 1.5, 2, 'p-vert-bot');
@@ -357,42 +316,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addPipes(dCut, 2, 'p-wall-conn');
     addPipes(hCut, 2, 'p-vert-up');
     if (lCut > 120) addPipes((lCut - 3) / 2, 2, 'p-horiz-bar');
-    else addPipes(lCut, 1, 'p-horiz-bar');
-  } else if (skuType === 'sku194') {
-    const lCut = Math.max(0, length - 10);
-    const dCut = wallDistance === 25 ? 23 : Math.max(0, wallDistance - 5);
-    const numMounts = lCut > 120 ? 3 : 2;
-    addPipes(dCut, numMounts, 'p-wall-conn');
-    if (lCut > 120) addPipes((lCut - 3) / 2, 2, 'p-horiz-bar');
-    else addPipes(lCut, 1, 'p-horiz-bar');
-  } else if (skuType === 'sku193') {
-    const arm1 = length / 2;
-    const arm2 = Math.max(0, (length / 2) - 5);
-    addPipes(23, 1, 'p-wall-conn');
-    addPipes(12, 1, 'p-drop-down');
-    
-    // Right arm
-    if (arm1 > 120) addPipes((arm1 - 3) / 2, 2, 'p-horiz-arms');
-    else addPipes(arm1, 1, 'p-horiz-arms');
-    
-    // Left arm
-    if (arm2 > 120) addPipes((arm2 - 3) / 2, 2, 'p-horiz-arms');
-    else addPipes(arm2, 1, 'p-horiz-arms');
-    } else if (skuType === 'sku192') {
-    const lCut = Math.max(0, length - 5);
-    const hCut = Math.max(0, height - 5);
-    addPipes(hCut / 2, 2, 'p-vert-pole');
-    if (lCut > 120) addPipes((lCut - 3) / 2, 4, 'p-horiz-arms');
-    else addPipes(lCut, 2, 'p-horiz-arms');
-  } else if (skuType === 'sku191') {
-    const lCut = Math.max(0, length - 10);
-    const hCut = height;
-    const dCut = wallDistance === 25 ? 23 : Math.max(0, wallDistance - 5);
-    addPipes(dCut, hasShelves ? 4 : 2, 'p-wall-conn');
-    if(hasShelves) addPipes(5, 2, 'p-top-drop');
-    addPipes(hCut, 2, 'p-vert-drop');
-    if (lCut > 120) addPipes((lCut - 3) / 2, 2, 'p-horiz-bar');
-    else addPipes(lCut, 1, 'p-horiz-bar');
+    else addPipes(lCut - 3, 1, 'p-horiz-bar');
   } else if (skuType === 'sku300') {
     const numPipes = Math.ceil(length / 120);
     const numMounts = numPipes + 1;
@@ -450,8 +374,8 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addPipes(wallDistance - 6.6, numLegs + 2, 'p-wall-conn');
     // 4 horizontal rail segments
     addPipes(segmentLength - 3, numSegments, 'p-horiz-rail');
-  } else if (skuType === 'sku111' || skuType === 'sku113' || skuType === 'sku117' || skuType === 'sku118') {
-    if (skuType === 'sku111' || skuType === 'sku113') {
+  } else if (skuType === 'sku111' || skuType === 'sku113' || skuType === 'sku117' || skuType === 'sku118' || skuType === 'sku119') {
+    if (skuType === 'sku111' || skuType === 'sku113' || skuType === 'sku119') {
       addPipes(height - 4.4, (skuType === 'sku113' ? 1 : 2), 'p-vert-drop');
     } else {
       // SKU 117, 118: Wall-mounted rails
@@ -460,7 +384,7 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     if (length > 120) addPipes((length - 4.4) / 2, 2, 'p-horiz-bar');
     else addPipes(length - 4.4, 1, 'p-horiz-bar');
 
-  } else if (skuType !== 'sku108' && skuType !== 'sku109' && skuType !== 'sku110' && skuType !== 'sku111' && skuType !== 'sku112' && skuType !== 'sku113' && skuType !== 'sku114' && skuType !== 'sku115' && skuType !== 'sku116' && skuType !== 'sku117' && skuType !== 'sku118' && skuType !== 'sku119' && skuType !== 'sku120' && skuType !== 'sku121' && skuType !== 'sku122' && skuType !== 'sku123' && skuType !== 'sku124' && skuType !== 'sku125' && skuType !== 'sku126' && skuType !== 'sku127' && skuType !== 'sku128' && skuType !== 'sku129' && skuType !== 'sku130' && skuType !== 'sku131' && skuType !== 'sku132' && skuType !== 'sku133' && skuType !== 'sku134' && skuType !== 'sku135' && skuType !== 'sku136' && skuType !== 'sku137' && skuType !== 'sku138' && skuType !== 'sku140' && skuType !== 'sku141' && skuType !== 'sku142' && skuType !== 'sku143' && skuType !== 'sku144' && skuType !== 'sku145' && skuType !== 'sku146' && skuType !== 'sku147' && skuType !== 'sku148' && skuType !== 'sku149' && skuType !== 'sku150' && skuType !== 'sku151' && skuType !== 'sku152' && skuType !== 'sku153' && skuType !== 'sku154' && skuType !== 'sku155' && skuType !== 'sku156' && skuType !== 'sku157' && skuType !== 'sku158' && skuType !== 'sku159' && skuType !== 'sku160' && skuType !== 'sku161' && skuType !== 'sku162' && skuType !== 'sku163' && skuType !== 'sku164' && skuType !== 'sku165' && skuType !== 'sku166' && skuType !== 'sku167' && skuType !== 'sku168' && skuType !== 'sku169' && skuType !== 'sku170' && skuType !== 'sku171' && skuType !== 'sku172' && skuType !== 'sku173' && skuType !== 'sku174' && skuType !== 'sku175' && skuType !== 'sku176' && skuType !== 'sku177' && skuType !== 'sku178' && skuType !== 'sku179' && skuType !== 'sku180' && skuType !== 'sku181' && skuType !== 'sku182' && skuType !== 'sku183' && skuType !== 'sku184' && skuType !== 'sku186' && skuType !== 'sku187' && skuType !== 'sku188' && skuType !== 'sku189' && skuType !== 'sku190' && skuType !== 'sku191' && skuType !== 'sku192') {
+  } else if (skuType !== 'sku108' && skuType !== 'sku109' && skuType !== 'sku110' && skuType !== 'sku111' && skuType !== 'sku112' && skuType !== 'sku113' && skuType !== 'sku114' && skuType !== 'sku115' && skuType !== 'sku116' && skuType !== 'sku117' && skuType !== 'sku118' && skuType !== 'sku119' && skuType !== 'sku120' && skuType !== 'sku121' && skuType !== 'sku122' && skuType !== 'sku123' && skuType !== 'sku124' && skuType !== 'sku125' && skuType !== 'sku126' && skuType !== 'sku127' && skuType !== 'sku128' && skuType !== 'sku129' && skuType !== 'sku130' && skuType !== 'sku131' && skuType !== 'sku132' && skuType !== 'sku133' && skuType !== 'sku134' && skuType !== 'sku135' && skuType !== 'sku136' && skuType !== 'sku137' && skuType !== 'sku138' && skuType !== 'sku140' && skuType !== 'sku141' && skuType !== 'sku142' && skuType !== 'sku143' && skuType !== 'sku144' && skuType !== 'sku145' && skuType !== 'sku146' && skuType !== 'sku147' && skuType !== 'sku148' && skuType !== 'sku149' && skuType !== 'sku150' && skuType !== 'sku151' && skuType !== 'sku152' && skuType !== 'sku153' && skuType !== 'sku154' && skuType !== 'sku155' && skuType !== 'sku156' && skuType !== 'sku157' && skuType !== 'sku158' && skuType !== 'sku159' && skuType !== 'sku160' && skuType !== 'sku161' && skuType !== 'sku162' && skuType !== 'sku163' && skuType !== 'sku164' && skuType !== 'sku165' && skuType !== 'sku166' && skuType !== 'sku167' && skuType !== 'sku168' && skuType !== 'sku169' && skuType !== 'sku170' && skuType !== 'sku171' && skuType !== 'sku172' && skuType !== 'sku173' && skuType !== 'sku174' && skuType !== 'sku175' && skuType !== 'sku176' && skuType !== 'sku177' && skuType !== 'sku178' && skuType !== 'sku179' && skuType !== 'sku180' && skuType !== 'sku181' && skuType !== 'sku182' && skuType !== 'sku183' && skuType !== 'sku184' && skuType !== 'sku186' && skuType !== 'sku187' && skuType !== 'sku188' && skuType !== 'sku189' && skuType !== 'sku190') {
     addPipes(height - (isFreestanding ? 7 : 1.5), 2, 'p-vert');
     addPipes(wallDistance - 6.6, 2, 'p-wall-conn');
     if (length > 120) addPipes((length - 3) / 2, 2, 'p-horiz-bar');
@@ -533,43 +457,6 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       addFitting('f-90-elbows', '90° Elbows', quantity * 2);
       addFitting('f-hex-nipples', 'Hex Nipples', quantity * 2);
     } else {
-      addFitting('f-90-elbows', '90° Elbows', quantity * 4);
-    }
-    addFitting('f-couplings', 'Couplings', quantity * ((lCut > 120 ? 1 : 0) + getTotalExtraCouplings()));
-  } else if (skuType === 'sku194') {
-    const lCut = Math.max(0, length - 10);
-    const numMounts = lCut > 120 ? 3 : 2;
-    addFitting('f-wall-flanges', 'Wall Flanges', quantity * numMounts);
-    addFitting('f-90-elbows', '90° Elbows', quantity * numMounts);
-    addFitting('f-t-fittings', 'T-Fittings', quantity * numMounts);
-    addFitting('f-hex-nipples', 'Hex Nipples', quantity * (numMounts + 2));
-    addFitting('f-end-caps', 'End Caps', quantity * 2);
-    addFitting('f-couplings', 'Couplings', quantity * ((lCut > 120 ? 1 : 0) + getTotalExtraCouplings()));
-  } else if (skuType === 'sku193') {
-    const arm1 = length / 2;
-    const arm2 = Math.max(0, (length / 2) - 5);
-    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 1);
-    addFitting('f-90-elbows', '90° Elbows', quantity * 1);
-    addFitting('f-t-fittings', 'T-Fittings', quantity * 1);
-    addFitting('f-end-caps', 'End Caps', quantity * 2);
-    addFitting('f-couplings', 'Couplings', quantity * (((arm1 > 120 ? 1 : 0) + (arm2 > 120 ? 1 : 0)) + getTotalExtraCouplings()));
-    } else if (skuType === 'sku192') {
-    const lCut = Math.max(0, length - 5);
-    addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
-    addFitting('f-floor-flanges', 'Floor Flanges', quantity * 1);
-    addFitting('f-t-fittings', 'T-Fittings', quantity * 1);
-    addFitting('f-90-elbows', '90° Elbows', quantity * 1);
-    addFitting('f-couplings', 'Couplings', quantity * ((lCut > 120 ? 2 : 0) + getTotalExtraCouplings()));
-  } else if (skuType === 'sku191') {
-    const lCut = Math.max(0, length - 10);
-    if (hasShelves) {
-      addFitting('f-wall-flanges', 'Wall Flanges', quantity * 4);
-      addFitting('f-floor-flanges', 'Floor Flanges', quantity * 4);
-      addFitting('f-t-fittings', 'T-Fittings', quantity * 2);
-      addFitting('f-90-elbows', '90° Elbows', quantity * 4);
-      addFitting('f-hex-nipples', 'Hex Nipples', quantity * 2);
-    } else {
-      addFitting('f-wall-flanges', 'Wall Flanges', quantity * 2);
       addFitting('f-90-elbows', '90° Elbows', quantity * 4);
     }
     addFitting('f-couplings', 'Couplings', quantity * ((lCut > 120 ? 1 : 0) + getTotalExtraCouplings()));
@@ -794,10 +681,9 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
       addFitting('f-90-elbows', '90° Elbows', quantity * 2);
     }
   } else if (skuType === 'sku119') {
-    const lCut = Math.max(0, length - 10);
     addFitting('f-ceil-flanges', 'Ceiling Flanges', quantity * 2);
     addFitting('f-90-elbows', '90° Elbows', quantity * 2);
-    addFitting('f-couplings', 'Couplings', quantity * ((lCut > 120 ? 1 : 0) + getTotalExtraCouplings()));
+    addFitting('f-couplings', 'Couplings', quantity * getTotalExtraCouplings());
   } else if (skuType === 'sku120') {
     // Acrylic rod: floor flange + top flange
     items.push({ id: 'acrylic-rod', partName: `Acrylic Rod 33mm ×${height}cm`, qty: quantity, type: 'fitting', color: colorName });
@@ -1783,9 +1669,6 @@ export const getCutlistItems = (config: any): CutlistItem[] => {
     addWood('w-shelf', 'Wood Shelf', quantity, `${length} × 23 cm`);
   }
   if (skuType === 'sku190' && hasShelves) {
-    addWood('w-shelf', 'Wood Shelf', quantity, `${length} × 23 cm`);
-  }
-  if (skuType === 'sku191' && hasShelves) {
     addWood('w-shelf', 'Wood Shelf', quantity, `${length} × 23 cm`);
   }
 
